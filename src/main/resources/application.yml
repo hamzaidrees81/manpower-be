@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: manpower
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/manpower
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: none  # Prevent overriding existing DB
+    show-sql: true  # Show SQL Queries in Console (Optional)
+
+# Swagger URL: http://localhost:8080/swagger-ui/index.html
