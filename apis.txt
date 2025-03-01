@@ -1,0 +1,180 @@
+1. Create a Company. ONLY SYSTEM ADMIN can create a company or view its CRUD.
+
+ {
+    "id": 1,
+    "name": "SAUDI TECH",
+    "address": "DAMMAN",
+    "maxAssetCount": 5
+  }
+
+
+2. Create a user for the company
+  {
+  "username": "Admin",
+  "password": "Admin123",
+  "company": {
+    "id": 1
+  },
+  "role": 1,
+  "status": 1
+}
+
+GET user to test...
+
+
+
+
+3. LOGIN TO TEST USER:
+Authenticate -> /login
+{
+  "userName": "Admin",
+  "password": "Admin123"
+}
+
+
+4. Add Client:
+
+{
+  "clientId": "ARM-123",
+  "name": "ARAMCO",
+  "address": "DHAHRAN"
+}
+
+
+call get to verify...
+
+
+5. Add Project: Project Controller
+
+{
+  "company": {
+    "id": 1
+  },
+  "client": {
+    "id": 1
+  },
+  "projectId": "PROJ-1",
+  "name": "ARAMCO HALL",
+  "location": "DAMMAM",
+  "startDate": "2025-03-01",
+  "endDate": "2025-04-01"
+}
+
+
+Verify if project is added...
+
+
+6. Add Sponsor (will be used for Asset) - Optional
+
+{
+  "company": {
+    "id": 1
+  },
+"sponsorId" : 1,
+   "name": "HAMZA_SPONSOR",
+  "phone": "+921234"
+}
+
+
+
+
+6. Add Asset - set asset company, asset sponsor company, type, etc...
+
+{
+  "company": {
+    "id": 1
+  },
+  "sponsoredBy": {
+     "id": 1
+  },
+  "name": "Adeel",
+  "idNumber": "12321",
+  "iqamaExpiry": "2025-03-20",
+  "phone": "",
+  "designation": "",
+  "passport": "AB1234",
+  "passportExpiry": "2025-03-01",
+  "joiningDate": "2025-03-01",
+  "assetType": "1",
+  "assetNumber": 123
+}
+
+
+
+6. Add Designations list
+
+{
+  "name": "QC Engineer"
+}
+
+
+
+
+7. Assign Project to Asset
+
+{
+   "company": {
+    "id": 1
+  },
+  "asset": {
+    "id": 2
+  },
+  "project": {
+    "id": 1
+  },
+  "designation": {
+    "id": 1
+  },
+  "regularRate": 10.00,
+  "overtimeRate": 12.00,
+  "regularRatePaid": 8.00,
+  "overtimeRatePaid": 9.00,
+  "startDate": "2025-03-01",
+  "endDate": "2025-03-15",
+  "isActive": "1",
+  "status": "1"
+}
+
+
+
+
+
+
+
+6. Update timesheet (pass dates, project and other details)
+
+Add a dummy entry for regular and OT... It inserts and updates both...
+[
+  {
+    "asset": {
+      "id": 2
+    },
+    "project": {
+      "id": 1
+    },
+    "timesheetDate": "2025-03-01",
+    "rateType": "1",
+    "hours": 5,
+    "invoiceNumber": 0
+  },
+{
+    "asset": {
+      "id": 2
+    },
+    "project": {
+      "id": 1
+    },
+    "timesheetDate": "2025-03-01",
+    "rateType": "2",
+    "hours": 5.51,
+    "invoiceNumber": 0
+  }
+]
+
+
+--------
+Calculate earning by taking Hours Spend * Rate of that date (taken from assigned Project table and designation...)...
+
+can project be same with different rates? Can we assign new entries based on designation?
+
+
