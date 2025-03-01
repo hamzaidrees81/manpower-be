@@ -1,6 +1,7 @@
 package com.manpower.service;
 
 import com.manpower.model.User;
+import com.manpower.model.dto.AuthenticateRequest;
 import com.manpower.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -39,5 +40,9 @@ public class UserService {
 
     public void deleteUser(Integer id) {
         userRepository.deleteById(id);
+    }
+
+    public Optional<User> authenticate(AuthenticateRequest authenticate) {
+        return userRepository.findByUsernameAndPassword(authenticate.getUserName(),authenticate.getPassword());
     }
 }

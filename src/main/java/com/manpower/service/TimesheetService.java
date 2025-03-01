@@ -1,7 +1,10 @@
 package com.manpower.service;
 
+import com.manpower.common.Contants;
 import com.manpower.model.Timesheet;
 import com.manpower.repository.TimesheetRepository;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -69,28 +72,28 @@ public class TimesheetService {
             return;
         }
 
-        String assetIdStr = timesheets.getFirst().getAsset().getIdNumber();
-        if(assetIdStr == null || assetIdStr.isEmpty()) {throw new RuntimeException("Invalid asset id");}
-
-        Integer assetId = Integer.parseInt(assetIdStr);
+        Integer assetId = timesheets.getFirst().getAsset().getId();
+        if(assetId == null || assetId.equals(0)) {throw new RuntimeException("Invalid asset id");}
 
         // Get all timesheets for this asset in the given month in ONE query
         List<LocalDate> timesheetDates = timesheets.stream()
           .map(Timesheet::getTimesheetDate)
           .collect(Collectors.toList());
 
+
         List<Timesheet> existingTimesheets = timesheetRepository
           .findByAssetIdAndTimesheetDateIn(assetId, timesheetDates);
 
         // Convert to a map for fast lookup
-        Map<LocalDate, Timesheet> existingTimesheetMap = existingTimesheets.stream()
-          .collect(Collectors.toMap(Timesheet::getTimesheetDate, Function.identity()));
+        Map<Map.Entry<LocalDate, Byte>, Timesheet> existingTimesheetMap = existingTimesheets.stream()
+          .collect(Collectors.toMap(ts -> Map.entry(ts.getTimesheetDate(), ts.getRateType()), // Composite key
+            Function.identity()));
 
         List<Timesheet> timesheetsToUpdate = new ArrayList<>();
         List<Timesheet> timesheetsToInsert = new ArrayList<>();
 
         for (Timesheet timesheetForDay : timesheets) {
-            Timesheet existing = existingTimesheetMap.get(timesheetForDay.getTimesheetDate());
+            Timesheet existing = existingTimesheetMap.get(Map.entry(timesheetForDay.getTimesheetDate(), timesheetForDay.getRateType()));
             if (existing != null) {
                 // Update existing timesheet
                 existing.setHours(timesheetForDay.getHours());

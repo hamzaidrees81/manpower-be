@@ -14,6 +14,7 @@ import java.time.LocalDate;
 @Table(name = "asset")
 public class Asset {
   @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id", nullable = false)
   private Integer id;
 
@@ -43,7 +44,7 @@ public class Asset {
   private String designation;
 
   @Column(name = "passport")
-  private Integer passport;
+  private String passport;
 
   @Column(name = "passport_expiry")
   private LocalDate passportExpiry;
@@ -55,6 +56,6 @@ public class Asset {
   private Byte assetType;
 
   @Column(name = "asset_number", nullable = false)
-  private Integer assetNumber;
+  private Integer assetNumber; //TODO: WHAT IS THIS?
 
 }

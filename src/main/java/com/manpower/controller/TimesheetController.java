@@ -42,11 +42,11 @@ public class TimesheetController {
           .orElse(ResponseEntity.notFound().build());
     }
 
-    @PutMapping
-    public Timesheet updateTimesheetForMonth(@RequestBody List<Timesheet> timesheet) {
-        return timesheetService.updateTimesheetForMonth(timesheet);
+    @PutMapping("/update-timesheet")
+    public  ResponseEntity<Void> updateTimesheetForMonth(@RequestBody List<Timesheet> timesheet) {
+        timesheetService.updateTimesheetForMonth(timesheet);
+        return ResponseEntity.ok().build();
     }
-
 
     @PostMapping
     public Timesheet createTimesheet(@RequestBody Timesheet timesheet) {

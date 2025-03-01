@@ -2,6 +2,7 @@ package com.manpower.service;
 
 import com.manpower.model.Client;
 import com.manpower.repository.ClientRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +23,7 @@ public class ClientService {
         return clientRepository.findById(id);
     }
 
+    @Transactional
     public Client createClient(Client client) {
         return clientRepository.save(client);
     }
