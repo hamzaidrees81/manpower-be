@@ -1,6 +1,5 @@
 package com.manpower.service;
 
-import com.manpower.model.AssetDesignation;
 import com.manpower.model.AssetProject;
 import com.manpower.repository.AssetProjectRepository;
 import org.springframework.stereotype.Service;

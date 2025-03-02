@@ -1,29 +1,27 @@
 package com.manpower.service;
 
 import com.manpower.common.Contants;
+import com.manpower.model.AssetProject;
 import com.manpower.model.Timesheet;
+import com.manpower.repository.AssetProjectRepository;
 import com.manpower.repository.TimesheetRepository;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
+import jakarta.validation.constraints.NotNull;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.YearMonth;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class TimesheetService {
     private final TimesheetRepository timesheetRepository;
-
-    public TimesheetService(TimesheetRepository timesheetRepository) {
-        this.timesheetRepository = timesheetRepository;
-    }
+    private final AssetProjectRepository assetProjectRepository;
 
     public List<Timesheet> getAllTimesheets() {
         return timesheetRepository.findAll();
@@ -92,16 +90,39 @@ public class TimesheetService {
         List<Timesheet> timesheetsToUpdate = new ArrayList<>();
         List<Timesheet> timesheetsToInsert = new ArrayList<>();
 
+        Map<Integer, AssetProject> assetProjectMap = new HashMap<>();
+
         for (Timesheet timesheetForDay : timesheets) {
+
+            AssetProject assetProject;
+
+            if(assetProjectMap.containsKey(timesheetForDay.getAsset().getId())) {
+                assetProject = assetProjectMap.get(timesheetForDay.getAsset().getId());
+            }
+            else {
+                //get rate for this project entry if not exist in map
+                Optional<AssetProject> assetProjectTemp = assetProjectRepository.findById(timesheetForDay.getAssetProject().getId());
+
+                if (assetProjectTemp.isEmpty()) {
+                    throw new RuntimeException("Invalid asset project");
+                }
+                assetProjectMap.put(assetProjectTemp.get().getId(), assetProjectTemp.get());
+                assetProject = assetProjectTemp.get();
+            }
+
             Timesheet existing = existingTimesheetMap.get(Map.entry(timesheetForDay.getTimesheetDate(), timesheetForDay.getRateType()));
             if (existing != null) {
                 // Update existing timesheet
                 existing.setHours(timesheetForDay.getHours());
                 existing.setRateType(timesheetForDay.getRateType());
                 existing.setInvoiceNumber(timesheetForDay.getInvoiceNumber());
+                existing.setRate(getRate(assetProject, existing.getRateType()));
+                existing.setRatePaid(getPaidRate(assetProject, existing.getRateType()));
                 timesheetsToUpdate.add(existing);
             } else {
                 // Prepare new timesheet entry
+                timesheetForDay.setRate(getRate(assetProject, timesheetForDay.getRateType()));
+                timesheetForDay.setRatePaid(getPaidRate(assetProject, timesheetForDay.getRateType()));
                 timesheetsToInsert.add(timesheetForDay);
             }
         }
@@ -114,4 +135,19 @@ public class TimesheetService {
             timesheetRepository.saveAll(timesheetsToInsert); // Single batch insert
         }
     }
+
+    private BigDecimal getRate(AssetProject assetProject, @NotNull Byte rateType) {
+        if(rateType == Contants.RateType.REGULAR.getValue())
+            return assetProject.getRegularRate();
+        else
+            return assetProject.getOvertimeRate();
+    }
+
+    private BigDecimal getPaidRate(AssetProject assetProject, @NotNull Byte rateType) {
+        if(rateType == Contants.RateType.REGULAR.getValue())
+            return assetProject.getRegularRatePaid();
+        else
+            return assetProject.getOvertimeRatePaid();
+    }
+
 }

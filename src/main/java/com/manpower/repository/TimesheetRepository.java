@@ -1,6 +1,5 @@
 package com.manpower.repository;
 
-import com.manpower.model.Asset;
 import com.manpower.model.Timesheet;
 import org.springframework.data.jpa.repository.JpaRepository;
 
