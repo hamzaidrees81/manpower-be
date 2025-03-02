@@ -28,6 +28,7 @@ CREATE TABLE `asset_project` (
   `asset_id` int NOT NULL,
   `project_id` int NOT NULL,
   `designation` int NOT NULL,
+  `asset_project_name` varchar(45) DEFAULT NULL,
   `regular_rate` decimal(10,2) NOT NULL,
   `overtime_rate` decimal(10,2) NOT NULL,
   `regular_rate_paid` decimal(10,2) NOT NULL,
@@ -45,7 +46,7 @@ CREATE TABLE `asset_project` (
   CONSTRAINT `asset_project_ibfk_2` FOREIGN KEY (`asset_id`) REFERENCES `asset` (`id`) ON DELETE CASCADE,
   CONSTRAINT `asset_project_ibfk_3` FOREIGN KEY (`project_id`) REFERENCES `project` (`id`) ON DELETE CASCADE,
   CONSTRAINT `asset_project_ibfk_4` FOREIGN KEY (`designation`) REFERENCES `designation` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf32;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf32;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --

@@ -25,17 +25,19 @@ DROP TABLE IF EXISTS `timesheet`;
 CREATE TABLE `timesheet` (
   `id` int NOT NULL AUTO_INCREMENT,
   `asset_id` int NOT NULL,
-  `project_id` int NOT NULL,
+  `asset_project_id` int NOT NULL,
   `timesheet_date` date NOT NULL,
-  `rate_type` tinyint NOT NULL,
   `hours` decimal(5,2) NOT NULL,
+  `rate_type` tinyint NOT NULL,
+  `rate` decimal(5,2) DEFAULT NULL,
+  `rate_paid` decimal(5,2) DEFAULT NULL,
   `invoice_number` int NOT NULL,
   PRIMARY KEY (`id`),
   KEY `asset_id` (`asset_id`),
-  KEY `project_id` (`project_id`),
-  CONSTRAINT `timesheet_ibfk_1` FOREIGN KEY (`asset_id`) REFERENCES `asset` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `timesheet_ibfk_2` FOREIGN KEY (`project_id`) REFERENCES `project` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf32;
+  KEY `timesheet_asset_proj_fk_1_idx` (`asset_project_id`),
+  CONSTRAINT `timesheet_asset_proj_fk_1` FOREIGN KEY (`asset_project_id`) REFERENCES `asset_project` (`id`),
+  CONSTRAINT `timesheet_ibfk_1` FOREIGN KEY (`asset_id`) REFERENCES `asset` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf32;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
