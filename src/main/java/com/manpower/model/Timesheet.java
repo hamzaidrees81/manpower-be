@@ -26,8 +26,8 @@ public class Timesheet {
 
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @OnDelete(action = OnDeleteAction.CASCADE)
-  @JoinColumn(name = "project_id", nullable = false)
-  private Project project;
+  @JoinColumn(name = "asset_project_id", nullable = false)
+  private AssetProject assetProject;
 
   @Column(name = "timesheet_date", nullable = false)
   private LocalDate timesheetDate;

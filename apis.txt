@@ -141,7 +141,7 @@ Verify if project is added...
 
 
 
-6. Update timesheet (pass dates, project and other details)
+6. Update timesheet (pass dates, asset project and other details)
 
 Add a dummy entry for regular and OT... It inserts and updates both...
 [
@@ -149,7 +149,7 @@ Add a dummy entry for regular and OT... It inserts and updates both...
     "asset": {
       "id": 2
     },
-    "project": {
+    "assetProject": {
       "id": 1
     },
     "timesheetDate": "2025-03-01",
@@ -161,7 +161,7 @@ Add a dummy entry for regular and OT... It inserts and updates both...
     "asset": {
       "id": 2
     },
-    "project": {
+    "assetProject": {
       "id": 1
     },
     "timesheetDate": "2025-03-01",
