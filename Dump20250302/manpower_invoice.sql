@@ -30,6 +30,8 @@ CREATE TABLE `invoice` (
   `status` tinyint NOT NULL DEFAULT '0',
   `total_amount` decimal(10,2) NOT NULL,
   `cleared_date` date DEFAULT NULL,
+  `start_date` date DEFAULT NULL,
+  `end_date` date DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `number` (`number`),
   KEY `company_id` (`company_id`),
