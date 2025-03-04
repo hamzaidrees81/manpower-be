@@ -15,12 +15,12 @@ public class Expense {
   @Column(name = "id", nullable = false)
   private Integer id;
 
-  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @ManyToOne(fetch = FetchType.EAGER, optional = false)
   @OnDelete(action = OnDeleteAction.CASCADE)
   @JoinColumn(name = "company_id", nullable = false)
   private Company company;
 
-  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @ManyToOne(fetch = FetchType.EAGER, optional = false)
   @OnDelete(action = OnDeleteAction.CASCADE)
   @JoinColumn(name = "asset_id", nullable = false)
   private Asset asset;
@@ -31,7 +31,7 @@ public class Expense {
   @Column(name = "amount", nullable = false)
   private Integer amount;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.EAGER)
   @OnDelete(action = OnDeleteAction.SET_NULL)
   @JoinColumn(name = "expense_project")
   private com.manpower.model.Project expenseProject;
