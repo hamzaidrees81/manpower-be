@@ -1,5 +1,5 @@
 1. Create a Company. ONLY SYSTEM ADMIN can create a company or view its CRUD.
-
+✅
  {
     "id": 1,
     "name": "SAUDI TECH",
@@ -7,7 +7,7 @@
     "maxAssetCount": 5
   }
 
-
+✅
 2. Create a user for the company
   {
   "username": "Admin",
@@ -31,7 +31,7 @@ Authenticate -> /login
   "password": "Admin123"
 }
 
-
+✅
 4. Add Client:
 
 {
@@ -43,13 +43,13 @@ Authenticate -> /login
 
 call get to verify...
 
-
+✅
 5. Add Project: Project Controller
 
 {
   "company": {
     "id": 1
-  },
+  }, --
   "client": {
     "id": 1
   },
@@ -77,7 +77,7 @@ Verify if project is added...
 
 
 
-
+✅
 6. Add Asset - set asset company, asset sponsor company, type, etc...
 
 {
@@ -93,15 +93,15 @@ Verify if project is added...
   "phone": "",
   "designation": "",
   "passport": "AB1234",
-  "passportExpiry": "2025-03-01",
-  "joiningDate": "2025-03-01",
+  "passportExpiry": "2025-03-01", Document Expiry
+      "joiningDate": "2025-03-01",
   "assetType": "1",
   "assetNumber": 123
 }
 
 
-
-6. Add Designations list
+✅
+6. Add designations list
 
 {
   "name": "QC Engineer"
@@ -109,7 +109,7 @@ Verify if project is added...
 
 
 
-
+✅
 7. Assign Project to Asset
 
 {
@@ -134,6 +134,7 @@ Verify if project is added...
   "isActive": "1",
   "status": "1"
 }
+name projct ---
 
 
 
