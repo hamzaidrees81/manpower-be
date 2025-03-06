@@ -32,6 +32,8 @@ CREATE TABLE `timesheet` (
   `rate` decimal(5,2) DEFAULT NULL,
   `rate_paid` decimal(5,2) DEFAULT NULL,
   `invoice_number` int NOT NULL,
+  `row_sr_no` int DEFAULT NULL,
+  `week_index` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `asset_id` (`asset_id`),
   KEY `timesheet_asset_proj_fk_1_idx` (`asset_project_id`),

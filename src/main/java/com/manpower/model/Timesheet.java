@@ -53,4 +53,10 @@ public class Timesheet {
   @Column(name = "invoice_number", nullable = false)
   private Integer invoiceNumber;
 
+  @Column(name = "row_sr_no")
+  private Integer rowSrNo;
+
+  @Column(name = "week_index")
+  private Integer weekIndex;
+
 }
