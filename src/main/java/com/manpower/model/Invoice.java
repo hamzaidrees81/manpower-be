@@ -23,32 +23,40 @@ public class Invoice {
   private Integer id;
 
   @NotNull
-  @ManyToOne(fetch = FetchType.EAGER, optional = false)
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @OnDelete(action = OnDeleteAction.CASCADE)
   @JoinColumn(name = "company_id", nullable = false)
   private Company company;
 
   @NotNull
-  @ManyToOne(fetch = FetchType.EAGER, optional = false)
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @OnDelete(action = OnDeleteAction.CASCADE)
   @JoinColumn(name = "client_id", nullable = false)
   private Client client;
 
   @Size(max = 50)
   @NotNull
-  @Column(name = "number", nullable = false, length = 50)
+  @Column(name = "number", length = 50)
   private String number;
 
   @NotNull
-  @ColumnDefault("0")
-  @Column(name = "status", nullable = false)
+  @ColumnDefault("1")  //1. unpaid; 2. Paid
+  @Column(name = "status")
   private Byte status;
 
   @NotNull
-  @Column(name = "total_amount", nullable = false, precision = 10, scale = 2)
+  @Column(name = "total_amount", precision = 10, scale = 2)
   private BigDecimal totalAmount;
 
   @Column(name = "cleared_date")
   private LocalDate clearedDate;
+
+  @NotNull
+  @Column(name = "start_date", nullable = false)
+  private LocalDate startDate;
+
+  @NotNull
+  @Column(name = "end_date", nullable = false)
+  private LocalDate endDate;
 
 }

@@ -44,7 +44,7 @@ public class TimesheetService {
 
     }
 
-    public Optional<Timesheet> getTimesheetByAssetYearMonth(Integer assetId, String year, String month) {
+    public Optional<List<Timesheet>> getTimesheetByAssetYearMonth(Integer assetId, String year, String month) {
 
         //calculate date for timesheet
         // Convert String to Integer
@@ -60,7 +60,7 @@ public class TimesheetService {
 
     /**
      * iterate over timesheet dates and add hours
-     * @param timesheet
+     * @param
      * @return
      */
     @Transactional
@@ -150,4 +150,7 @@ public class TimesheetService {
             return assetProject.getOvertimeRatePaid();
     }
 
+    public Optional<List<Timesheet>> getTimesheetByAssetOnProjectBetweenDate(Integer assetId, Integer assetProjectId, @NotNull LocalDate startDate, @NotNull LocalDate endDate) {
+        return timesheetRepository.getTimesheetsByAssetIdAndAssetProjectIdAndTimesheetDateBetween(assetId, assetProjectId, startDate, endDate);
+    }
 }

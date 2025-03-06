@@ -30,14 +30,14 @@ public class TimesheetController {
 
     /**
      * get time sheet by month for a resource
-     * @param empId
+     * @param assetId
      * @param year
      * @param month
      * @return
      */
-    @GetMapping("sheet/{empId}/{year}/{month}")
-    public ResponseEntity<Timesheet> getTimesheetByEmployeeYearMonth(@PathVariable Integer empId, @PathVariable String year, @PathVariable String month) {
-        return timesheetService.getTimesheetByAssetYearMonth(empId, year, month)
+    @GetMapping("sheet/{assetId}/{year}/{month}")
+    public ResponseEntity<List<Timesheet>> getTimesheetByEmployeeYearMonth(@PathVariable Integer assetId, @PathVariable String year, @PathVariable String month) {
+        return timesheetService.getTimesheetByAssetYearMonth(assetId, year, month)
           .map(ResponseEntity::ok)
           .orElse(ResponseEntity.notFound().build());
     }

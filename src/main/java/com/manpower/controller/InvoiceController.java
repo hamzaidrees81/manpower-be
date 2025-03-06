@@ -2,6 +2,7 @@ package com.manpower.controller;
 
 import com.manpower.model.Invoice;
 import com.manpower.model.InvoiceAsset;
+import com.manpower.model.InvoiceWithAsset;
 import com.manpower.service.InvoiceService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -42,6 +43,10 @@ public class InvoiceController {
           .orElse(ResponseEntity.notFound().build());
     }
 
+    @PostMapping("/create-invoice-with-assets")
+    public Invoice createInvoiceWithAssets(@RequestBody InvoiceWithAsset invoiceAndAssets) {
+        return invoiceService.createInvoiceWithAssets(invoiceAndAssets);
+    }
 
     @PostMapping
     public Invoice createInvoice(@RequestBody Invoice invoice) {

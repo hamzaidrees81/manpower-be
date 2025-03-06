@@ -1,5 +1,7 @@
 package com.manpower.common;
 
+import lombok.Getter;
+
 public class Contants {
 
   public enum AssetType {
@@ -37,7 +39,6 @@ public class Contants {
     }
   }
 
-
   public enum RateType {
     REGULAR(1),
     OVERTIME(2);
@@ -57,6 +58,27 @@ public class Contants {
         }
       }
       throw new IllegalArgumentException("Invalid RateType value: " + value);
+    }
+  }
+
+  @Getter
+  public enum InvoiceStatus {
+    DELETED((byte) 0),
+    UNPAID((byte) 1),
+    PAID((byte) 2);
+
+    private final Byte value;
+    InvoiceStatus(Byte value) {
+      this.value = value;
+    }
+
+    public static InvoiceStatus fromValue(Byte value) {
+      for (InvoiceStatus rate : InvoiceStatus.values()) {
+        if (rate.getValue() == value) {
+          return rate;
+        }
+      }
+      throw new IllegalArgumentException("Invalid InvoiceStatus value: " + value);
     }
   }
 

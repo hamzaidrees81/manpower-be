@@ -1,10 +1,13 @@
 package com.manpower.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+
+import java.math.BigDecimal;
 
 @Getter
 @Setter
@@ -12,17 +15,36 @@ import org.hibernate.annotations.OnDeleteAction;
 @Table(name = "invoice_asset")
 public class InvoiceAsset {
   @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id", nullable = false)
   private Integer id;
 
-  @ManyToOne(fetch = FetchType.EAGER, optional = false)
+  @NotNull
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @OnDelete(action = OnDeleteAction.CASCADE)
   @JoinColumn(name = "invoice_id", nullable = false)
   private Invoice invoice;
 
-  @ManyToOne(fetch = FetchType.EAGER, optional = false)
+  @NotNull
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @OnDelete(action = OnDeleteAction.CASCADE)
   @JoinColumn(name = "asset_id", nullable = false)
   private Asset asset;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "project_id")
+  private AssetProject assetProject;
+
+  @Column(name = "standard_hours", precision = 5, scale = 2)
+  private BigDecimal standardHours;
+
+  @Column(name = "standard_rate", precision = 5, scale = 2)
+  private BigDecimal standardRate;
+
+  @Column(name = "ot_rate", precision = 5, scale = 2)
+  private BigDecimal otRate;
+
+  @Column(name = "ot_hours", precision = 5, scale = 2)
+  private BigDecimal otHours;
 
 }
