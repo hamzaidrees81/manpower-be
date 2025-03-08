@@ -71,6 +71,11 @@ public class Contants {
       }
       throw new IllegalArgumentException("Invalid RateType value: " + value);
     }
+
+    public enum Claims{
+      USER_ID,
+      COMPANY_ID
+    }
   }
 
   @Getter
