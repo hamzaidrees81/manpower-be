@@ -1,5 +1,6 @@
 package com.manpower.controller;
 
+import com.manpower.dto.InvoiceMetadata;
 import com.manpower.model.Invoice;
 import com.manpower.model.InvoiceAsset;
 import com.manpower.model.InvoiceWithAsset;
@@ -46,6 +47,11 @@ public class InvoiceController {
     @PostMapping("/create-invoice-with-assets")
     public Invoice createInvoiceWithAssets(@RequestBody InvoiceWithAsset invoiceAndAssets) {
         return invoiceService.createInvoiceWithAssets(invoiceAndAssets);
+    }
+
+    @PostMapping("/prepare-invoice")
+    public void prepareInvoice(@RequestBody InvoiceMetadata invoiceMetadata) {
+        invoiceService.createInvoiceTemplateFromClient(invoiceMetadata);
     }
 
     @PostMapping

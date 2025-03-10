@@ -1,6 +1,7 @@
 package com.manpower.service;
 
 import com.manpower.common.Contants;
+import com.manpower.dto.InvoiceMetadata;
 import com.manpower.model.*;
 import com.manpower.repository.AssetRepository;
 import com.manpower.repository.InvoiceAssetRepository;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -146,4 +148,17 @@ public class InvoiceService {
         }
         return null;
     }
+
+    public void createInvoiceTemplateFromClient(InvoiceMetadata invoiceMetadata) {
+
+        //find all projects of this client
+//        List<Project> clientProjects = projectService.findProjectByClientAndDate
+//          (invoiceMetadata.getClient(), invoiceMetadata.getStartDate(), invoiceMetadata.getEndDate());
+
+        List<Project> clientProjects = projectService.findProjectByClient(invoiceMetadata.getClient());
+
+        int a=0;
+
+    }
+
 }
