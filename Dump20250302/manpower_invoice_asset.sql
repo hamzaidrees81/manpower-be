@@ -26,17 +26,18 @@ CREATE TABLE `invoice_asset` (
   `id` int NOT NULL AUTO_INCREMENT,
   `invoice_id` int NOT NULL,
   `asset_id` int NOT NULL,
-  `project_id` int DEFAULT NULL,
+  `asset_project_id` int DEFAULT NULL,
   `standard_hours` decimal(5,2) DEFAULT NULL,
-  `ot_hours` decimal(5,2) DEFAULT NULL,
   `standard_rate` decimal(5,2) DEFAULT NULL,
   `ot_rate` decimal(5,2) DEFAULT NULL,
+  `ot_hours` decimal(5,2) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `invoice_id` (`invoice_id`),
   KEY `asset_id` (`asset_id`),
+  KEY `invoice_asset_ibfk_3_idx` (`asset_project_id`),
   CONSTRAINT `invoice_asset_ibfk_1` FOREIGN KEY (`invoice_id`) REFERENCES `invoice` (`id`) ON DELETE CASCADE,
   CONSTRAINT `invoice_asset_ibfk_2` FOREIGN KEY (`asset_id`) REFERENCES `asset` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `invoice_asset_ibfk_3` FOREIGN KEY (`project_id`) REFERENCES `project` (`id`)
+  CONSTRAINT `invoice_asset_ibfk_3` FOREIGN KEY (`asset_project_id`) REFERENCES `asset_project` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf32;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
