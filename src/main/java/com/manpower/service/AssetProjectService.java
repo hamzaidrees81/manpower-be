@@ -1,6 +1,7 @@
 package com.manpower.service;
 
 import com.manpower.model.AssetProject;
+import com.manpower.model.Client;
 import com.manpower.repository.AssetProjectRepository;
 import org.springframework.stereotype.Service;
 
@@ -40,4 +41,9 @@ public class AssetProjectService {
     public List<AssetProject> getProjectsByAssetBetweenDate(Integer assetId, LocalDate startDate, LocalDate endDate) {
         return assetProjectRepository.findProjectsByAsset_IdAndStartDateGreaterThanEqualAndEndDateLessThanEqual(assetId, startDate, endDate);
     }
+
+    public List<AssetProject> findProjectByClientAndDate(Client client, LocalDate endDate) {
+        return assetProjectRepository.findAssetsByClientAndProjectEndDate(client, endDate);
+    }
+
 }

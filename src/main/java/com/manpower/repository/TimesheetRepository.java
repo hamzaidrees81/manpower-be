@@ -12,4 +12,5 @@ public interface TimesheetRepository extends JpaRepository<Timesheet, Integer> {
   public Optional<List<Timesheet>> getTimesheetByAssetIdAndTimesheetDateBetween(Integer assetId, LocalDate timesheetDateAfter, LocalDate timesheetDateBefore);
   public List<Timesheet> findByAssetIdAndTimesheetDateIn(Integer assetId, List<LocalDate> timesheetDates);
   public Optional<List<Timesheet>> getTimesheetsByAssetIdAndAssetProjectIdAndTimesheetDateBetween(Integer assetId, Integer assetProjectId, LocalDate timesheetDateAfter, LocalDate timesheetDateBefore);
+  public List<Timesheet> findByAssetIdAndAssetProjectIdAndTimesheetDateBetween(Integer assetId, Integer assetProjectId, LocalDate startDate,  LocalDate endDate);
   }

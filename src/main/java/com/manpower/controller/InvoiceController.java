@@ -4,6 +4,7 @@ import com.manpower.dto.InvoiceMetadata;
 import com.manpower.model.Invoice;
 import com.manpower.model.InvoiceAsset;
 import com.manpower.model.InvoiceWithAsset;
+import com.manpower.model.dto.DetailedInvoice;
 import com.manpower.service.InvoiceService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -50,8 +51,8 @@ public class InvoiceController {
     }
 
     @PostMapping("/prepare-invoice")
-    public void prepareInvoice(@RequestBody InvoiceMetadata invoiceMetadata) {
-        invoiceService.createInvoiceTemplateFromClient(invoiceMetadata);
+    public DetailedInvoice prepareInvoice(@RequestBody InvoiceMetadata invoiceMetadata) {
+        return invoiceService.createInvoiceTemplateFromClient(invoiceMetadata);
     }
 
     @PostMapping

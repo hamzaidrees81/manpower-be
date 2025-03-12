@@ -31,7 +31,7 @@ CREATE TABLE `timesheet` (
   `rate_type` tinyint NOT NULL,
   `rate` decimal(5,2) DEFAULT NULL,
   `rate_paid` decimal(5,2) DEFAULT NULL,
-  `invoice_number` int NOT NULL,
+  `invoice_number` int ,
   `row_sr_no` int DEFAULT NULL,
   `week_index` int DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -39,7 +39,7 @@ CREATE TABLE `timesheet` (
   KEY `timesheet_asset_proj_fk_1_idx` (`asset_project_id`),
   CONSTRAINT `timesheet_asset_proj_fk_1` FOREIGN KEY (`asset_project_id`) REFERENCES `asset_project` (`id`),
   CONSTRAINT `timesheet_ibfk_1` FOREIGN KEY (`asset_id`) REFERENCES `asset` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf32;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf32;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --

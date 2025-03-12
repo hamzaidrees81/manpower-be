@@ -2,6 +2,7 @@ package com.manpower.service;
 
 import com.manpower.model.Client;
 import com.manpower.model.Project;
+import com.manpower.repository.AssetProjectRepository;
 import com.manpower.repository.ProjectRepository;
 import org.springframework.stereotype.Service;
 
@@ -13,10 +14,12 @@ import java.util.Optional;
 @Service
 public class ProjectService {
     private final ProjectRepository projectRepository;
+  private final AssetProjectRepository assetProjectRepository;
 
-    public ProjectService(ProjectRepository projectRepository) {
+  public ProjectService(ProjectRepository projectRepository, AssetProjectRepository assetProjectRepository) {
         this.projectRepository = projectRepository;
-    }
+    this.assetProjectRepository = assetProjectRepository;
+  }
 
     public List<Project> getAllProjects() {
         return projectRepository.findAll();
@@ -46,10 +49,6 @@ public class ProjectService {
     public void deleteProject(Integer id) {
         projectRepository.deleteById(id);
     }
-
-  public List<Project> findProjectByClientAndDate(Client client, LocalDate startDate, LocalDate endDate) {
-      return projectRepository.findProjectByClientAndStartDateGreaterThanEqualAndEndDateLessThanEqual(client, startDate, endDate);
-  }
 
   public List<Project> findProjectByClient(Client client) {
     return projectRepository.findProjectByClient(client);

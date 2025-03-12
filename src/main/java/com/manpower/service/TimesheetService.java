@@ -153,4 +153,8 @@ public class TimesheetService {
     public Optional<List<Timesheet>> getTimesheetByAssetOnProjectBetweenDate(Integer assetId, Integer assetProjectId, @NotNull LocalDate startDate, @NotNull LocalDate endDate) {
         return timesheetRepository.getTimesheetsByAssetIdAndAssetProjectIdAndTimesheetDateBetween(assetId, assetProjectId, startDate, endDate);
     }
+
+    public List<Timesheet> getTimesheetByAssetAndProjectAndDateRange(Integer assetId, Integer assetProjectId, LocalDate startDate, LocalDate endDate) {
+        return timesheetRepository.findByAssetIdAndAssetProjectIdAndTimesheetDateBetween(assetId, assetProjectId, startDate, endDate);
+    }
 }

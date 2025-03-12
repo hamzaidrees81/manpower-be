@@ -10,7 +10,10 @@ import java.util.List;
 
 public interface ProjectRepository extends JpaRepository<Project, Integer> {
 //  public List<Project> findProjectByClientAndDate(Client client, Date startDate, Date endDate) {
-  List<Project> findProjectByClientAndStartDateGreaterThanEqualAndEndDateLessThanEqual(Client client, LocalDate startDate, LocalDate endDate);
+
+  //on-going project is a project which end date is greater or equal to our start date
+  List<Project> findProjectByClientAndEndDateGreaterThanEqual(Client client, LocalDate startDate);
+
   List<Project> findProjectByClient(Client client);
 
 }
