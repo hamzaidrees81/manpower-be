@@ -6,11 +6,9 @@ import com.manpower.model.*;
 import com.manpower.model.dto.DetailedAssetInvoice;
 import com.manpower.model.dto.DetailedInvoice;
 import com.manpower.model.dto.DetailedProjectInvoice;
-import com.manpower.repository.AssetRepository;
-import com.manpower.repository.ClientRepository;
-import com.manpower.repository.InvoiceAssetRepository;
-import com.manpower.repository.InvoiceRepository;
+import com.manpower.repository.*;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -18,6 +16,7 @@ import java.util.*;
 
 
 @Service
+@RequiredArgsConstructor
 public class InvoiceService {
     private final InvoiceRepository invoiceRepository;
     private final InvoiceAssetRepository invoiceAssetRepository;
@@ -26,16 +25,7 @@ public class InvoiceService {
     private final AssetProjectService assetProjectService;
     private final TimesheetService timesheetService;
     private final ClientRepository clientRepository;
-
-    public InvoiceService(InvoiceRepository invoiceRepository, InvoiceAssetRepository invoiceAssetRepository, AssetRepository assetRepository, ProjectService projectService, AssetProjectService assetProjectService, TimesheetService timesheetService, ClientRepository clientRepository) {
-        this.invoiceRepository = invoiceRepository;
-      this.invoiceAssetRepository = invoiceAssetRepository;
-        this.assetRepository = assetRepository;
-        this.projectService = projectService;
-        this.assetProjectService = assetProjectService;
-        this.timesheetService = timesheetService;
-        this.clientRepository = clientRepository;
-    }
+    private final CompanyRepository companyRepository;
 
     public List<Invoice> getAllInvoices() {
         return invoiceRepository.findAll();
@@ -46,8 +36,61 @@ public class InvoiceService {
     }
 
     @Transactional
-    public Invoice createInvoice(Invoice invoice) {
-        return invoiceRepository.save(invoice);
+    public Invoice createInvoice(DetailedInvoice detailedInvoice) {
+
+        //TODO: HARD CODED COMPANY
+        Integer companyId = 1;
+
+        String clientId = detailedInvoice.getClientId();
+
+        //create invoiceBuilder
+        Invoice.InvoiceBuilder invoiceBuilder = Invoice.builder();
+
+        // Fetch existing client
+        Client existingClient = clientRepository.findById(Integer.valueOf(clientId))
+          .orElseThrow(() -> new RuntimeException("Client not found"));
+
+        // Fetch existing company
+        Company existingCompany = companyRepository.findById(companyId)
+          .orElseThrow(() -> new RuntimeException("Company not found"));
+        invoiceBuilder.company(existingCompany);
+
+        invoiceBuilder.client(existingClient);
+        invoiceBuilder.status(Contants.InvoiceStatus.UNPAID.getValue());
+        invoiceBuilder.startDate(detailedInvoice.getStartDate());
+        invoiceBuilder.endDate(detailedInvoice.getEndDate());
+        invoiceBuilder.createDate(detailedInvoice.getInvoiceDate());
+        invoiceBuilder.totalAmount(detailedInvoice.getTotalAmount());
+
+        Invoice invoice = invoiceBuilder.build();
+        invoiceRepository.save(invoice); // Save invoice
+
+        //create invoice asset
+        for(DetailedProjectInvoice detailedProjectInvoice: detailedInvoice.getDetailedProjectInvoiceList())
+        {
+            //for every project, make entry of asset
+            Integer projectId = detailedProjectInvoice.getProjectId();
+
+            for(DetailedAssetInvoice detailedAssetInvoice: detailedProjectInvoice.getAssetInvoicesList())
+            {
+                InvoiceAsset.InvoiceAssetBuilder invoiceAsset = InvoiceAsset.builder();
+
+                AssetProject assetProject =assetProjectService.getAssetProjectById(detailedAssetInvoice.getAssetProjectId())
+                  .orElseThrow(() -> new RuntimeException("Asset Project not found"));
+                invoiceAsset.assetProject(assetProject);
+
+                Integer assetId = detailedAssetInvoice.getAssetId();
+                invoiceAsset.asset(Asset.builder().id(assetId).build());
+                invoiceAsset.invoice(invoice);
+                invoiceAsset.standardHours(detailedAssetInvoice.getRegularHours());
+                invoiceAsset.otHours(detailedAssetInvoice.getOvertimeHours());
+                invoiceAsset.standardRate(detailedAssetInvoice.getRegularRate());
+                invoiceAsset.otRate(detailedAssetInvoice.getOvertimeRate());
+
+                invoiceAssetRepository.save(invoiceAsset.build());
+            }
+        }
+        return invoice;
     }
 
     public void deleteInvoice(Integer id) {
@@ -92,66 +135,6 @@ public class InvoiceService {
         return invoiceAssetRepository.findByInvoice_Id(invoiceId);
     }
 
-    @Transactional
-    public Invoice createInvoiceWithAssets(InvoiceWithAsset invoiceAndAssets) {
-
-        int companyId = 1; //TODO: replace it from token
-
-        //create invoice
-        Invoice invoice = invoiceAndAssets.getInvoice();
-        invoice.setCompany(Company.builder().id(companyId).build());
-        invoice.setStatus(Contants.InvoiceStatus.UNPAID.getValue());
-        invoice =  createInvoice(invoiceAndAssets.getInvoice());
-
-        //using this Invoice ID, create invoice items
-
-        for(InvoiceAsset asset : invoiceAndAssets.getInvoiceAssetList()) {
-            //Step1: get the projects of this Asset for this company which this employee worked on between selected dates
-            List<AssetProject> assetProjects = assetProjectService.getProjectsByAssetBetweenDate(
-             asset.getId(), invoice.getStartDate(), invoice.getEndDate());
-
-            /**
-             * 2. Get the projects this resource is working on
-             * 3. Get the hours this resource spent on this project
-             * 4. Get the cost as well
-             * 5. Assign all this to InvoiceAsset
-             */
-            for(AssetProject assetProject : assetProjects) {
-                Optional<List<Timesheet>> timeSheetsForThisProject =
-                  timesheetService.getTimesheetByAssetOnProjectBetweenDate(asset.getAsset().getId(),
-                    assetProject.getProject().getId(),  invoice.getStartDate(), invoice.getEndDate());
-
-                BigDecimal regularHours = BigDecimal.ZERO;
-                BigDecimal overtimeHours = BigDecimal.ZERO;
-
-                if(timeSheetsForThisProject.isPresent()) {
-                    for(Timesheet timesheet : timeSheetsForThisProject.get()) {
-                        if(timesheet.getRateType() == Contants.RateType.REGULAR.getValue())
-                            regularHours = regularHours.add(timesheet.getHours());
-                        if(timesheet.getRateType() == Contants.RateType.OVERTIME.getValue())
-                            overtimeHours = overtimeHours.add(timesheet.getHours());
-                    }
-                }
-
-                //now we have hours and timesheet, let's calculate total spend on this project
-                InvoiceAsset invoiceAsset = new InvoiceAsset();
-                invoiceAsset.setInvoice(invoice);
-                invoiceAsset.setOtHours(overtimeHours);
-                invoiceAsset.setAsset(asset.getAsset());
-                invoiceAsset.setStandardHours(regularHours);
-                invoiceAsset.setAssetProject(assetProject);
-                invoiceAsset.setOtRate(assetProject.getOvertimeRate());
-                invoiceAsset.setStandardRate(assetProject.getRegularRate());
-                invoiceAssetRepository.save(invoiceAsset);
-
-            }
-
-
-
-        }
-        return null;
-    }
-
     public DetailedInvoice createInvoiceTemplateFromClient(InvoiceMetadata invoiceMetadata) {
 
         //find all ongoing projects - where end date is greather than equal to our start date
@@ -159,10 +142,13 @@ public class InvoiceService {
           (invoiceMetadata.getClient(), invoiceMetadata.getEndDate());
 
         DetailedInvoice.DetailedInvoiceBuilder detailedInvoice = DetailedInvoice.builder();
+        detailedInvoice.startDate(invoiceMetadata.getStartDate());
+        detailedInvoice.endDate(invoiceMetadata.getEndDate());
 
         //get client name from ID
         Client client = clientRepository.findById(invoiceMetadata.getClient().getId()).get();
         detailedInvoice.clientName(client.getName());
+         detailedInvoice.clientId(String.valueOf(client.getId()));
 
         Map<Integer,DetailedProjectInvoice> detailedProjectInvoiceList = new HashMap<>();
 
@@ -179,6 +165,8 @@ public class InvoiceService {
             //assign asset details to it
             detailedAssetInvoice.setAssetId(assetProject.getAsset().getId());
             detailedAssetInvoice.setAssetName(assetProject.getAsset().getName());
+            detailedAssetInvoice.setAssetType(Contants.AssetType.fromValue(assetProject.getAsset().getAssetType()));
+            detailedAssetInvoice.setAssetProjectId(assetProject.getId());
 
             //add this employee's calculation to list
             //extract the project lister from map

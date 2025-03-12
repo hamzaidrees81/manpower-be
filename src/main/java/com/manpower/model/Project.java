@@ -1,15 +1,17 @@
 package com.manpower.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDate;
 
-@Getter
-@Setter
+
+@Data
+@Builder
+@AllArgsConstructor
+@RequiredArgsConstructor
 @Entity
 @Table(name = "project")
 public class Project {

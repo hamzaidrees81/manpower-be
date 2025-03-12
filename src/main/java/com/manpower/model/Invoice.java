@@ -3,8 +3,7 @@ package com.manpower.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -12,10 +11,12 @@ import org.hibernate.annotations.OnDeleteAction;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-@Getter
-@Setter
+@Data
+@Builder
 @Entity
 @Table(name = "invoice")
+@AllArgsConstructor
+@RequiredArgsConstructor
 public class Invoice {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -59,4 +60,7 @@ public class Invoice {
   @Column(name = "end_date", nullable = false)
   private LocalDate endDate;
 
+  @NotNull
+  @Column(name = "create_date", nullable = false)
+  private LocalDate createDate;
 }

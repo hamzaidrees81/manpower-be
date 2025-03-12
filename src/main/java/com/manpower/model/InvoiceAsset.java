@@ -2,17 +2,18 @@ package com.manpower.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.math.BigDecimal;
 
-@Getter
-@Setter
+@Data
+@Builder
+@RequiredArgsConstructor
 @Entity
 @Table(name = "invoice_asset")
+@AllArgsConstructor
 public class InvoiceAsset {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,10 +32,6 @@ public class InvoiceAsset {
   @JoinColumn(name = "asset_id", nullable = false)
   private Asset asset;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "project_id")
-  private AssetProject assetProject;
-
   @Column(name = "standard_hours", precision = 5, scale = 2)
   private BigDecimal standardHours;
 
@@ -46,5 +43,9 @@ public class InvoiceAsset {
 
   @Column(name = "ot_hours", precision = 5, scale = 2)
   private BigDecimal otHours;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "asset_project_id")
+  private AssetProject assetProject;
 
 }

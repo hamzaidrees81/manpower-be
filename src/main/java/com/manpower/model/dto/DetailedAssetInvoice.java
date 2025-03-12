@@ -1,5 +1,6 @@
 package com.manpower.model.dto;
 
+import com.manpower.common.Contants;
 import lombok.Builder;
 import lombok.Data;
 
@@ -9,10 +10,12 @@ import java.math.BigDecimal;
 @Builder
 public class DetailedAssetInvoice {
   Integer assetId;
+  Integer assetProjectId;
   String assetName;
   BigDecimal regularHours;
-  BigDecimal overtimeHours;
   BigDecimal regularRate;
+  BigDecimal overtimeHours;
   BigDecimal overtimeRate;
   BigDecimal totalAmount;
+  Contants.AssetType assetType;
 }

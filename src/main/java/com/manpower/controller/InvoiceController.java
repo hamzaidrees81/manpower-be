@@ -45,10 +45,6 @@ public class InvoiceController {
           .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping("/create-invoice-with-assets")
-    public Invoice createInvoiceWithAssets(@RequestBody InvoiceWithAsset invoiceAndAssets) {
-        return invoiceService.createInvoiceWithAssets(invoiceAndAssets);
-    }
 
     @PostMapping("/prepare-invoice")
     public DetailedInvoice prepareInvoice(@RequestBody InvoiceMetadata invoiceMetadata) {
@@ -56,8 +52,8 @@ public class InvoiceController {
     }
 
     @PostMapping
-    public Invoice createInvoice(@RequestBody Invoice invoice) {
-        return invoiceService.createInvoice(invoice);
+    public Invoice createInvoice(@RequestBody DetailedInvoice detailedInvoice) {
+        return invoiceService.createInvoice(detailedInvoice);
     }
 
     @PutMapping("/{id}")

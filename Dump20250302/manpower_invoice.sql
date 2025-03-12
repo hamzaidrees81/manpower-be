@@ -31,6 +31,7 @@ CREATE TABLE `invoice` (
   `total_amount` decimal(10,2) NOT NULL,
   `cleared_date` date DEFAULT NULL,
   `start_date` date DEFAULT NULL,
+  `create_date` date DEFAULT NULL,
   `end_date` date DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `number` (`number`),
