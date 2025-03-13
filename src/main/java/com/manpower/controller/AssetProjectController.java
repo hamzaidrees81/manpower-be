@@ -1,5 +1,6 @@
 package com.manpower.controller;
 
+import com.manpower.common.Contants;
 import com.manpower.model.AssetProject;
 import com.manpower.service.AssetProjectService;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +27,12 @@ public class AssetProjectController {
         return assetProjectService.getAssetProjectById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/{assetId}/{assetProjectStatus}")
+    public ResponseEntity<List<AssetProject>> getAssetProjectByAssetId(@PathVariable Integer assetId, @PathVariable Contants.AssetProjectStatus assetProjectStatus) {
+        List<AssetProject> assetProjects =  assetProjectService.getAssetProjectByAssetId(assetId, assetProjectStatus);
+        return ResponseEntity.ok(assetProjects);
     }
 
     @PostMapping

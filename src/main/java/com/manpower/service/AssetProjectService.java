@@ -1,5 +1,6 @@
 package com.manpower.service;
 
+import com.manpower.common.Contants;
 import com.manpower.model.AssetProject;
 import com.manpower.model.Client;
 import com.manpower.repository.AssetProjectRepository;
@@ -46,4 +47,7 @@ public class AssetProjectService {
         return assetProjectRepository.findAssetsByClientAndProjectEndDate(client, endDate);
     }
 
+    public List<AssetProject> getAssetProjectByAssetId(Integer assetId, Contants.AssetProjectStatus assetProjectStatus) {
+        return assetProjectRepository.findProjectsByAsset_IdAndIsActive(assetId, assetProjectStatus.getValue());
+    }
 }

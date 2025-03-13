@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 public interface AssetProjectRepository extends JpaRepository<AssetProject, Integer> {
@@ -18,4 +17,5 @@ public interface AssetProjectRepository extends JpaRepository<AssetProject, Inte
   List<AssetProject> findAssetsByClientAndProjectEndDate(@Param("client") Client client,
                                                          @Param("endDate") LocalDate endDate);
 
+  List<AssetProject> findProjectsByAsset_IdAndIsActive(Integer assetId, @NotNull Byte status);
 }

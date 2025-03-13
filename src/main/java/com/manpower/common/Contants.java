@@ -2,6 +2,8 @@ package com.manpower.common;
 
 import lombok.Getter;
 
+import java.util.Objects;
+
 public class Contants {
 
   public enum AssetType {
@@ -92,4 +94,23 @@ public class Contants {
     }
   }
 
+  @Getter
+  public enum AssetProjectStatus {
+    Active((byte) 1),
+    Inactive((byte) 0);
+
+    private final Byte value;
+    AssetProjectStatus(Byte value) {
+      this.value = value;
+    }
+
+    public static AssetProjectStatus fromValue(Byte value) {
+      for (AssetProjectStatus assetProjectStatus : AssetProjectStatus.values()) {
+        if (Objects.equals(assetProjectStatus.getValue(), value)) {
+          return assetProjectStatus;
+        }
+      }
+      throw new IllegalArgumentException("Invalid AssetProjectStatus value: " + value);
+    }
+  }
 }
