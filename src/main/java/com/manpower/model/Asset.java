@@ -59,4 +59,7 @@ public class Asset {
   @Column(name = "asset_number", nullable = false)
   private Integer assetNumber; //TODO: WHAT IS THIS?
 
+  @Column(name = "asset_ownership", nullable = false)
+  private Byte assetOwnership;
+
 }

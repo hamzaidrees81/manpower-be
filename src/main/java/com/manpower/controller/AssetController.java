@@ -1,7 +1,9 @@
 package com.manpower.controller;
 
+import com.manpower.common.Contants;
 import com.manpower.model.Asset;
 import com.manpower.service.AssetService;
+import com.manpower.util.SecurityUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,9 +18,12 @@ public class AssetController {
         this.assetService = assetService;
     }
 
-    @GetMapping
-    public List<Asset> getAllAssets() {
-        return assetService.getAllAssets();
+    @GetMapping("/assetsByCompany")
+    public ResponseEntity<List<Asset>> getAllAssetsByCompany() {
+        //get company ID from token
+        String companyId = (String) SecurityUtil.getClaim(Contants.RateType.Claims.COMPANY_ID.name());
+      assert companyId != null;
+      return ResponseEntity.ok().body(assetService.getAssetByCompanyId(Integer.parseInt(companyId)));
     }
 
     @GetMapping("/{id}")

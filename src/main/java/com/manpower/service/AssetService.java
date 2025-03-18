@@ -47,4 +47,8 @@ public class AssetService {
     public void deleteAsset(Integer id) {
         assetRepository.deleteById(id);
     }
+
+  public List<Asset> getAssetByCompanyId(Integer companyId) {
+      return assetRepository.findByCompany_Id(companyId);
+  }
 }
