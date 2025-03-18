@@ -6,6 +6,7 @@ import java.util.Objects;
 
 public class Contants {
 
+  @Getter
   public enum AssetType {
     MANPOWER(1),
     ITEM(2);
@@ -16,13 +17,31 @@ public class Contants {
 
     public static AssetType fromValue(int value) {
       for (AssetType assetType : AssetType.values()) {
+        if (assetType.value == value) {
+          return assetType;
+        }
+      }
+      throw new IllegalArgumentException("Invalid role value: " + value);
+    }
+  }
+
+  @Getter
+  public enum AssetOwnership {
+    SELF(1),
+    RENTAL(2);
+    private final int value;
+    AssetOwnership(int value) {
+      this.value = value;
+    }
+
+    public static Contants.AssetOwnership fromValue(int value) {
+      for (Contants.AssetOwnership assetType : Contants.AssetOwnership.values()) {
         if (assetType.getValue() == value) {
           return assetType;
         }
       }
       throw new IllegalArgumentException("Invalid role value: " + value);
     }
-
 
     public int getValue() {
       return value;

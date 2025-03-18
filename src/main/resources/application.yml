@@ -21,4 +21,4 @@ config:
     issuer: demo-issuer
     leeway: 10000
     key: TOKEN_SECRET
-    expirymilliseconds: 300000
+    expirymilliseconds: 3000000

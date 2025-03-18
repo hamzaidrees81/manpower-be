@@ -3,6 +3,7 @@ package com.manpower.filter;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.manpower.common.Contants;
 import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -18,79 +19,76 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class JWTTokenFilter extends OncePerRequestFilter {
 
-    //this will be used to verify the token
     private final JWTVerifier jwtVerifier;
 
     @Override
-    @SuppressWarnings("null")
     protected void doFilterInternal(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            FilterChain chain
+      HttpServletRequest request,
+      HttpServletResponse response,
+      FilterChain chain
     ) throws ServletException, IOException {
 
-        //get the header which should contain a token
         String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
-        // If there's no token, just proceed with the chain
         if (authorizationHeader == null || !authorizationHeader.toLowerCase().startsWith("bearer ")) {
             chain.doFilter(request, response);
             return;
         }
 
-        String token = "";
-        if (authorizationHeader.toLowerCase().startsWith("bearer ")) {
-            token = authorizationHeader.substring(7); // Remove the "Bearer " prefix
-            try {
-                //validate if request has a header attached
-                if (StringUtils.isNotBlank(token)) {
-                    //verify the signature and decide the token
-                    DecodedJWT jwt = jwtVerifier.verify(token);
+        String token = authorizationHeader.substring(7); // Remove "Bearer " prefix
+        try {
+            if (StringUtils.isNotBlank(token)) {
+                // Verify the signature and decode the token
+                DecodedJWT jwt = jwtVerifier.verify(token);
 
-                    // Check token expiry
-                    Date expiresAt = jwt.getExpiresAt();
-                    if (expiresAt != null && expiresAt.before(new Date())) {
-                        throw new JWTVerificationException("Token has expired");
-                    }
-
-                    //obtain roles and claims present into the token
-                    List<String> roles = jwt.getClaim("roles").asList(String.class);
-                    String userID = String.valueOf(jwt.getClaim("userID"));
-
-                    /*
-                     * create a list of spring roles and add prefix of ROLE_ to it
-                     * the spring roles will be used by security context to allow access
-                     * based on the roles in security config
-                     */
-                    List<SimpleGrantedAuthority> rolesList = roles.stream().map(
-                            thisRoleString -> new SimpleGrantedAuthority(
-                                    String.format("%s%s", "ROLE_", thisRoleString)
-                            )
-                    ).toList();
-
-                    /*
-                     * finally, after all verification,
-                     * create a spring user and assign roles and claims to it
-                     */
-                    UsernamePasswordAuthenticationToken user =
-                            new UsernamePasswordAuthenticationToken(jwt, token, rolesList);
-
-                    //set this user to spring security context for the current thread
-                    SecurityContextHolder.getContext().setAuthentication(user);
+                // Check token expiry
+                Date expiresAt = jwt.getExpiresAt();
+                if (expiresAt != null && expiresAt.before(new Date())) {
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    response.getWriter().write("Token has expired.");
+                    return;
                 }
-            } catch (JWTVerificationException jwtException) {
-                log.debug("Problem in token.", jwtException);
-                throw jwtException;
+
+                // Obtain claims from the token
+                String userID = jwt.getClaim(Contants.RateType.Claims.USER_ID.name()).asString();
+                String companyID = jwt.getClaim(Contants.RateType.Claims.COMPANY_ID.name()).asString();
+                List<String> roles = jwt.getClaim("roles").asList(String.class);
+
+                // Store claims in a Map
+                Map<String, Object> claims = new HashMap<>();
+                claims.put(Contants.RateType.Claims.USER_ID.name(), userID);
+                claims.put(Contants.RateType.Claims.COMPANY_ID.name(), companyID);
+                claims.put("roles", roles);
+
+                // Create a list of granted authorities (Spring Security roles)
+                List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+                for (String role : roles) {
+                    authorities.add(new SimpleGrantedAuthority("ROLE_" + role));
+                }
+
+                // Create a UsernamePasswordAuthenticationToken with claims as the principal and roles as authorities
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(claims, token, authorities);
+
+                // Set the authentication in the security context
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+
+                log.debug("Token validated and claims stored in SecurityContext");
             }
+        } catch (JWTVerificationException jwtException) {
+            log.error("Invalid token.", jwtException);
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("Invalid JWT token.");
+            return;
         }
-        chain.doFilter(request,response);
+
+        // Continue with the filter chain
+        chain.doFilter(request, response);
     }
 }
