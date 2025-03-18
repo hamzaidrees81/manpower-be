@@ -2,6 +2,7 @@ package com.manpower.controller;
 
 import com.manpower.common.Contants;
 import com.manpower.model.AssetProject;
+import com.manpower.model.dto.AssetDTO;
 import com.manpower.model.dto.AssetProjectDTO;
 import com.manpower.service.AssetProjectService;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +35,18 @@ public class AssetProjectController {
     public ResponseEntity<List<AssetProjectDTO>> getAssetProjectByAssetId(@PathVariable Integer assetId, @PathVariable Contants.AssetProjectStatus assetProjectStatus) {
         List<AssetProjectDTO> assetProjects =  assetProjectService.getAssetProjectByAssetId(assetId, assetProjectStatus);
         return ResponseEntity.ok(assetProjects);
+    }
+
+    @GetMapping(value = "/assets/{projectId}" , name = "Get resources on this project")
+    public ResponseEntity<List<AssetDTO>> getProjectAssets(@PathVariable Integer projectId) {
+        List<AssetDTO> assetDTOS =  assetProjectService.getAssetsByProjectId(projectId);
+        return ResponseEntity.ok(assetDTOS);
+    }
+
+    @GetMapping(value = "/assets/{projectId}/count", name = "Get count of resources on this project")
+    public ResponseEntity<Long> getProjectAssetCount(@PathVariable Integer projectId) {
+        Long assetCount = assetProjectService.countAssetsByProjectId(projectId);
+        return ResponseEntity.ok(assetCount);
     }
 
     @PostMapping

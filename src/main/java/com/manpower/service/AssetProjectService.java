@@ -145,6 +145,15 @@ public class AssetProjectService {
   public List<AssetProjectDTO> getAssetProjectByAssetId(Integer assetId, Contants.AssetProjectStatus assetProjectStatus) {
     return assetProjectRepository.findProjectsByAsset_IdAndIsActive(assetId, assetProjectStatus.getValue()).stream().map(AssetProjectMapper::toDTO).collect(Collectors.toList());
   }
+  public Long countAssetsByProjectId(Integer projectId) {
+    return assetProjectRepository.countAssetsByProjectId(projectId);
+  }
+
+  public List<AssetDTO> getAssetsByProjectId(Integer projectId) {
+
+      List<Asset> assetList = assetProjectRepository.findAssetsByProjectId(projectId);
+      return assetList.stream().map(AssetMapper::toDTO).collect(Collectors.toList());
+  }
 
   public Long countAssetsWithActiveProjectsActive()
   {

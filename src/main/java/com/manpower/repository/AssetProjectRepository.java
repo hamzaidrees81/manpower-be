@@ -1,5 +1,6 @@
 package com.manpower.repository;
 
+import com.manpower.model.Asset;
 import com.manpower.model.AssetProject;
 import com.manpower.model.Client;
 import jakarta.validation.constraints.NotNull;
@@ -55,5 +56,21 @@ public interface AssetProjectRepository extends JpaRepository<AssetProject, Inte
     )
 """)
   List<com.manpower.model.Asset> findAssetsWithNoActiveProjects(@Param("companyId") Integer companyId);
+
+  @Query("""
+    SELECT DISTINCT ap.asset 
+    FROM AssetProject ap 
+    WHERE ap.project.id = :projectId
+    AND   ap.isActive = 1
+""") //TODO: ADD COMPANY ID
+  List<Asset> findAssetsByProjectId(@Param("projectId") Integer projectId);
+
+  @Query("""
+    SELECT COUNT(DISTINCT ap.asset.id) 
+    FROM AssetProject ap 
+    WHERE ap.project.id = :projectId
+    AND   ap.isActive = 1
+""") //TODO: ADD COMPANY ID
+  long countAssetsByProjectId(@Param("projectId") Integer projectId);
 
 }
