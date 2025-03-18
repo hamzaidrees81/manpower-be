@@ -14,7 +14,7 @@ import java.util.List;
 public interface AssetProjectRepository extends JpaRepository<AssetProject, Integer> {
   List<AssetProject> findProjectsByAsset_IdAndStartDateGreaterThanEqualAndEndDateLessThanEqual(@NotNull Integer assetId, LocalDate startDate, LocalDate endDate);
 
-  @Query("SELECT ap FROM AssetProject ap JOIN ap.project p WHERE p.client = :client AND p.startDate <= :endDate")
+  @Query("SELECT ap FROM AssetProject ap JOIN ap.project p WHERE p.client = :client AND p.startDate <= :endDate  AND ap.status = 1 ")
   List<AssetProject> findAssetsByClientAndProjectEndDate(@Param("client") Client client,
                                                          @Param("endDate") LocalDate endDate);
 
@@ -23,7 +23,7 @@ public interface AssetProjectRepository extends JpaRepository<AssetProject, Inte
   @Query("""
     SELECT COUNT(DISTINCT ap.asset.id) 
     FROM AssetProject ap 
-    WHERE ap.isActive = 1 AND ap.company.id = :companyId
+    WHERE ap.isActive = 1  AND ap.status = 1 AND ap.company.id = :companyId
 """)
   long countAssetsWithActiveProjects(@Param("companyId") Integer companyId);
 
@@ -33,7 +33,7 @@ public interface AssetProjectRepository extends JpaRepository<AssetProject, Inte
     FROM Asset a 
     WHERE a.company.id = :companyId
     AND NOT EXISTS (
-        SELECT ap.id FROM AssetProject ap WHERE ap.asset.id = a.id AND ap.isActive = 1 AND ap.company.id = :companyId
+        SELECT ap.id FROM AssetProject ap WHERE ap.asset.id = a.id AND ap.isActive = 1  AND ap.status = 1 AND ap.company.id = :companyId
     )
 """)
   long countAssetsWithNoActiveProjects(@Param("companyId") Integer companyId);
@@ -42,7 +42,7 @@ public interface AssetProjectRepository extends JpaRepository<AssetProject, Inte
   @Query("""
     SELECT DISTINCT ap.asset 
     FROM AssetProject ap 
-    WHERE ap.isActive = 1 AND ap.company.id = :companyId
+    WHERE ap.isActive = 1  AND ap.status = 1 AND ap.company.id = :companyId
 """)
   List<com.manpower.model.Asset> findAssetsWithActiveProjects(@Param("companyId") Integer companyId);
 
@@ -52,7 +52,7 @@ public interface AssetProjectRepository extends JpaRepository<AssetProject, Inte
     FROM Asset a 
     WHERE a.company.id = :companyId
     AND NOT EXISTS (
-        SELECT ap.id FROM AssetProject ap WHERE ap.asset.id = a.id AND ap.isActive = 1 AND ap.company.id = :companyId
+        SELECT ap.id FROM AssetProject ap WHERE ap.asset.id = a.id AND ap.isActive = 1 AND ap.status = 1 AND ap.company.id = :companyId
     )
 """)
   List<com.manpower.model.Asset> findAssetsWithNoActiveProjects(@Param("companyId") Integer companyId);
@@ -62,6 +62,8 @@ public interface AssetProjectRepository extends JpaRepository<AssetProject, Inte
     FROM AssetProject ap 
     WHERE ap.project.id = :projectId
     AND   ap.isActive = 1
+    AND   ap.status = 1
+
 """) //TODO: ADD COMPANY ID
   List<Asset> findAssetsByProjectId(@Param("projectId") Integer projectId);
 
@@ -70,6 +72,7 @@ public interface AssetProjectRepository extends JpaRepository<AssetProject, Inte
     FROM AssetProject ap 
     WHERE ap.project.id = :projectId
     AND   ap.isActive = 1
+    AND   ap.status = 1
 """) //TODO: ADD COMPANY ID
   long countAssetsByProjectId(@Param("projectId") Integer projectId);
 
