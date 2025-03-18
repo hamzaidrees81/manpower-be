@@ -1,5 +1,6 @@
 package com.manpower.util;
 
+import com.manpower.common.Contants;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
@@ -9,8 +10,12 @@ import java.util.Map;
 
 public class SecurityUtil {
 
+    public static Integer getCompanyClaim() {
+        return Integer.parseInt((String)getClaim(Contants.RateType.Claims.COMPANY_ID.name()));
+    }
 
-    public static Object getClaim(String claimKey) {
+
+        public static Object getClaim(String claimKey) {
         // Retrieve the authentication object from SecurityContext
         UsernamePasswordAuthenticationToken authentication =
           (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
