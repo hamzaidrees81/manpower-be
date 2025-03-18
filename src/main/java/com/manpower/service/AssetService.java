@@ -50,6 +50,7 @@ public class AssetService {
       return AssetMapper.toDTO(asset);
     }
 
+
     public AssetDTO updateAsset(Integer id, AssetDTO updatedAsset) {
         Asset assetDB = assetRepository.findById(id)
                 .map(asset -> {

@@ -120,8 +120,8 @@ public class Contants {
 
   @Getter
   public enum AssetProjectStatus {
-    Active((byte) 1),
-    Inactive((byte) 0);
+    ACTIVE((byte) 1),
+    INACTIVE((byte) 0);
 
     private final Byte value;
     AssetProjectStatus(Byte value) {
@@ -137,4 +137,26 @@ public class Contants {
       throw new IllegalArgumentException("Invalid AssetProjectStatus value: " + value);
     }
   }
+
+  @Getter
+  public enum Status {
+    DELETED((byte) 0),
+    ACTIVE((byte) 1);
+
+    private final Byte value;
+    Status(Byte value) {
+      this.value = value;
+    }
+
+    public static Status fromValue(Byte value) {
+      for (Status rate : Status.values()) {
+        if (Objects.equals(rate.getValue(), value)) {
+          return rate;
+        }
+      }
+      throw new IllegalArgumentException("Invalid status value: " + value);
+    }
+  }
+
+
 }

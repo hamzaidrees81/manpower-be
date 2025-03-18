@@ -18,4 +18,42 @@ public interface AssetProjectRepository extends JpaRepository<AssetProject, Inte
                                                          @Param("endDate") LocalDate endDate);
 
   List<AssetProject> findProjectsByAsset_IdAndIsActive(Integer assetId, @NotNull Byte status);
+  // Method 1: Count assets where the number of active projects is at least 1 for a given company
+  @Query("""
+    SELECT COUNT(DISTINCT ap.asset.id) 
+    FROM AssetProject ap 
+    WHERE ap.isActive = 1 AND ap.company.id = :companyId
+""")
+  long countAssetsWithActiveProjects(@Param("companyId") Integer companyId);
+
+  // Method 2: Count assets where the asset has NO active projects for a given company
+  @Query("""
+    SELECT COUNT(DISTINCT a.id) 
+    FROM Asset a 
+    WHERE a.company.id = :companyId
+    AND NOT EXISTS (
+        SELECT ap.id FROM AssetProject ap WHERE ap.asset.id = a.id AND ap.isActive = 1 AND ap.company.id = :companyId
+    )
+""")
+  long countAssetsWithNoActiveProjects(@Param("companyId") Integer companyId);
+
+  // Return assets where they have at least 1 active project for a given company
+  @Query("""
+    SELECT DISTINCT ap.asset 
+    FROM AssetProject ap 
+    WHERE ap.isActive = 1 AND ap.company.id = :companyId
+""")
+  List<com.manpower.model.Asset> findAssetsWithActiveProjects(@Param("companyId") Integer companyId);
+
+  // Method 4: Return assets where they have NO active projects for a given company
+  @Query("""
+    SELECT a 
+    FROM Asset a 
+    WHERE a.company.id = :companyId
+    AND NOT EXISTS (
+        SELECT ap.id FROM AssetProject ap WHERE ap.asset.id = a.id AND ap.isActive = 1 AND ap.company.id = :companyId
+    )
+""")
+  List<com.manpower.model.Asset> findAssetsWithNoActiveProjects(@Param("companyId") Integer companyId);
+
 }
