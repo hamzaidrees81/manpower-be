@@ -113,6 +113,10 @@ public class InvoiceService {
                 DetailedAssetInvoice.DetailedAssetInvoiceBuilder detailedAssetInvoiceBuilder = DetailedAssetInvoice.builder();
                 Asset asset = assetRepository.findById(invoiceAsset.getAsset().getId()).orElse(null);
                 assert asset != null;
+                BigDecimal regularTotal = invoiceAsset.getStandardHours().multiply(invoiceAsset.getStandardRate());
+                BigDecimal otTotal = invoiceAsset.getOtHours().multiply(invoiceAsset.getOtRate());
+                BigDecimal grandTotal = regularTotal.add(otTotal);
+
                 detailedAssetInvoiceBuilder.assetName(asset.getName());
                 detailedAssetInvoiceBuilder.assetType(Contants.AssetType.fromValue(asset.getAssetType()));
                 detailedAssetInvoiceBuilder.assetId(invoiceAsset.getAsset().getId());
@@ -121,10 +125,24 @@ public class InvoiceService {
                 detailedAssetInvoiceBuilder.overtimeHours(invoiceAsset.getOtHours());
                 detailedAssetInvoiceBuilder.regularRate(invoiceAsset.getStandardRate());
                 detailedAssetInvoiceBuilder.overtimeRate(invoiceAsset.getOtRate());
+                detailedAssetInvoiceBuilder.regularTotal(regularTotal);
+                detailedAssetInvoiceBuilder.otTotal(otTotal);
+                detailedAssetInvoiceBuilder.totalAmount(grandTotal);
+
                 detailedAssetInvoiceList.add(detailedAssetInvoiceBuilder.build());
+
             }
             listDetailedProjectInvoice.add(detailedProjectInvoiceBuilder.build());
         }
+
+        //assign total of all assets to it
+        BigDecimal invoiceTotal = listDetailedProjectInvoice.stream()
+          .flatMap(detailedProjectInvoice -> detailedProjectInvoice.getAssetInvoicesList().stream())  // Flatten the nested list of asset invoices
+          .map(DetailedAssetInvoice::getTotalAmount)  // Get the totalAmount from each detailedAssetInvoice
+          .filter(Objects::nonNull)  // Ensure that totalAmount is not null
+          .reduce(BigDecimal.ZERO, BigDecimal::add);  // Sum all the totalAmount values
+
+        detailedInvoiceBuilder.totalAmount(invoiceTotal);
 
         return Optional.ofNullable(detailedInvoiceBuilder.build());
     }

@@ -16,6 +16,8 @@ public class DetailedAssetInvoice {
   BigDecimal regularRate;
   BigDecimal overtimeHours;
   BigDecimal overtimeRate;
+  BigDecimal regularTotal;
+  BigDecimal otTotal;
   BigDecimal totalAmount;
   Contants.AssetType assetType;
 }
