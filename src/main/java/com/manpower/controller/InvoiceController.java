@@ -33,7 +33,7 @@ public class InvoiceController {
         return ResponseEntity.ok().body(invoiceService.getInvoicesForAssetByStatus(assetId, status));
     }
 
-    @GetMapping(value = "/invoices/company/{clientId}/{status}", name = "Get all invoices for this client based on status as paid/unpaid.  If status is null, get all.")
+    @GetMapping(value = "/invoices/client/{clientId}/{status}", name = "Get all invoices for this client based on status as paid/unpaid.  If status is null, get all.")
     public ResponseEntity<InvoiceStatusCompanyDTO> getInvoiceForClientByStatus(@PathVariable Integer clientId, @PathVariable Contants.InvoiceStatus status) {
         return ResponseEntity.ok().body(invoiceService.getInvoicesForClientByStatus(clientId, status));
     }
