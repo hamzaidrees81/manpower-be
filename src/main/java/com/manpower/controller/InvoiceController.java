@@ -39,6 +39,16 @@ public class InvoiceController {
     }
 
 
+    @GetMapping(value = "/invoices/clients/{status}", name = "Get all invoices for all client of company based on status as paid/unpaid.  If status is null, get all.")
+    public ResponseEntity<InvoiceStatusCompanyDTO> getInvoiceForAllClientByStatus(@PathVariable Contants.InvoiceStatus status) {
+        return ResponseEntity.ok().body(invoiceService.getInvoicesForAllClientsByStatus(status));
+    }
+
+    //TODO: PENDING
+    @GetMapping(value = "/invoices/assets/{status}", name = "Get all invoices for all asset of company based on status as paid/unpaid.  If status is null, get all.")
+    public ResponseEntity<List<InvoiceStatusDTO>> getInvoiceForAssetByStatus(@PathVariable Contants.InvoiceStatus status) {
+        return ResponseEntity.ok().body(invoiceService.getInvoicesForAllAssetsByStatus(status));
+    }
 
 //    @PostMapping("/addAsset/{invoiceId}/{assetId}")
 //    public ResponseEntity<Invoice> addAssetToInvoice(@PathVariable Integer invoiceId, @PathVariable Integer assetId) {

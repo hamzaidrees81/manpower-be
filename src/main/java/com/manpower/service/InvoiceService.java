@@ -383,6 +383,55 @@ public class InvoiceService {
           .build();
     }
 
+
+    public InvoiceStatusCompanyDTO getInvoicesForAllClientsByStatus(Contants.InvoiceStatus status) {
+
+        //get all invoices for this asset based on invoice status. If status is null, get all
+        //find all invoice where this user is an asset
+        Integer companyId = SecurityUtil.getCompanyClaim();
+        Optional<List<Invoice>> invoicesListOptional = invoiceRepository.findInvoicesByCompany_Id(companyId);
+
+        if (invoicesListOptional.isEmpty()) {
+            return InvoiceStatusCompanyDTO.builder().build();
+        }
+
+        List<InvoiceStatusDTO> assetInvoiceStatusDTOS = new ArrayList<>();
+
+        //check all these invoice assets for parent invoice and mark as paid or not
+        List<Invoice> invoiceList = invoicesListOptional.get();
+
+        for (Invoice invoice : invoiceList) {
+
+            //if status filter is enabled, skip this
+            if(status != null) {
+                if(Contants.InvoiceStatus.fromValue(invoice.getStatus()) != status)
+                    continue;
+            }
+
+            InvoiceStatusDTO.InvoiceStatusDTOBuilder builder = InvoiceStatusDTO.builder();
+            builder.invoiceStatus(Contants.InvoiceStatus.fromValue(invoice.getStatus()));
+            builder.invoiceNumber(invoice.getNumber());
+            builder.creationDate(invoice.getCreateDate());
+            builder.clearedDate(invoice.getClearedDate());
+            builder.payableAmount(invoice.getTotalAmount());
+
+            assetInvoiceStatusDTOS.add(builder.build());
+        }
+
+        //calculate total amount
+
+        BigDecimal totalPayableAmount = assetInvoiceStatusDTOS.stream()
+          .map(InvoiceStatusDTO::getPayableAmount) // Extract payableAmount
+          .reduce(BigDecimal.ZERO, BigDecimal::add); // Sum all amounts, starting from BigDecimal.ZERO
+
+
+        return InvoiceStatusCompanyDTO.builder()
+          .invoiceStatusDTOList(assetInvoiceStatusDTOS)
+          .totalAmount(totalPayableAmount)
+          .build();
+    }
+
+
     public List<InvoiceStatusDTO> getInvoicesForAssetByStatus(Integer assetId, Contants.InvoiceStatus status) {
 
         //get all invoices for this asset based on invoice status. If status is null, get all
@@ -417,4 +466,42 @@ public class InvoiceService {
 
         return assetInvoiceStatusDTOS;
     }
+
+    public List<InvoiceStatusDTO> getInvoicesForAllAssetsByStatus(Contants.InvoiceStatus status) {
+        //TODO: FIND ALL ASSETS IN OUR COMPANY
+//
+//        //get all invoices for this asset based on invoice status. If status is null, get all
+//        //find all invoice where this user is an asset
+//        Optional<List<InvoiceAsset>> invoiceAssetListOptional = invoiceAssetRepository.findDistinctByAsset_Id(assetId);
+//
+//        if (invoiceAssetListOptional.isEmpty()) {
+//            return Collections.emptyList();
+//        }
+//        List<InvoiceStatusDTO> assetInvoiceStatusDTOS = new ArrayList<>();
+//
+//        //check all these invoice assets for parent invoice and mark as paid or not
+//        List<InvoiceAsset> invoiceAssets = invoiceAssetListOptional.get();
+//
+//        for (InvoiceAsset invoiceAsset : invoiceAssets) {
+//
+//            //if status filter is enabled, skip this
+//            if(status != null) {
+//                if(Contants.InvoiceStatus.fromValue(invoiceAsset.getInvoice().getStatus()) != status)
+//                    continue;
+//            }
+//
+//            InvoiceStatusDTO.InvoiceStatusDTOBuilder builder = InvoiceStatusDTO.builder();
+//            builder.invoiceStatus(Contants.InvoiceStatus.fromValue(invoiceAsset.getInvoice().getStatus()));
+//            builder.invoiceNumber(invoiceAsset.getInvoice().getNumber());
+//            builder.creationDate(invoiceAsset.getInvoice().getCreateDate());
+//            builder.clearedDate(invoiceAsset.getInvoice().getClearedDate());
+////            builder.payableAmount();
+//
+//            assetInvoiceStatusDTOS.add(builder.build());
+//        }
+//
+//        return assetInvoiceStatusDTOS;
+        return null;
+    }
+
 }
