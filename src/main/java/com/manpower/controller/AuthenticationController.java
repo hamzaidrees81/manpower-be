@@ -22,7 +22,7 @@ public class AuthenticationController {
   private final UserService userService;
   private final TokenService tokenService;
 
-  @PostMapping("/login")
+  @PostMapping("/api/login")
   public ResponseEntity<AuthenticateResponse> getUserById(@RequestBody AuthenticateRequest authenticate) {
 
     Optional<User> user = userService.authenticate(authenticate);
