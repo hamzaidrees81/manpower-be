@@ -9,6 +9,7 @@ import java.util.List;
 @Builder
 public class DetailedProjectInvoice {
   Integer projectId;
+  String projectNumber;
   String projectName;
 
   List<DetailedAssetInvoice> assetInvoicesList;

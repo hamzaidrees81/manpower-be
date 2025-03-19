@@ -13,11 +13,14 @@ public class DetailedInvoice {
 
   String clientId;
   String clientName;
-  String invoiceId;
+  Integer invoiceId;
+  String invoiceNumber;
   LocalDate invoiceDate;
+  LocalDate clearedDate;
   LocalDate startDate;
   LocalDate endDate;
   BigDecimal totalAmount;
+  CompanyDTO company;
 
   List<DetailedProjectInvoice> detailedProjectInvoiceList;
 

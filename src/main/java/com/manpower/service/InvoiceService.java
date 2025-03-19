@@ -2,16 +2,20 @@ package com.manpower.service;
 
 import com.manpower.common.Contants;
 import com.manpower.dto.InvoiceMetadata;
+import com.manpower.mapper.CompanyMapper;
 import com.manpower.model.*;
+import com.manpower.model.dto.CompanyDTO;
 import com.manpower.model.dto.DetailedAssetInvoice;
 import com.manpower.model.dto.DetailedInvoice;
 import com.manpower.model.dto.DetailedProjectInvoice;
 import com.manpower.repository.*;
+import com.manpower.util.SecurityUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.*;
 
 
@@ -31,15 +35,106 @@ public class InvoiceService {
         return invoiceRepository.findAll();
     }
 
-    public Optional<Invoice> getInvoiceById(Integer id) {
-        return invoiceRepository.findById(id);
+    public Optional<DetailedInvoice> getDetailedInvoiceById(Integer id) {
+
+        Optional<Invoice> invoiceOptional = invoiceRepository.findById(id);
+        if(invoiceOptional.isEmpty())
+        {
+            throw new RuntimeException("Invoice not found");
+        }
+
+        Invoice invoice = invoiceOptional.get();
+
+        //get invoice assets
+        Optional<List<InvoiceAsset>> invoiceAssetsOptional = invoiceAssetRepository.findByInvoice_Id(id);
+
+        if(invoiceAssetsOptional.isEmpty() || invoiceAssetsOptional.get().isEmpty())
+        {
+            throw new RuntimeException("Invoice is empty");
+        }
+
+        Company companyDb = companyRepository.findById(invoice.getCompany().getId()).orElse(null);
+        assert companyDb != null;
+        CompanyDTO companyDTO = CompanyMapper.toDTO(companyDb);
+
+        //prepare detailed object
+        DetailedInvoice.DetailedInvoiceBuilder detailedInvoiceBuilder = DetailedInvoice.builder();
+        detailedInvoiceBuilder.clientId(invoice.getClient().getClientId());
+        detailedInvoiceBuilder.clientName(invoice.getClient().getName());
+        detailedInvoiceBuilder.invoiceNumber(invoice.getNumber()); //TODO: generate invoice number
+        detailedInvoiceBuilder.invoiceId(invoice.getId());
+        detailedInvoiceBuilder.invoiceDate(invoice.getCreateDate());
+        detailedInvoiceBuilder.startDate(invoice.getCreateDate());
+        detailedInvoiceBuilder.endDate(invoice.getCreateDate());
+        detailedInvoiceBuilder.clearedDate(invoice.getClearedDate());
+        detailedInvoiceBuilder.totalAmount(invoice.getTotalAmount());
+        detailedInvoiceBuilder.company(companyDTO);
+
+        //for this invoice, get list of all projects from asset project against assets
+        List<InvoiceAsset> invoiceAssetList = invoiceAssetsOptional.get();
+
+        // Get all projects from these asset projects
+        HashMap<Integer, List<InvoiceAsset>> projectList = new HashMap<>();
+
+
+        // Get unique projects
+        for (InvoiceAsset invoiceAsset : invoiceAssetList) {
+            int projectId = invoiceAsset.getAssetProject().getProject().getId();
+
+
+            // Check if the project ID already exists in the map
+            if (!projectList.containsKey(projectId)) {
+                // If it doesn't exist, create a new list and add the asset project
+                projectList.put(projectId, new ArrayList<>());
+            }
+
+            // Add the asset project to the existing list
+            projectList.get(projectId).add(invoiceAsset);
+        }
+
+        List<DetailedProjectInvoice> listDetailedProjectInvoice = new ArrayList<>();
+        detailedInvoiceBuilder.detailedProjectInvoiceList(listDetailedProjectInvoice);
+
+        //now, for every project, we have related asset project list.
+        //iterate on map and combine the resources
+        for(Map.Entry<Integer, List<InvoiceAsset>> entry: projectList.entrySet())
+        {
+            //take a project and make an object
+            DetailedProjectInvoice.DetailedProjectInvoiceBuilder detailedProjectInvoiceBuilder = DetailedProjectInvoice.builder();
+            detailedProjectInvoiceBuilder.projectId(entry.getKey());
+            detailedProjectInvoiceBuilder.projectName(entry.getValue().getFirst().getAssetProject().getProject().getName());
+            detailedProjectInvoiceBuilder.projectNumber(entry.getValue().getFirst().getAssetProject().getProject().getProjectId());
+            List<DetailedAssetInvoice> detailedAssetInvoiceList = new ArrayList<>();
+            detailedProjectInvoiceBuilder.assetInvoicesList(detailedAssetInvoiceList);
+
+            //make list of all resources within it
+            for(InvoiceAsset invoiceAsset : entry.getValue())
+            {
+                DetailedAssetInvoice.DetailedAssetInvoiceBuilder detailedAssetInvoiceBuilder = DetailedAssetInvoice.builder();
+                Asset asset = assetRepository.findById(invoiceAsset.getAsset().getId()).orElse(null);
+                assert asset != null;
+                detailedAssetInvoiceBuilder.assetName(asset.getName());
+                detailedAssetInvoiceBuilder.assetType(Contants.AssetType.fromValue(asset.getAssetType()));
+                detailedAssetInvoiceBuilder.assetId(invoiceAsset.getAsset().getId());
+                detailedAssetInvoiceBuilder.assetProjectId(invoiceAsset.getAssetProject().getProject().getId());
+                detailedAssetInvoiceBuilder.regularHours(invoiceAsset.getStandardHours());
+                detailedAssetInvoiceBuilder.overtimeHours(invoiceAsset.getOtHours());
+                detailedAssetInvoiceBuilder.regularRate(invoiceAsset.getStandardRate());
+                detailedAssetInvoiceBuilder.overtimeRate(invoiceAsset.getOtRate());
+                detailedAssetInvoiceList.add(detailedAssetInvoiceBuilder.build());
+            }
+            listDetailedProjectInvoice.add(detailedProjectInvoiceBuilder.build());
+        }
+
+        return Optional.ofNullable(detailedInvoiceBuilder.build());
     }
 
     @Transactional
     public Invoice createInvoice(DetailedInvoice detailedInvoice) {
 
-        //TODO: HARD CODED COMPANY
-        Integer companyId = 1;
+        //TODO: ASSIGN INVOICE NUMBER SOMEHOW FROM PREFERENCES...
+
+        Integer companyId = SecurityUtil.getCompanyClaim();
 
         String clientId = detailedInvoice.getClientId();
 
@@ -130,9 +225,9 @@ public class InvoiceService {
      * @param invoiceId
      * @return
      */
-    public Optional<InvoiceAsset> getInvoiceWithAssetsById(Integer invoiceId)
+    public Optional<List<InvoiceAsset>> getInvoiceWithAssetsById(Integer invoiceId)
     {
-        return invoiceAssetRepository.findByInvoice_Id(invoiceId);
+        return invoiceAssetRepository.findInvoiceAssetByInvoice_Id(invoiceId);
     }
 
     public DetailedInvoice createInvoiceTemplateFromClient(InvoiceMetadata invoiceMetadata) {

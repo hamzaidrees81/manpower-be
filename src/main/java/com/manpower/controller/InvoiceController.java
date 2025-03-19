@@ -3,7 +3,6 @@ package com.manpower.controller;
 import com.manpower.dto.InvoiceMetadata;
 import com.manpower.model.Invoice;
 import com.manpower.model.InvoiceAsset;
-import com.manpower.model.InvoiceWithAsset;
 import com.manpower.model.dto.DetailedInvoice;
 import com.manpower.service.InvoiceService;
 import org.springframework.http.ResponseEntity;
@@ -20,14 +19,9 @@ public class InvoiceController {
         this.invoiceService = invoiceService;
     }
 
-    @GetMapping
-    public List<Invoice> getAllInvoices() {
-        return invoiceService.getAllInvoices();
-    }
-
     @GetMapping("/{id}")
-    public ResponseEntity<Invoice> getInvoiceById(@PathVariable Integer id) {
-        return invoiceService.getInvoiceById(id)
+    public ResponseEntity<DetailedInvoice> getDetailedInvoiceById(@PathVariable Integer id) {
+        return invoiceService.getDetailedInvoiceById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -39,7 +33,7 @@ public class InvoiceController {
     }
 
     @GetMapping("/{invoiceId}/assets")
-    public ResponseEntity<InvoiceAsset> addAssetToInvoice(@PathVariable Integer invoiceId) {
+    public ResponseEntity<List<InvoiceAsset>> getInvoiceAssets(@PathVariable Integer invoiceId) {
         return invoiceService.getInvoiceWithAssetsById(invoiceId)
           .map(ResponseEntity::ok)
           .orElse(ResponseEntity.notFound().build());
