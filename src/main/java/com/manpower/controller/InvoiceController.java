@@ -1,8 +1,10 @@
 package com.manpower.controller;
 
+import com.manpower.common.Contants;
 import com.manpower.dto.InvoiceMetadata;
 import com.manpower.model.Invoice;
-import com.manpower.model.InvoiceAsset;
+import com.manpower.model.dto.InvoiceStatusCompanyDTO;
+import com.manpower.model.dto.InvoiceStatusDTO;
 import com.manpower.model.dto.DetailedInvoice;
 import com.manpower.service.InvoiceService;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +27,18 @@ public class InvoiceController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+
+    @GetMapping(value = "/invoices/{assetId}/{status}", name = "Get all invoices for this asset based on status as paid/unpaid.  If status is null, get all.")
+    public ResponseEntity<List<InvoiceStatusDTO>> getInvoiceForAssetByStatus(@PathVariable Integer assetId, @PathVariable Contants.InvoiceStatus status) {
+        return ResponseEntity.ok().body(invoiceService.getInvoicesForAssetByStatus(assetId, status));
+    }
+
+    @GetMapping(value = "/invoices/company/{clientId}/{status}", name = "Get all invoices for this client based on status as paid/unpaid.  If status is null, get all.")
+    public ResponseEntity<InvoiceStatusCompanyDTO> getInvoiceForClientByStatus(@PathVariable Integer clientId, @PathVariable Contants.InvoiceStatus status) {
+        return ResponseEntity.ok().body(invoiceService.getInvoicesForClientByStatus(clientId, status));
+    }
+
+
 
 //    @PostMapping("/addAsset/{invoiceId}/{assetId}")
 //    public ResponseEntity<Invoice> addAssetToInvoice(@PathVariable Integer invoiceId, @PathVariable Integer assetId) {

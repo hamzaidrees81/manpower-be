@@ -4,10 +4,7 @@ import com.manpower.common.Contants;
 import com.manpower.dto.InvoiceMetadata;
 import com.manpower.mapper.CompanyMapper;
 import com.manpower.model.*;
-import com.manpower.model.dto.CompanyDTO;
-import com.manpower.model.dto.DetailedAssetInvoice;
-import com.manpower.model.dto.DetailedInvoice;
-import com.manpower.model.dto.DetailedProjectInvoice;
+import com.manpower.model.dto.*;
 import com.manpower.repository.*;
 import com.manpower.util.SecurityUtil;
 import jakarta.transaction.Transactional;
@@ -15,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.*;
 
 
@@ -214,10 +210,6 @@ public class InvoiceService {
         throw new RuntimeException("Not implemented yet");
     }
 
-    public Optional<Invoice> getInvoiceByClientId(String clientId) {
-        return invoiceRepository.findByClient_ClientId(clientId);
-    }
-
     @Transactional
     public void addAssetToInvoice(Integer invoiceId, Integer assetId) {
         //check if the invoice and asset exists
@@ -344,4 +336,85 @@ public class InvoiceService {
         return detailedAssetInvoice;
     }
 
+
+    public InvoiceStatusCompanyDTO getInvoicesForClientByStatus(Integer clientId, Contants.InvoiceStatus status) {
+
+        //get all invoices for this asset based on invoice status. If status is null, get all
+        //find all invoice where this user is an asset
+        Optional<List<Invoice>> invoicesListOptional = invoiceRepository.findInvoicesByClient_Id(clientId);
+
+        if (invoicesListOptional.isEmpty()) {
+            return InvoiceStatusCompanyDTO.builder().build();
+        }
+
+        List<InvoiceStatusDTO> assetInvoiceStatusDTOS = new ArrayList<>();
+
+        //check all these invoice assets for parent invoice and mark as paid or not
+        List<Invoice> invoiceList = invoicesListOptional.get();
+
+        for (Invoice invoice : invoiceList) {
+
+            //if status filter is enabled, skip this
+            if(status != null) {
+                if(Contants.InvoiceStatus.fromValue(invoice.getStatus()) != status)
+                    continue;
+            }
+
+            InvoiceStatusDTO.InvoiceStatusDTOBuilder builder = InvoiceStatusDTO.builder();
+            builder.invoiceStatus(Contants.InvoiceStatus.fromValue(invoice.getStatus()));
+            builder.invoiceNumber(invoice.getNumber());
+            builder.creationDate(invoice.getCreateDate());
+            builder.clearedDate(invoice.getClearedDate());
+            builder.payableAmount(invoice.getTotalAmount());
+
+            assetInvoiceStatusDTOS.add(builder.build());
+        }
+
+        //calculate total amount
+
+        BigDecimal totalPayableAmount = assetInvoiceStatusDTOS.stream()
+          .map(InvoiceStatusDTO::getPayableAmount) // Extract payableAmount
+          .reduce(BigDecimal.ZERO, BigDecimal::add); // Sum all amounts, starting from BigDecimal.ZERO
+
+
+       return InvoiceStatusCompanyDTO.builder()
+          .invoiceStatusDTOList(assetInvoiceStatusDTOS)
+          .totalAmount(totalPayableAmount)
+          .build();
+    }
+
+    public List<InvoiceStatusDTO> getInvoicesForAssetByStatus(Integer assetId, Contants.InvoiceStatus status) {
+
+        //get all invoices for this asset based on invoice status. If status is null, get all
+        //find all invoice where this user is an asset
+        Optional<List<InvoiceAsset>> invoiceAssetListOptional = invoiceAssetRepository.findDistinctByAsset_Id(assetId);
+
+        if (invoiceAssetListOptional.isEmpty()) {
+            return Collections.emptyList();
+        }
+        List<InvoiceStatusDTO> assetInvoiceStatusDTOS = new ArrayList<>();
+
+        //check all these invoice assets for parent invoice and mark as paid or not
+        List<InvoiceAsset> invoiceAssets = invoiceAssetListOptional.get();
+
+        for (InvoiceAsset invoiceAsset : invoiceAssets) {
+
+            //if status filter is enabled, skip this
+            if(status != null) {
+                if(Contants.InvoiceStatus.fromValue(invoiceAsset.getInvoice().getStatus()) != status)
+                    continue;
+            }
+
+            InvoiceStatusDTO.InvoiceStatusDTOBuilder builder = InvoiceStatusDTO.builder();
+            builder.invoiceStatus(Contants.InvoiceStatus.fromValue(invoiceAsset.getInvoice().getStatus()));
+            builder.invoiceNumber(invoiceAsset.getInvoice().getNumber());
+            builder.creationDate(invoiceAsset.getInvoice().getCreateDate());
+            builder.clearedDate(invoiceAsset.getInvoice().getClearedDate());
+//            builder.payableAmount();
+
+            assetInvoiceStatusDTOS.add(builder.build());
+        }
+
+        return assetInvoiceStatusDTOS;
+    }
 }
