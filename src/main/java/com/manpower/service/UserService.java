@@ -43,6 +43,6 @@ public class UserService {
     }
 
     public Optional<User> authenticate(AuthenticateRequest authenticate) {
-        return userRepository.findByUsernameAndPassword(authenticate.getUserName(),authenticate.getPassword());
+        return userRepository.findByUsernameAndPassword(authenticate.getEmail(),authenticate.getPassword());
     }
 }
