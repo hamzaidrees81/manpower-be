@@ -26,19 +26,18 @@ public class InvoiceController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping("/addAsset/{invoiceId}/{assetId}")
-    public ResponseEntity<Invoice> addAssetToInvoice(@PathVariable Integer invoiceId, @PathVariable Integer assetId) {
-        invoiceService.addAssetToInvoice(invoiceId, assetId);
-        return ResponseEntity.ok().build();
-    }
+//    @PostMapping("/addAsset/{invoiceId}/{assetId}")
+//    public ResponseEntity<Invoice> addAssetToInvoice(@PathVariable Integer invoiceId, @PathVariable Integer assetId) {
+//        invoiceService.addAssetToInvoice(invoiceId, assetId);
+//        return ResponseEntity.ok().build();
+//    }
 
-    @GetMapping("/{invoiceId}/assets")
-    public ResponseEntity<List<InvoiceAsset>> getInvoiceAssets(@PathVariable Integer invoiceId) {
-        return invoiceService.getInvoiceWithAssetsById(invoiceId)
-          .map(ResponseEntity::ok)
-          .orElse(ResponseEntity.notFound().build());
-    }
-
+//    @GetMapping("/{invoiceId}/assets")
+//    public ResponseEntity<List<InvoiceAsset>> getInvoiceAssets(@PathVariable Integer invoiceId) {
+//        return invoiceService.getInvoiceWithAssetsById(invoiceId)
+//          .map(ResponseEntity::ok)
+//          .orElse(ResponseEntity.notFound().build());
+//    }
 
     @PostMapping("/prepare-invoice")
     public DetailedInvoice prepareInvoice(@RequestBody InvoiceMetadata invoiceMetadata) {
