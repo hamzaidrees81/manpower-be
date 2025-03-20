@@ -27,6 +27,12 @@ CREATE TABLE `company` (
   `name` varchar(50) NOT NULL,
   `address` varchar(100) NOT NULL,
   `max_asset_count` int NOT NULL,
+  `header_image_url` varchar(100) DEFAULT NULL,
+  `footer_image_url` varchar(100) DEFAULT NULL,
+  `bank_account_title` varchar(45) DEFAULT NULL,
+  `bank_account_number` varchar(45) DEFAULT NULL,
+  `bank_iban` varchar(45) DEFAULT NULL,
+  `bank_name` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf32;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -37,7 +43,7 @@ CREATE TABLE `company` (
 
 LOCK TABLES `company` WRITE;
 /*!40000 ALTER TABLE `company` DISABLE KEYS */;
-INSERT INTO `company` VALUES (1,'SAUDI TECH','DAMMAN',5);
+INSERT INTO `company` VALUES (1,'SAUDI TECH','DAMMAN',5,NULL,NULL,NULL,NULL,NULL,NULL),(2,'SAUDI TECH2','RIYADH',5,NULL,NULL,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `company` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -50,4 +56,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-03-02  1:03:42
+-- Dump completed on 2025-03-20 23:53:13

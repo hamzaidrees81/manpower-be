@@ -31,7 +31,7 @@ CREATE TABLE `timesheet` (
   `rate_type` tinyint NOT NULL,
   `rate` decimal(5,2) DEFAULT NULL,
   `rate_paid` decimal(5,2) DEFAULT NULL,
-  `invoice_number` int ,
+  `invoice_number` int DEFAULT NULL,
   `row_sr_no` int DEFAULT NULL,
   `week_index` int DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -39,7 +39,7 @@ CREATE TABLE `timesheet` (
   KEY `timesheet_asset_proj_fk_1_idx` (`asset_project_id`),
   CONSTRAINT `timesheet_asset_proj_fk_1` FOREIGN KEY (`asset_project_id`) REFERENCES `asset_project` (`id`),
   CONSTRAINT `timesheet_ibfk_1` FOREIGN KEY (`asset_id`) REFERENCES `asset` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf32;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf32;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -48,7 +48,7 @@ CREATE TABLE `timesheet` (
 
 LOCK TABLES `timesheet` WRITE;
 /*!40000 ALTER TABLE `timesheet` DISABLE KEYS */;
-INSERT INTO `timesheet` VALUES (1,2,1,'2025-03-01',1,5.00,0),(2,2,1,'2025-03-01',2,5.51,0);
+INSERT INTO `timesheet` VALUES (4,2,1,'2025-03-01',5.00,1,10.00,8.00,0,NULL,NULL),(5,2,1,'2025-03-01',5.51,2,12.00,9.00,0,NULL,NULL),(6,2,1,'2025-03-02',6.00,1,12.00,9.00,NULL,NULL,NULL),(7,2,1,'2025-03-02',7.00,2,12.00,9.00,NULL,NULL,NULL),(8,2,1,'2025-03-05',8.00,1,12.00,9.00,NULL,NULL,NULL),(9,2,1,'2025-03-06',9.00,2,12.00,9.00,NULL,NULL,NULL),(10,2,2,'2025-03-02',5.00,1,12.00,9.00,NULL,NULL,NULL),(11,2,2,'2025-03-02',5.00,2,12.00,9.00,NULL,NULL,NULL),(12,2,2,'2025-03-05',5.00,1,12.00,9.00,NULL,NULL,NULL),(13,2,3,'2025-03-06',5.00,2,12.00,9.00,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `timesheet` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -61,4 +61,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-03-02  1:03:41
+-- Dump completed on 2025-03-20 23:53:11

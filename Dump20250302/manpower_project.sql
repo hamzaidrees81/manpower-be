@@ -29,15 +29,15 @@ CREATE TABLE `project` (
   `project_id` varchar(50) NOT NULL,
   `name` varchar(50) NOT NULL,
   `location` varchar(100) NOT NULL,
-  `start_date` date NOT NULL,
-  `end_date` date DEFAULT NULL,
+  `start_date` datetime NOT NULL,
+  `end_date` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `project_id` (`project_id`),
   KEY `company_id` (`company_id`),
   KEY `client_id` (`client_id`),
   CONSTRAINT `project_ibfk_1` FOREIGN KEY (`company_id`) REFERENCES `company` (`id`) ON DELETE CASCADE,
   CONSTRAINT `project_ibfk_2` FOREIGN KEY (`client_id`) REFERENCES `client` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf32;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf32;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -46,7 +46,7 @@ CREATE TABLE `project` (
 
 LOCK TABLES `project` WRITE;
 /*!40000 ALTER TABLE `project` DISABLE KEYS */;
-INSERT INTO `project` VALUES (1,1,1,'PROJ-1','ARAMCO HALL','DAMMAM','2025-03-01','2025-04-01');
+INSERT INTO `project` VALUES (1,1,1,'PROJ-1','ARAMCO HALL','DAMMAM','2025-03-01 00:00:00','2025-04-22 00:00:00'),(2,1,1,'PROJ-2','Halliburton','RIYADH','2025-03-01 00:00:00','2025-04-22 00:00:00');
 /*!40000 ALTER TABLE `project` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -59,4 +59,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-03-02  1:03:41
+-- Dump completed on 2025-03-20 23:53:13

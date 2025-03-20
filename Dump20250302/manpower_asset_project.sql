@@ -46,7 +46,7 @@ CREATE TABLE `asset_project` (
   CONSTRAINT `asset_project_ibfk_2` FOREIGN KEY (`asset_id`) REFERENCES `asset` (`id`) ON DELETE CASCADE,
   CONSTRAINT `asset_project_ibfk_3` FOREIGN KEY (`project_id`) REFERENCES `project` (`id`) ON DELETE CASCADE,
   CONSTRAINT `asset_project_ibfk_4` FOREIGN KEY (`designation`) REFERENCES `designation` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf32;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf32;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -55,7 +55,7 @@ CREATE TABLE `asset_project` (
 
 LOCK TABLES `asset_project` WRITE;
 /*!40000 ALTER TABLE `asset_project` DISABLE KEYS */;
-INSERT INTO `asset_project` VALUES (1,1,2,1,1,10.00,12.00,8.00,9.00,'2025-03-01','2025-03-15',1,1);
+INSERT INTO `asset_project` VALUES (1,1,2,1,1,'AP-1',10.00,12.00,8.00,9.00,'2025-02-01','2025-03-15',1,1),(2,1,3,1,1,'DRILLING',10.00,12.00,8.00,9.00,'2025-03-01','2025-03-15',1,1),(3,1,2,2,1,NULL,20.00,25.00,15.00,21.00,'2025-03-01','2025-03-15',1,1),(4,1,2,1,1,'AP-2',10.00,12.00,8.00,9.00,'2025-02-01','2025-03-15',1,1);
 /*!40000 ALTER TABLE `asset_project` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -68,4 +68,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-03-02  1:03:40
+-- Dump completed on 2025-03-20 23:53:12

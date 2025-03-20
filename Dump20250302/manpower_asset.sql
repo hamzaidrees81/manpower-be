@@ -36,13 +36,14 @@ CREATE TABLE `asset` (
   `joining_date` date NOT NULL,
   `asset_type` tinyint NOT NULL,
   `asset_number` int NOT NULL,
+  `asset_ownership` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_number` (`id_number`),
   KEY `company_id` (`company_id`),
   KEY `sponsored_by` (`sponsored_by`),
   CONSTRAINT `asset_ibfk_1` FOREIGN KEY (`company_id`) REFERENCES `company` (`id`) ON DELETE CASCADE,
   CONSTRAINT `asset_ibfk_2` FOREIGN KEY (`sponsored_by`) REFERENCES `sponsor` (`id`) ON DELETE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf32;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf32;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -51,7 +52,7 @@ CREATE TABLE `asset` (
 
 LOCK TABLES `asset` WRITE;
 /*!40000 ALTER TABLE `asset` DISABLE KEYS */;
-INSERT INTO `asset` VALUES (2,1,1,'Adeel','12321','2025-03-20','','','AB1234','2025-03-01','2025-03-01',1,123);
+INSERT INTO `asset` VALUES (2,1,1,'Adeel','12321','2025-03-20','','','AB1234','2025-03-01','2025-03-01',1,123,1),(3,1,1,'Hamza','123','2025-03-20',NULL,NULL,NULL,NULL,'2025-03-01',1,321,2),(4,1,NULL,'string','string','2025-03-18','string','string','string','2025-03-18','2025-03-18',1,0,1),(6,1,NULL,'string','string2','2025-03-18','string','string','string','2025-03-18','2025-03-18',1,0,1);
 /*!40000 ALTER TABLE `asset` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -64,4 +65,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-03-02  1:03:40
+-- Dump completed on 2025-03-20 23:53:14

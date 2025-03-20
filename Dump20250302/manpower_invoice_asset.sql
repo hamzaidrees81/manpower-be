@@ -38,7 +38,7 @@ CREATE TABLE `invoice_asset` (
   CONSTRAINT `invoice_asset_ibfk_1` FOREIGN KEY (`invoice_id`) REFERENCES `invoice` (`id`) ON DELETE CASCADE,
   CONSTRAINT `invoice_asset_ibfk_2` FOREIGN KEY (`asset_id`) REFERENCES `asset` (`id`) ON DELETE CASCADE,
   CONSTRAINT `invoice_asset_ibfk_3` FOREIGN KEY (`asset_project_id`) REFERENCES `asset_project` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf32;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf32;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -47,6 +47,7 @@ CREATE TABLE `invoice_asset` (
 
 LOCK TABLES `invoice_asset` WRITE;
 /*!40000 ALTER TABLE `invoice_asset` DISABLE KEYS */;
+INSERT INTO `invoice_asset` VALUES (13,9,2,1,0.00,0.00,12.00,9.00),(14,9,3,2,0.00,0.00,0.00,0.00),(15,9,2,3,0.00,0.00,12.00,5.00);
 /*!40000 ALTER TABLE `invoice_asset` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -59,4 +60,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-03-02  1:03:43
+-- Dump completed on 2025-03-20 23:53:13

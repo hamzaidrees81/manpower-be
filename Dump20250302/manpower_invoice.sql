@@ -26,20 +26,20 @@ CREATE TABLE `invoice` (
   `id` int NOT NULL AUTO_INCREMENT,
   `company_id` int NOT NULL,
   `client_id` int NOT NULL,
-  `number` varchar(50) NOT NULL,
-  `status` tinyint NOT NULL DEFAULT '0',
-  `total_amount` decimal(10,2) NOT NULL,
+  `number` varchar(50) DEFAULT NULL,
+  `status` tinyint DEFAULT '1',
+  `total_amount` decimal(10,2) DEFAULT NULL,
   `cleared_date` date DEFAULT NULL,
   `start_date` date DEFAULT NULL,
-  `create_date` date DEFAULT NULL,
   `end_date` date DEFAULT NULL,
+  `create_date` date DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `number` (`number`),
   KEY `company_id` (`company_id`),
   KEY `client_id` (`client_id`),
   CONSTRAINT `invoice_ibfk_1` FOREIGN KEY (`company_id`) REFERENCES `company` (`id`) ON DELETE CASCADE,
   CONSTRAINT `invoice_ibfk_2` FOREIGN KEY (`client_id`) REFERENCES `client` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf32;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf32;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -48,6 +48,7 @@ CREATE TABLE `invoice` (
 
 LOCK TABLES `invoice` WRITE;
 /*!40000 ALTER TABLE `invoice` DISABLE KEYS */;
+INSERT INTO `invoice` VALUES (9,1,1,NULL,1,5000.00,NULL,'2025-03-06','2025-03-06','2025-03-11');
 /*!40000 ALTER TABLE `invoice` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -60,4 +61,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-03-02  1:03:41
+-- Dump completed on 2025-03-20 23:53:11
