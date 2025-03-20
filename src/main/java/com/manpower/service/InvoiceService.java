@@ -58,7 +58,7 @@ public class InvoiceService {
         DetailedInvoice.DetailedInvoiceBuilder detailedInvoiceBuilder = DetailedInvoice.builder();
         detailedInvoiceBuilder.clientId(invoice.getClient().getClientId());
         detailedInvoiceBuilder.clientName(invoice.getClient().getName());
-        detailedInvoiceBuilder.invoiceNumber(invoice.getNumber()); //TODO: generate invoice number
+        detailedInvoiceBuilder.invoiceNumber(invoice.getNumber());
         detailedInvoiceBuilder.invoiceId(invoice.getId());
         detailedInvoiceBuilder.invoiceDate(invoice.getCreateDate());
         detailedInvoiceBuilder.startDate(invoice.getCreateDate());
@@ -118,6 +118,7 @@ public class InvoiceService {
                 BigDecimal regularTotal = invoiceAsset.getStandardHours().multiply(invoiceAsset.getStandardRate());
                 BigDecimal otTotal = invoiceAsset.getOtHours().multiply(invoiceAsset.getOtRate());
                 BigDecimal grandTotal = regularTotal.add(otTotal);
+                BigDecimal vat = regularTotal.add(grandTotal.multiply(preferenceService.findVATAmount()));
 
                 detailedAssetInvoiceBuilder.assetName(asset.getName());
                 detailedAssetInvoiceBuilder.assetType(Contants.AssetType.fromValue(asset.getAssetType()));
@@ -130,6 +131,8 @@ public class InvoiceService {
                 detailedAssetInvoiceBuilder.regularTotal(regularTotal);
                 detailedAssetInvoiceBuilder.otTotal(otTotal);
                 detailedAssetInvoiceBuilder.totalAmount(grandTotal);
+                detailedAssetInvoiceBuilder.vatAmount(vat);
+                detailedAssetInvoiceBuilder.totalWithVAT(grandTotal.add(vat));
 
                 detailedAssetInvoiceList.add(detailedAssetInvoiceBuilder.build());
 
