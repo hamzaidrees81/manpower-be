@@ -3,13 +3,15 @@ package com.manpower.service;
 import com.manpower.model.Preference;
 import com.manpower.repository.PreferencesRepository;
 import com.manpower.util.SecurityUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 
 @Service
+@RequiredArgsConstructor
 public class PreferenceService {
-  PreferencesRepository preferencesRepository;
+  private final PreferencesRepository preferencesRepository;
 
   BigDecimal findVATAmount()
   {
