@@ -13,13 +13,16 @@ public class DetailedInvoice {
 
   String clientId;
   String clientName;
+  String clientAddress;
   Integer invoiceId;
   String invoiceNumber;
   LocalDate invoiceDate;
   LocalDate clearedDate;
   LocalDate startDate;
   LocalDate endDate;
-  BigDecimal totalAmount;
+  BigDecimal totalAmount; //this is without VAT
+  BigDecimal vatAmount;
+  BigDecimal totalWithVAT;
   CompanyDTO company;
 
   List<DetailedProjectInvoice> detailedProjectInvoiceList;

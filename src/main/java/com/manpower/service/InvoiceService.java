@@ -26,6 +26,7 @@ public class InvoiceService {
     private final TimesheetService timesheetService;
     private final ClientRepository clientRepository;
     private final CompanyRepository companyRepository;
+    private final PreferenceService preferenceService;
 
     public List<Invoice> getAllInvoices() {
         return invoiceRepository.findAll();
@@ -65,6 +66,11 @@ public class InvoiceService {
         detailedInvoiceBuilder.clearedDate(invoice.getClearedDate());
         detailedInvoiceBuilder.totalAmount(invoice.getTotalAmount());
         detailedInvoiceBuilder.company(companyDTO);
+        detailedInvoiceBuilder.totalAmount(invoice.getTotalAmount());
+        detailedInvoiceBuilder.vatAmount(invoice.getTaxAmount());
+        detailedInvoiceBuilder.totalWithVAT(invoice.getTotalAmountWithTax());
+        detailedInvoiceBuilder.clientAddress(invoice.getClient().getAddress());
+
 
         //for this invoice, get list of all projects from asset project against assets
         List<InvoiceAsset> invoiceAssetList = invoiceAssetsOptional.get();
@@ -131,22 +137,12 @@ public class InvoiceService {
             listDetailedProjectInvoice.add(detailedProjectInvoiceBuilder.build());
         }
 
-        //assign total of all assets to it
-        BigDecimal invoiceTotal = listDetailedProjectInvoice.stream()
-          .flatMap(detailedProjectInvoice -> detailedProjectInvoice.getAssetInvoicesList().stream())  // Flatten the nested list of asset invoices
-          .map(DetailedAssetInvoice::getTotalAmount)  // Get the totalAmount from each detailedAssetInvoice
-          .filter(Objects::nonNull)  // Ensure that totalAmount is not null
-          .reduce(BigDecimal.ZERO, BigDecimal::add);  // Sum all the totalAmount values
-
-        detailedInvoiceBuilder.totalAmount(invoiceTotal);
 
         return Optional.ofNullable(detailedInvoiceBuilder.build());
     }
 
     @Transactional
     public Invoice createInvoice(DetailedInvoice detailedInvoice) {
-
-        //TODO: ASSIGN INVOICE NUMBER SOMEHOW FROM PREFERENCES...
 
         Integer companyId = SecurityUtil.getCompanyClaim();
 
@@ -164,12 +160,16 @@ public class InvoiceService {
           .orElseThrow(() -> new RuntimeException("Company not found"));
         invoiceBuilder.company(existingCompany);
 
+        BigDecimal tax = detailedInvoice.getTotalAmount().multiply(preferenceService.findVATAmount());
         invoiceBuilder.client(existingClient);
         invoiceBuilder.status(Contants.InvoiceStatus.UNPAID.getValue());
         invoiceBuilder.startDate(detailedInvoice.getStartDate());
         invoiceBuilder.endDate(detailedInvoice.getEndDate());
         invoiceBuilder.createDate(detailedInvoice.getInvoiceDate());
         invoiceBuilder.totalAmount(detailedInvoice.getTotalAmount());
+        invoiceBuilder.taxAmount(tax);
+        invoiceBuilder.totalAmountWithTax(detailedInvoice.getTotalAmount().add(tax));
+        invoiceBuilder.number("INV-"+preferenceService.invoiceSequence());
 
         Invoice invoice = invoiceBuilder.build();
         invoiceRepository.save(invoice); // Save invoice
@@ -199,6 +199,8 @@ public class InvoiceService {
                 invoiceAssetRepository.save(invoiceAsset.build());
             }
         }
+
+        preferenceService.updateInvoiceNumber();
         return invoice;
     }
 

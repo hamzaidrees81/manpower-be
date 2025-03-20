@@ -64,4 +64,11 @@
     @NotNull
     @Column(name = "create_date", nullable = false)
     private LocalDate createDate;
+
+    @Column(name = "taxAmount", precision = 10, scale = 2)
+    private BigDecimal taxAmount;
+
+    @Column(name = "total_amount_with_tax", precision = 10, scale = 2)
+    private BigDecimal totalAmountWithTax;
+
   }
