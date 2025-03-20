@@ -49,4 +49,7 @@ public class Company {
   @Column(name = "bank_name", length = 45)
   private String bankName;
 
+  @Column(name = "status")
+  private Integer status;
+
 }

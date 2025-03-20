@@ -97,6 +97,31 @@ public class Contants {
     }
   }
 
+  public enum CompanyStatus {
+    ACTIVE(1),
+    DISABLED(0);
+
+    private final int value;
+
+    CompanyStatus(int value) {
+      this.value = value;
+    }
+
+    public int getValue() {
+      return value;
+    }
+
+    public static CompanyStatus fromValue(int value) {
+      for (CompanyStatus status : CompanyStatus.values()) {
+        if (status.getValue() == value) {
+          return status;
+        }
+      }
+      throw new IllegalArgumentException("Invalid CompanyStatus value: " + value);
+    }
+  }
+
+
   @Getter
   public enum InvoiceStatus {
     DELETED((byte) 0),
