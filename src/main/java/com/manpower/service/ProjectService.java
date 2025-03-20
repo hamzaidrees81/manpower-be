@@ -4,10 +4,9 @@ import com.manpower.model.Client;
 import com.manpower.model.Project;
 import com.manpower.repository.AssetProjectRepository;
 import com.manpower.repository.ProjectRepository;
+import com.manpower.util.SecurityUtil;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,8 +20,9 @@ public class ProjectService {
     this.assetProjectRepository = assetProjectRepository;
   }
 
-    public List<Project> getAllProjects() {
-        return projectRepository.findAll();
+    public List<Project> getAllProjectsByCompany() {
+      Integer companyId = SecurityUtil.getCompanyClaim();
+      return projectRepository.findProjectByCompany_Id(companyId);
     }
 
     public Optional<Project> getProjectById(Integer id) {
