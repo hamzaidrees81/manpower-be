@@ -16,6 +16,7 @@ public class AssetDTO {
 
   private Integer id;
   private Integer sponsoredById;
+  private String sponsoredName;
   private String name;
   private String idNumber;
   private LocalDate iqamaExpiry;
