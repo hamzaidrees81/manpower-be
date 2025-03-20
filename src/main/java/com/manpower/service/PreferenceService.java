@@ -14,19 +14,19 @@ public class PreferenceService {
   BigDecimal findVATAmount()
   {
     Integer companyId = SecurityUtil.getCompanyClaim();
-    return preferencesRepository.findByCompany_Id(String.valueOf(companyId)).getTaxAmount();
+    return preferencesRepository.findByCompany_Id(companyId).getTaxAmount();
   }
 
   Integer invoiceSequence()
   {
     Integer companyId = SecurityUtil.getCompanyClaim();
-    return preferencesRepository.findByCompany_Id(String.valueOf(companyId)).getInvoiceSeq();
+    return preferencesRepository.findByCompany_Id(companyId).getInvoiceSeq();
   }
 
   void updateInvoiceNumber()
   {
     Integer companyId = SecurityUtil.getCompanyClaim();
-    Preference preference = preferencesRepository.findByCompany_Id(String.valueOf(companyId));
+    Preference preference = preferencesRepository.findByCompany_Id(companyId);
     preference.setInvoiceSeq(preference.getInvoiceSeq() + 1);
     preferencesRepository.save(preference);
   }
