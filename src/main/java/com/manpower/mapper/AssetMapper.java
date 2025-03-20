@@ -18,7 +18,7 @@ public class AssetMapper {
         return AssetDTO.builder()
                 .id(asset.getId())
                 .sponsoredById(asset.getSponsoredBy() != null ? asset.getSponsoredBy().getId() : null)
-                .sponsoredName(asset.getSponsoredBy() != null ? asset.getName() : null)
+                .sponsoredName(asset.getSponsoredBy() != null ? asset.getSponsoredBy().getName() : null)
                 .name(asset.getName())
                 .idNumber(asset.getIdNumber())
                 .iqamaExpiry(asset.getIqamaExpiry())
