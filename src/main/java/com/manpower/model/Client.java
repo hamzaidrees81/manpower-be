@@ -24,4 +24,7 @@ public class Client {
   @Column(name = "address", nullable = false, length = 100)
   private String address;
 
+  @Column(name = "status")
+  private Integer status;
+
 }

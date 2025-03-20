@@ -97,13 +97,13 @@ public class Contants {
     }
   }
 
-  public enum CompanyStatus {
+  public enum StatusInt {
     ACTIVE(1),
     DISABLED(0);
 
     private final int value;
 
-    CompanyStatus(int value) {
+    StatusInt(int value) {
       this.value = value;
     }
 
@@ -111,8 +111,8 @@ public class Contants {
       return value;
     }
 
-    public static CompanyStatus fromValue(int value) {
-      for (CompanyStatus status : CompanyStatus.values()) {
+    public static StatusInt fromValue(int value) {
+      for (StatusInt status : StatusInt.values()) {
         if (status.getValue() == value) {
           return status;
         }

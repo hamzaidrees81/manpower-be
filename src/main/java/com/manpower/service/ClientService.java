@@ -1,5 +1,6 @@
 package com.manpower.service;
 
+import com.manpower.common.Contants;
 import com.manpower.model.Client;
 import com.manpower.repository.ClientRepository;
 import jakarta.transaction.Transactional;
@@ -25,15 +26,26 @@ public class ClientService {
 
     @Transactional
     public Client createClient(Client client) {
+
+        client.setStatus(Contants.StatusInt.ACTIVE.getValue());
         return clientRepository.save(client);
     }
 
-    public void deleteClient(Integer id) {
-        clientRepository.deleteById(id);
-    }
 
+    @Transactional
     public Client updateClient(Integer id, Client client) {
-        throw new RuntimeException("Not implemented yet");
-
+        return clientRepository.findById(id).map(existingClient -> {
+            existingClient.setClientId(client.getClientId());
+            existingClient.setName(client.getName());
+            existingClient.setAddress(client.getAddress());
+            return clientRepository.save(existingClient);
+        }).orElseThrow(() -> new RuntimeException("Client not found"));
     }
-}
+
+    @Transactional
+    public void deleteClient(Integer id) {
+        clientRepository.findById(id).ifPresent(client -> {
+            client.setStatus(Contants.StatusInt.ACTIVE.getValue());
+            clientRepository.save(client);
+        });
+    }}

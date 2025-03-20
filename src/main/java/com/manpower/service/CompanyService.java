@@ -25,7 +25,7 @@ public class CompanyService {
 
   public Company createCompany(Company company) {
 
-    company.setStatus(Contants.CompanyStatus.ACTIVE.getValue());
+    company.setStatus(Contants.StatusInt.ACTIVE.getValue());
     return companyRepository.save(company);
   }
 
@@ -47,7 +47,7 @@ public class CompanyService {
 
   public void deleteCompany(Integer id) {
     companyRepository.findById(id).ifPresent(company -> {
-      company.setStatus(Contants.CompanyStatus.DISABLED.getValue());
+      company.setStatus(Contants.StatusInt.DISABLED.getValue());
       companyRepository.save(company);
     });
   }
