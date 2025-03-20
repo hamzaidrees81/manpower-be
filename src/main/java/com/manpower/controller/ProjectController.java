@@ -18,7 +18,7 @@ public class ProjectController {
 
     @GetMapping
     public List<Project> getAllProjects() {
-        return projectService.getAllProjects();
+        return projectService.getAllProjectsByCompany();
     }
 
     @GetMapping("/{id}")
