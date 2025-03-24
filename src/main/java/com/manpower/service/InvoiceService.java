@@ -408,7 +408,7 @@ public class InvoiceService {
         for (Invoice invoice : invoiceList) {
 
             //if status filter is enabled, skip this
-            if(status != null) {
+            if(status != null && status != Contants.InvoiceStatus.ALL) {
                 if(Contants.InvoiceStatus.fromValue(invoice.getStatus()) != status)
                     continue;
             }

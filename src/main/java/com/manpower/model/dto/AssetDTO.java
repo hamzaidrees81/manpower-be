@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Data
@@ -17,6 +18,7 @@ public class AssetDTO {
   private Integer id;
   private Integer sponsoredById;
   private String sponsoredName;
+  private BigDecimal sponsoredPercentage;
   private String name;
   private String idNumber;
   private LocalDate iqamaExpiry;

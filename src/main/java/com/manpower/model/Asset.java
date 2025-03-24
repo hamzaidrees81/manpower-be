@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Data
@@ -61,5 +62,8 @@ public class Asset {
 
   @Column(name = "asset_ownership", nullable = false)
   private Byte assetOwnership;
+
+  @Column(name = "sponsorship_percentage", precision = 3, scale = 2)
+  private BigDecimal sponsorshipPercentage;
 
 }

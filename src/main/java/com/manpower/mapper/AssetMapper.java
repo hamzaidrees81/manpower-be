@@ -55,6 +55,7 @@ public class AssetMapper {
         asset.setAssetType((byte)assetDTO.getAssetType().getValue());
         asset.setAssetNumber(assetDTO.getAssetNumber());
         asset.setAssetOwnership((byte) assetDTO.getAssetOwnership().getValue());
+        asset.setSponsorshipPercentage(assetDTO.getSponsoredPercentage());
 
         return asset;
     }

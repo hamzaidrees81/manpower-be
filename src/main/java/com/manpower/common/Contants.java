@@ -126,7 +126,8 @@ public class Contants {
   public enum InvoiceStatus {
     DELETED((byte) 0),
     UNPAID((byte) 1),
-    PAID((byte) 2);
+    PAID((byte) 2),
+    ALL((byte)-1);
 
     private final Byte value;
     InvoiceStatus(Byte value) {
