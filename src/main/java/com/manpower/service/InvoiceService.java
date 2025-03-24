@@ -3,15 +3,21 @@ package com.manpower.service;
 import com.manpower.common.Contants;
 import com.manpower.dto.InvoiceMetadata;
 import com.manpower.mapper.CompanyMapper;
+import com.manpower.mapper.InvoiceStatusMapper;
 import com.manpower.model.*;
 import com.manpower.model.dto.*;
 import com.manpower.repository.*;
+import com.manpower.specification.InvoiceSpecifications;
 import com.manpower.util.SecurityUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.*;
 
 
@@ -30,6 +36,12 @@ public class InvoiceService {
 
     public List<Invoice> getAllInvoices() {
         return invoiceRepository.findAll();
+    }
+
+    public Page<InvoiceStatusDTO> getFilteredInvoices(Integer clientId, Contants.InvoiceStatus status, LocalDate startDate, LocalDate endDate, Pageable pageable) {
+        Integer companyId = SecurityUtil.getCompanyClaim();
+        Specification<Invoice> spec = InvoiceSpecifications.filterInvoices(companyId, clientId, status, startDate, endDate);
+        return invoiceRepository.findAll(spec, pageable).map(InvoiceStatusMapper::convertToDTO);
     }
 
     public Optional<DetailedInvoice> getDetailedInvoiceById(Integer id) {
@@ -366,11 +378,15 @@ public class InvoiceService {
             }
 
             InvoiceStatusDTO.InvoiceStatusDTOBuilder builder = InvoiceStatusDTO.builder();
-            builder.invoiceStatus(Contants.InvoiceStatus.fromValue(invoice.getStatus()));
-            builder.invoiceNumber(invoice.getNumber());
-            builder.creationDate(invoice.getCreateDate());
-            builder.clearedDate(invoice.getClearedDate());
-            builder.payableAmount(invoice.getTotalAmount());
+            builder.invoiceStatus(Contants.InvoiceStatus.fromValue(invoice.getStatus()))
+              .invoiceNumber(invoice.getNumber())
+              .creationDate(invoice.getCreateDate())
+              .clearedDate(invoice.getClearedDate())
+              .payableAmount(invoice.getTotalAmount())
+              .startDate(invoice.getStartDate())  // Added start date
+              .endDate(invoice.getEndDate())      // Added end date
+              .taxAmount(invoice.getTaxAmount())  // Added tax amount
+              .totalAmountWithTax(invoice.getTotalAmountWithTax());  // Added total amount with tax
 
             assetInvoiceStatusDTOS.add(builder.build());
         }

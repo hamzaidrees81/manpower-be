@@ -10,9 +10,14 @@ import java.time.LocalDate;
 @Data
 @Builder
 public class InvoiceStatusDTO {
-  LocalDate creationDate;
-  LocalDate clearedDate;
-  String invoiceNumber;
-  Contants.InvoiceStatus invoiceStatus;
-  BigDecimal payableAmount;
+  private Integer id;
+  private LocalDate creationDate;
+  private LocalDate clearedDate;
+  private String invoiceNumber;
+  private Contants.InvoiceStatus invoiceStatus;
+  private BigDecimal payableAmount;
+  private LocalDate startDate;
+  private LocalDate endDate;
+  private BigDecimal taxAmount;
+  private BigDecimal totalAmountWithTax;
 }

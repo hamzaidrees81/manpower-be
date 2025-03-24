@@ -7,9 +7,13 @@ import com.manpower.model.dto.InvoiceStatusCompanyDTO;
 import com.manpower.model.dto.InvoiceStatusDTO;
 import com.manpower.model.dto.DetailedInvoice;
 import com.manpower.service.InvoiceService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -26,6 +30,19 @@ public class InvoiceController {
         return invoiceService.getDetailedInvoiceById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/list")
+    public Page<InvoiceStatusDTO> listInvoices(
+      @RequestParam(required = false) Integer clientId,
+      @RequestParam(required = false) Contants.InvoiceStatus status,
+      @RequestParam(required = false) LocalDate startDate,
+      @RequestParam(required = false) LocalDate endDate,
+      @RequestParam(defaultValue = "0") int page,
+      @RequestParam(defaultValue = "10") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        return invoiceService.getFilteredInvoices(clientId, status, startDate, endDate, pageable);
     }
 
     @GetMapping(value = "/invoices/{assetId}/{status}", name = "Get all invoices for this asset based on status as paid/unpaid.  If status is null, get all.")
