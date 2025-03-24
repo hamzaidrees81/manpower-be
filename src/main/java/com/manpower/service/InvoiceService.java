@@ -38,9 +38,9 @@ public class InvoiceService {
         return invoiceRepository.findAll();
     }
 
-    public Page<InvoiceStatusDTO> getFilteredInvoices(Integer clientId, Contants.InvoiceStatus status, LocalDate startDate, LocalDate endDate, Pageable pageable) {
+    public Page<InvoiceStatusDTO> getFilteredInvoices(Integer clientId, Contants.InvoiceStatus status, LocalDate invoiceStartDate, LocalDate invoiceEndDate,LocalDate createdStartDate,LocalDate createdEndDate,LocalDate clearedStartDate,LocalDate clearedEndDate, Pageable pageable) {
         Integer companyId = SecurityUtil.getCompanyClaim();
-        Specification<Invoice> spec = InvoiceSpecifications.filterInvoices(companyId, clientId, status, startDate, endDate);
+        Specification<Invoice> spec = InvoiceSpecifications.filterInvoices(companyId, clientId, status, invoiceStartDate, invoiceEndDate, createdStartDate, clearedEndDate, clearedStartDate, clearedEndDate);
         return invoiceRepository.findAll(spec, pageable).map(InvoiceStatusMapper::convertToDTO);
     }
 

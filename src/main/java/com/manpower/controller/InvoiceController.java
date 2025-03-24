@@ -36,13 +36,17 @@ public class InvoiceController {
     public Page<InvoiceStatusDTO> listInvoices(
       @RequestParam(required = false) Integer clientId,
       @RequestParam(required = false) Contants.InvoiceStatus status,
-      @RequestParam(required = false) LocalDate startDate,
-      @RequestParam(required = false) LocalDate endDate,
+      @RequestParam(required = false) LocalDate invoiceStartDate,
+      @RequestParam(required = false) LocalDate invoiceEndDate,
+      @RequestParam(required = false) LocalDate createdStartDate,
+      @RequestParam(required = false) LocalDate createdEndDate,
+      @RequestParam(required = false) LocalDate clearedStartDate,
+      @RequestParam(required = false) LocalDate clearedEndDate,
       @RequestParam(defaultValue = "0") int page,
       @RequestParam(defaultValue = "10") int size) {
 
         Pageable pageable = PageRequest.of(page, size);
-        return invoiceService.getFilteredInvoices(clientId, status, startDate, endDate, pageable);
+        return invoiceService.getFilteredInvoices(clientId, status, invoiceStartDate, invoiceEndDate, createdStartDate, createdEndDate, clearedStartDate, clearedEndDate, pageable);
     }
 
     @GetMapping(value = "/invoices/{assetId}/{status}", name = "Get all invoices for this asset based on status as paid/unpaid.  If status is null, get all.")
