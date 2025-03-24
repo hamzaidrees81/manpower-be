@@ -30,6 +30,8 @@ public class AssetMapper {
                 .assetType(Contants.AssetType.fromValue(asset.getAssetType()))
                 .assetNumber(asset.getAssetNumber())
                 .assetOwnership(Contants.AssetOwnership.fromValue(asset.getAssetOwnership()))
+                .sponsorshipType(asset.getSponsorshipType())
+                .sponsorshipValue(asset.getSponsorshipValue())
                 .build();
     }
 
@@ -55,8 +57,8 @@ public class AssetMapper {
         asset.setAssetType((byte)assetDTO.getAssetType().getValue());
         asset.setAssetNumber(assetDTO.getAssetNumber());
         asset.setAssetOwnership((byte) assetDTO.getAssetOwnership().getValue());
-        asset.setSponsorshipPercentage(assetDTO.getSponsoredPercentage());
-
+        asset.setSponsorshipValue(assetDTO.getSponsorshipValue());
+        asset.setSponsorshipType(assetDTO.getSponsorshipType());
         return asset;
     }
 }

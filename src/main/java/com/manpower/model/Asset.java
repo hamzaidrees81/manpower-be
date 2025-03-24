@@ -63,7 +63,9 @@ public class Asset {
   @Column(name = "asset_ownership", nullable = false)
   private Byte assetOwnership;
 
-  @Column(name = "sponsorship_percentage", precision = 3, scale = 2)
-  private BigDecimal sponsorshipPercentage;
+  @Column(name = "sponsorship_value", precision = 3, scale = 2)
+  private BigDecimal sponsorshipValue;
 
+  @Column(name = "sponsorship_type")
+  private String sponsorshipType;
 }

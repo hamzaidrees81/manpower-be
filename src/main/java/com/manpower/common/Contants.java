@@ -11,6 +11,7 @@ public class Contants {
     MANPOWER(1),
     ITEM(2);
     private final int value;
+
     AssetType(int value) {
       this.value = value;
     }
@@ -30,6 +31,7 @@ public class Contants {
     SELF(1),
     RENTAL(2);
     private final int value;
+
     AssetOwnership(int value) {
       this.value = value;
     }
@@ -53,9 +55,11 @@ public class Contants {
     EMPLOYEE(2);
 
     private final int value;
+
     Role(int value) {
       this.value = value;
     }
+
     public int getValue() {
       return value;
     }
@@ -75,9 +79,11 @@ public class Contants {
     OVERTIME(2);
 
     private final int value;
+
     RateType(int value) {
       this.value = value;
     }
+
     public int getValue() {
       return value;
     }
@@ -91,7 +97,7 @@ public class Contants {
       throw new IllegalArgumentException("Invalid RateType value: " + value);
     }
 
-    public enum Claims{
+    public enum Claims {
       USER_ID,
       COMPANY_ID
     }
@@ -120,6 +126,14 @@ public class Contants {
       throw new IllegalArgumentException("Invalid CompanyStatus value: " + value);
     }
   }
+
+  @Getter
+  public enum SponsorshipType
+  {
+    PERCENTAGE,
+    FIXED;
+  }
+
 
 
   @Getter

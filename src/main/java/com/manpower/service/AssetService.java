@@ -1,13 +1,11 @@
 package com.manpower.service;
 
-import com.manpower.common.Contants;
 import com.manpower.mapper.AssetMapper;
 import com.manpower.model.Asset;
 import com.manpower.model.Company;
 import com.manpower.model.Sponsor;
 import com.manpower.model.dto.AssetDTO;
 import com.manpower.repository.AssetRepository;
-import com.manpower.repository.CompanyRepository;
 import com.manpower.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -65,7 +63,9 @@ public class AssetService {
         asset.setJoiningDate(updatedAsset.getJoiningDate());
         asset.setAssetType((byte) updatedAsset.getAssetType().getValue());
         asset.setAssetNumber(updatedAsset.getAssetNumber());
-        asset.setSponsorshipPercentage(updatedAsset.getSponsoredPercentage());
+        asset.setSponsorshipValue(updatedAsset.getSponsorshipValue());
+        asset.setSponsorshipType(updatedAsset.getSponsorshipType());
+
         return assetRepository.save(asset);
       }).orElse(null);
     return AssetMapper.toDTO(assetDB);

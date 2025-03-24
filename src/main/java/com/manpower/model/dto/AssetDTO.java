@@ -18,7 +18,8 @@ public class AssetDTO {
   private Integer id;
   private Integer sponsoredById;
   private String sponsoredName;
-  private BigDecimal sponsoredPercentage;
+  private BigDecimal sponsorshipValue;
+  private String sponsorshipType;
   private String name;
   private String idNumber;
   private LocalDate iqamaExpiry;
