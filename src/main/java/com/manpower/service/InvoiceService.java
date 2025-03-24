@@ -76,9 +76,8 @@ public class InvoiceService {
         detailedInvoiceBuilder.startDate(invoice.getCreateDate());
         detailedInvoiceBuilder.endDate(invoice.getCreateDate());
         detailedInvoiceBuilder.clearedDate(invoice.getClearedDate());
-        detailedInvoiceBuilder.totalAmount(invoice.getTotalAmount());
         detailedInvoiceBuilder.company(companyDTO);
-        detailedInvoiceBuilder.totalAmount(invoice.getTotalAmount());
+        detailedInvoiceBuilder.totalAmount(invoice.getTotalBeforeTax());
         detailedInvoiceBuilder.vatAmount(invoice.getTaxAmount());
         detailedInvoiceBuilder.totalWithVAT(invoice.getTotalAmountWithTax());
         detailedInvoiceBuilder.clientAddress(invoice.getClient().getAddress());
@@ -156,6 +155,13 @@ public class InvoiceService {
         return Optional.ofNullable(detailedInvoiceBuilder.build());
     }
 
+    private BigDecimal calculateAssetPayable(BigDecimal rate, BigDecimal hours) {
+        if (rate != null && hours != null && rate.compareTo(BigDecimal.ZERO) != 0 && hours.compareTo(BigDecimal.ZERO) != 0) {
+            return rate.multiply(hours);
+        }
+        return BigDecimal.ZERO;
+    }
+
     @Transactional
     public Invoice createInvoice(DetailedInvoice detailedInvoice) {
 
@@ -181,20 +187,21 @@ public class InvoiceService {
         invoiceBuilder.startDate(detailedInvoice.getStartDate());
         invoiceBuilder.endDate(detailedInvoice.getEndDate());
         invoiceBuilder.createDate(detailedInvoice.getInvoiceDate());
-        invoiceBuilder.totalAmount(detailedInvoice.getTotalAmount());
+        invoiceBuilder.totalBeforeTax(detailedInvoice.getTotalAmount());
         invoiceBuilder.taxAmount(tax);
         invoiceBuilder.totalAmountWithTax(detailedInvoice.getTotalAmount().add(tax));
         invoiceBuilder.number("INV-"+preferenceService.invoiceSequence());
+        invoiceBuilder.creatorId((Integer) SecurityUtil.getClaim(Contants.RateType.Claims.USER_ID.name()));
 
-        Invoice invoice = invoiceBuilder.build();
-        invoiceRepository.save(invoice); // Save invoice
+        Invoice invoice = invoiceRepository.save(invoiceBuilder.build()); // Save invoice
+
+        BigDecimal totalAssetPayable = BigDecimal.ZERO;
+        BigDecimal totalSponsorPayable = BigDecimal.ZERO;
 
         //create invoice asset
         for(DetailedProjectInvoice detailedProjectInvoice: detailedInvoice.getDetailedProjectInvoiceList())
         {
             //for every project, make entry of asset
-            Integer projectId = detailedProjectInvoice.getProjectId();
-
             for(DetailedAssetInvoice detailedAssetInvoice: detailedProjectInvoice.getAssetInvoicesList())
             {
                 InvoiceAsset.InvoiceAssetBuilder invoiceAsset = InvoiceAsset.builder();
@@ -211,12 +218,55 @@ public class InvoiceService {
                 invoiceAsset.standardRate(detailedAssetInvoice.getRegularRate());
                 invoiceAsset.otRate(detailedAssetInvoice.getOvertimeRate());
 
-                invoiceAssetRepository.save(invoiceAsset.build());
+
+                InvoiceAsset asset = invoiceAssetRepository.save(invoiceAsset.build());
+
+
+                // calculate payable to asset and sponsor
+                BigDecimal currentAssetPayable = BigDecimal.ZERO;
+
+                // Calculate current asset payable (Standard + OT)
+                currentAssetPayable = currentAssetPayable.add(calculateAssetPayable(asset.getStandardRate(), asset.getStandardHours()));
+                currentAssetPayable = currentAssetPayable.add(calculateAssetPayable(asset.getOtRate(), asset.getOtHours()));
+
+                // Calculate sponsor payable for this asset
+                BigDecimal assetSponsorPayable = BigDecimal.ZERO;
+                assetSponsorPayable = calculateSponsorPayable(asset, assetSponsorPayable, currentAssetPayable);
+
+                // Add the calculated sponsor payable and asset payable to the totals
+                totalSponsorPayable = totalSponsorPayable.add(assetSponsorPayable);
+                totalAssetPayable = totalAssetPayable.add(currentAssetPayable);
+
             }
         }
 
+        //store payables and profits in db
+        invoice.setSponsorPayable(totalSponsorPayable);
+        invoice.setAssetsPayable(totalAssetPayable);
+        invoice.setProfit(totalAssetPayable.subtract(totalSponsorPayable).subtract(totalAssetPayable));
+        invoiceRepository.save(invoice);
+
         preferenceService.updateInvoiceNumber();
         return invoice;
+    }
+
+    private static BigDecimal calculateSponsorPayable(InvoiceAsset asset, BigDecimal assetSponsorPayable, BigDecimal currentAssetPayable) {
+        if (asset.getAsset().getSponsoredBy() != null) {
+            String sponsorshipType = asset.getAsset().getSponsorshipType();
+            BigDecimal sponsorshipValue = asset.getAsset().getSponsorshipValue();
+
+            // Check if sponsorship type is fixed or percentage
+            if (Contants.SponsorshipType.FIXED.name().equals(sponsorshipType)) {
+                // Fixed sponsorship: add fixed amount
+                assetSponsorPayable = assetSponsorPayable.add(sponsorshipValue != null ? sponsorshipValue : BigDecimal.ZERO);
+            } else if (Contants.SponsorshipType.PERCENTAGE.name().equals(sponsorshipType)) {
+                // Percentage sponsorship: calculate based on earned amount
+                if (sponsorshipValue != null && sponsorshipValue.compareTo(BigDecimal.ZERO) != 0) {
+                    assetSponsorPayable = assetSponsorPayable.add(sponsorshipValue.multiply(currentAssetPayable));
+                }
+            }
+        }
+        return assetSponsorPayable;
     }
 
     public void deleteInvoice(Integer id) {
@@ -382,7 +432,7 @@ public class InvoiceService {
               .invoiceNumber(invoice.getNumber())
               .creationDate(invoice.getCreateDate())
               .clearedDate(invoice.getClearedDate())
-              .payableAmount(invoice.getTotalAmount())
+              .payableAmount(invoice.getTotalBeforeTax())
               .startDate(invoice.getStartDate())  // Added start date
               .endDate(invoice.getEndDate())      // Added end date
               .taxAmount(invoice.getTaxAmount())  // Added tax amount
@@ -434,7 +484,7 @@ public class InvoiceService {
             builder.invoiceNumber(invoice.getNumber());
             builder.creationDate(invoice.getCreateDate());
             builder.clearedDate(invoice.getClearedDate());
-            builder.payableAmount(invoice.getTotalAmount());
+            builder.payableAmount(invoice.getTotalBeforeTax());
 
             assetInvoiceStatusDTOS.add(builder.build());
         }

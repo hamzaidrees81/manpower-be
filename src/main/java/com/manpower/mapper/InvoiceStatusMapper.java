@@ -13,7 +13,7 @@ public class InvoiceStatusMapper {
       .clearedDate(invoice.getClearedDate())
       .invoiceNumber(invoice.getNumber())
       .invoiceStatus(invoice.getStatus() == 1 ? Contants.InvoiceStatus.UNPAID : Contants.InvoiceStatus.PAID)
-      .payableAmount(invoice.getTotalAmount())
+      .payableAmount(invoice.getTotalBeforeTax())
       .startDate(invoice.getStartDate())
       .endDate(invoice.getEndDate())
       .taxAmount(invoice.getTaxAmount())

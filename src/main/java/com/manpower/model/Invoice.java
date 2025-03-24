@@ -46,10 +46,6 @@
     @Column(name = "status")
     private Byte status;
 
-    @NotNull
-    @Column(name = "total_amount", precision = 10, scale = 2)
-    private BigDecimal totalAmount;
-
     @Column(name = "cleared_date")
     private LocalDate clearedDate;
 
@@ -65,10 +61,25 @@
     @Column(name = "create_date", nullable = false)
     private LocalDate createDate;
 
-    @Column(name = "taxAmount", precision = 10, scale = 2)
+    @Column(name = "tax_amount", precision = 10, scale = 2)
     private BigDecimal taxAmount;
 
     @Column(name = "total_amount_with_tax", precision = 10, scale = 2)
     private BigDecimal totalAmountWithTax;
+
+    @Column(name = "total_before_tax", precision = 10, scale = 2)
+    private BigDecimal totalBeforeTax;
+
+    @Column(name = "assets_payable", precision = 10, scale = 2)
+    private BigDecimal assetsPayable;
+
+    @Column(name = "sponsor_payable", precision = 10, scale = 2)
+    private BigDecimal sponsorPayable;
+
+    @Column(name = "profit", precision = 10, scale = 2)
+    private BigDecimal profit;
+
+    @Column(name = "creator_id")
+    private Integer creatorId;
 
   }

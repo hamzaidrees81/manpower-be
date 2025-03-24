@@ -85,7 +85,7 @@ public class InvoiceController {
 //    }
 
     @PostMapping("/prepare-invoice")
-    public DetailedInvoice prepareInvoice(@RequestBody InvoiceMetadata invoiceMetadata) {
+    public DetailedInvoice prepareInvoiceDataForReview(@RequestBody InvoiceMetadata invoiceMetadata) {
         return invoiceService.createInvoiceTemplateFromClient(invoiceMetadata);
     }
 
