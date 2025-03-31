@@ -39,4 +39,7 @@ public class Expense {
   @Column(name = "expense_metric")
   private Byte expenseMetric;
 
+  @Column(name = "expense_category")
+  private Integer expenseCategory;
+
 }
