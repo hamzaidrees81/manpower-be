@@ -35,6 +35,9 @@ public class InvoiceSponsorPayable {
   @Column(name = "status")
   private Byte status;
 
-
+  //stores which asset helped us earn it
+  @ManyToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name = "sponsorship_asset")
+  private Asset sponsorshipAsset;
 
 }
