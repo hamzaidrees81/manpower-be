@@ -137,19 +137,19 @@ public class Contants {
 
 
   @Getter
-  public enum InvoiceStatus {
+  public enum PaymentStatus {
     DELETED((byte) 0),
     UNPAID((byte) 1),
     PAID((byte) 2),
     ALL((byte)-1);
 
     private final Byte value;
-    InvoiceStatus(Byte value) {
+    PaymentStatus(Byte value) {
       this.value = value;
     }
 
-    public static InvoiceStatus fromValue(Byte value) {
-      for (InvoiceStatus rate : InvoiceStatus.values()) {
+    public static PaymentStatus fromValue(Byte value) {
+      for (PaymentStatus rate : PaymentStatus.values()) {
         if (rate.getValue() == value) {
           return rate;
         }

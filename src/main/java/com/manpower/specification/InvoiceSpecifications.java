@@ -9,7 +9,7 @@ import java.time.LocalDate;
 
 public class InvoiceSpecifications {
 
-    public static Specification<Invoice> filterInvoices(Integer companyId, Integer clientId, Contants.InvoiceStatus status, LocalDate invoiceStartDate, LocalDate invoiceEndDate,LocalDate createdStartDate,LocalDate createdEndDate,LocalDate clearedStartDate,LocalDate clearedEndDate) {
+    public static Specification<Invoice> filterInvoices(Integer companyId, Integer clientId, Contants.PaymentStatus status, LocalDate invoiceStartDate, LocalDate invoiceEndDate, LocalDate createdStartDate, LocalDate createdEndDate, LocalDate clearedStartDate, LocalDate clearedEndDate) {
         return (root, query, criteriaBuilder) -> {
             Predicate predicate = criteriaBuilder.equal(root.get("company").get("id"), companyId);
 

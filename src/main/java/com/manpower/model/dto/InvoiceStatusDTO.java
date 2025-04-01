@@ -14,7 +14,7 @@ public class InvoiceStatusDTO {
   private LocalDate creationDate;
   private LocalDate clearedDate;
   private String invoiceNumber;
-  private Contants.InvoiceStatus invoiceStatus;
+  private Contants.PaymentStatus paymentStatus;
   private BigDecimal payableAmount;
   private LocalDate startDate;
   private LocalDate endDate;

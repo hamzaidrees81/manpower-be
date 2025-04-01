@@ -38,7 +38,7 @@ public class InvoiceService {
         return invoiceRepository.findAll();
     }
 
-    public Page<InvoiceStatusDTO> getFilteredInvoices(Integer clientId, Contants.InvoiceStatus status, LocalDate invoiceStartDate, LocalDate invoiceEndDate,LocalDate createdStartDate,LocalDate createdEndDate,LocalDate clearedStartDate,LocalDate clearedEndDate, Pageable pageable) {
+    public Page<InvoiceStatusDTO> getFilteredInvoices(Integer clientId, Contants.PaymentStatus status, LocalDate invoiceStartDate, LocalDate invoiceEndDate, LocalDate createdStartDate, LocalDate createdEndDate, LocalDate clearedStartDate, LocalDate clearedEndDate, Pageable pageable) {
         Integer companyId = SecurityUtil.getCompanyClaim();
         Specification<Invoice> spec = InvoiceSpecifications.filterInvoices(companyId, clientId, status, invoiceStartDate, invoiceEndDate, createdStartDate, clearedEndDate, clearedStartDate, clearedEndDate);
         return invoiceRepository.findAll(spec, pageable).map(InvoiceStatusMapper::convertToDTO);
@@ -183,7 +183,7 @@ public class InvoiceService {
 
         BigDecimal tax = detailedInvoice.getTotalAmount().multiply(preferenceService.findVATAmount());
         invoiceBuilder.client(existingClient);
-        invoiceBuilder.status(Contants.InvoiceStatus.UNPAID.getValue());
+        invoiceBuilder.status(Contants.PaymentStatus.UNPAID.getValue());
         invoiceBuilder.startDate(detailedInvoice.getStartDate());
         invoiceBuilder.endDate(detailedInvoice.getEndDate());
         invoiceBuilder.createDate(detailedInvoice.getInvoiceDate());
@@ -404,7 +404,7 @@ public class InvoiceService {
     }
 
 
-    public InvoiceStatusCompanyDTO getInvoicesForClientByStatus(Integer clientId, Contants.InvoiceStatus status) {
+    public InvoiceStatusCompanyDTO getInvoicesForClientByStatus(Integer clientId, Contants.PaymentStatus status) {
 
         //get all invoices for this asset based on invoice status. If status is null, get all
         //find all invoice where this user is an asset
@@ -423,12 +423,12 @@ public class InvoiceService {
 
             //if status filter is enabled, skip this
             if(status != null) {
-                if(Contants.InvoiceStatus.fromValue(invoice.getStatus()) != status)
+                if(Contants.PaymentStatus.fromValue(invoice.getStatus()) != status)
                     continue;
             }
 
             InvoiceStatusDTO.InvoiceStatusDTOBuilder builder = InvoiceStatusDTO.builder();
-            builder.invoiceStatus(Contants.InvoiceStatus.fromValue(invoice.getStatus()))
+            builder.paymentStatus(Contants.PaymentStatus.fromValue(invoice.getStatus()))
               .invoiceNumber(invoice.getNumber())
               .creationDate(invoice.getCreateDate())
               .clearedDate(invoice.getClearedDate())
@@ -455,7 +455,7 @@ public class InvoiceService {
     }
 
 
-    public InvoiceStatusCompanyDTO getInvoicesForAllClientsByStatus(Contants.InvoiceStatus status) {
+    public InvoiceStatusCompanyDTO getInvoicesForAllClientsByStatus(Contants.PaymentStatus status) {
 
         //get all invoices for this asset based on invoice status. If status is null, get all
         //find all invoice where this user is an asset
@@ -474,13 +474,13 @@ public class InvoiceService {
         for (Invoice invoice : invoiceList) {
 
             //if status filter is enabled, skip this
-            if(status != null && status != Contants.InvoiceStatus.ALL) {
-                if(Contants.InvoiceStatus.fromValue(invoice.getStatus()) != status)
+            if(status != null && status != Contants.PaymentStatus.ALL) {
+                if(Contants.PaymentStatus.fromValue(invoice.getStatus()) != status)
                     continue;
             }
 
             InvoiceStatusDTO.InvoiceStatusDTOBuilder builder = InvoiceStatusDTO.builder();
-            builder.invoiceStatus(Contants.InvoiceStatus.fromValue(invoice.getStatus()));
+            builder.paymentStatus(Contants.PaymentStatus.fromValue(invoice.getStatus()));
             builder.invoiceNumber(invoice.getNumber());
             builder.creationDate(invoice.getCreateDate());
             builder.clearedDate(invoice.getClearedDate());
@@ -503,7 +503,7 @@ public class InvoiceService {
     }
 
 
-    public List<InvoiceStatusDTO> getInvoicesForAssetByStatus(Integer assetId, Contants.InvoiceStatus status) {
+    public List<InvoiceStatusDTO> getInvoicesForAssetByStatus(Integer assetId, Contants.PaymentStatus status) {
 
         //get all invoices for this asset based on invoice status. If status is null, get all
         //find all invoice where this user is an asset
@@ -521,12 +521,12 @@ public class InvoiceService {
 
             //if status filter is enabled, skip this
             if(status != null) {
-                if(Contants.InvoiceStatus.fromValue(invoiceAsset.getInvoice().getStatus()) != status)
+                if(Contants.PaymentStatus.fromValue(invoiceAsset.getInvoice().getStatus()) != status)
                     continue;
             }
 
             InvoiceStatusDTO.InvoiceStatusDTOBuilder builder = InvoiceStatusDTO.builder();
-            builder.invoiceStatus(Contants.InvoiceStatus.fromValue(invoiceAsset.getInvoice().getStatus()));
+            builder.paymentStatus(Contants.PaymentStatus.fromValue(invoiceAsset.getInvoice().getStatus()));
             builder.invoiceNumber(invoiceAsset.getInvoice().getNumber());
             builder.creationDate(invoiceAsset.getInvoice().getCreateDate());
             builder.clearedDate(invoiceAsset.getInvoice().getClearedDate());
@@ -538,7 +538,7 @@ public class InvoiceService {
         return assetInvoiceStatusDTOS;
     }
 
-    public List<InvoiceStatusDTO> getInvoicesForAllAssetsByStatus(Contants.InvoiceStatus status) {
+    public List<InvoiceStatusDTO> getInvoicesForAllAssetsByStatus(Contants.PaymentStatus status) {
         //TODO: FIND ALL ASSETS IN OUR COMPANY
 //
 //        //get all invoices for this asset based on invoice status. If status is null, get all

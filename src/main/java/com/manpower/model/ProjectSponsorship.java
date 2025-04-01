@@ -1,5 +1,6 @@
 package com.manpower.model;
 
+import com.manpower.common.Contants;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -28,7 +29,7 @@ public class ProjectSponsorship {
 
   @Size(max = 11)
   @Column(name = "sponsorship_type", length = 11)
-  private String sponsorshipType;
+  private Contants.SponsorshipType sponsorshipType;
 
   @Column(name = "sponsorship_value", precision = 10, scale = 2)
   private BigDecimal sponsorshipValue;

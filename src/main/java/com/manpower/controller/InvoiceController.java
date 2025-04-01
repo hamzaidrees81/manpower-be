@@ -35,7 +35,7 @@ public class InvoiceController {
     @GetMapping("/list")
     public Page<InvoiceStatusDTO> listInvoices(
       @RequestParam(required = false) Integer clientId,
-      @RequestParam(required = false) Contants.InvoiceStatus status,
+      @RequestParam(required = false) Contants.PaymentStatus status,
       @RequestParam(required = false) LocalDate invoiceStartDate,
       @RequestParam(required = false) LocalDate invoiceEndDate,
       @RequestParam(required = false) LocalDate createdStartDate,
@@ -50,24 +50,24 @@ public class InvoiceController {
     }
 
     @GetMapping(value = "/invoices/{assetId}/{status}", name = "Get all invoices for this asset based on status as paid/unpaid.  If status is null, get all.")
-    public ResponseEntity<List<InvoiceStatusDTO>> getInvoiceForAssetByStatus(@PathVariable Integer assetId, @PathVariable Contants.InvoiceStatus status) {
+    public ResponseEntity<List<InvoiceStatusDTO>> getInvoiceForAssetByStatus(@PathVariable Integer assetId, @PathVariable Contants.PaymentStatus status) {
         return ResponseEntity.ok().body(invoiceService.getInvoicesForAssetByStatus(assetId, status));
     }
 
     @GetMapping(value = "/invoices/client/{clientId}/{status}", name = "Get all invoices for this client based on status as paid/unpaid.  If status is null, get all.")
-    public ResponseEntity<InvoiceStatusCompanyDTO> getInvoiceForClientByStatus(@PathVariable Integer clientId, @PathVariable Contants.InvoiceStatus status) {
+    public ResponseEntity<InvoiceStatusCompanyDTO> getInvoiceForClientByStatus(@PathVariable Integer clientId, @PathVariable Contants.PaymentStatus status) {
         return ResponseEntity.ok().body(invoiceService.getInvoicesForClientByStatus(clientId, status));
     }
 
 
     @GetMapping(value = "/invoices/clients/{status}", name = "Get all invoices for all client of company based on status as paid/unpaid.  If status is null, get all.")
-    public ResponseEntity<InvoiceStatusCompanyDTO> getInvoiceForAllClientByStatus(@PathVariable Contants.InvoiceStatus status) {
+    public ResponseEntity<InvoiceStatusCompanyDTO> getInvoiceForAllClientByStatus(@PathVariable Contants.PaymentStatus status) {
         return ResponseEntity.ok().body(invoiceService.getInvoicesForAllClientsByStatus(status));
     }
 
     //TODO: PENDING
     @GetMapping(value = "/invoices/assets/{status}", name = "Get all invoices for all asset of company based on status as paid/unpaid.  If status is null, get all.")
-    public ResponseEntity<List<InvoiceStatusDTO>> getInvoiceForAssetByStatus(@PathVariable Contants.InvoiceStatus status) {
+    public ResponseEntity<List<InvoiceStatusDTO>> getInvoiceForAssetByStatus(@PathVariable Contants.PaymentStatus status) {
         return ResponseEntity.ok().body(invoiceService.getInvoicesForAllAssetsByStatus(status));
     }
 
