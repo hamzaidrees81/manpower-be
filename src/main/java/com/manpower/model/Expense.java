@@ -39,7 +39,9 @@ public class Expense {
   @Column(name = "expense_metric")
   private Byte expenseMetric;
 
-  @Column(name = "expense_category")
-  private Integer expenseCategory;
+  @ManyToOne(fetch = FetchType.EAGER, optional = false)
+  @OnDelete(action = OnDeleteAction.CASCADE)
+  @JoinColumn(name = "expense_category", nullable = false)
+  private ExpenseCategory expenseCategory;
 
 }

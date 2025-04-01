@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.math.BigDecimal;
 
@@ -19,13 +21,16 @@ public class ProjectSponsorship {
   @Column(name = "id", nullable = false)
   private Integer id;
 
-  @NotNull
-  @Column(name = "sponsor_id", nullable = false)
-  private Integer sponsorId;
+  @ManyToOne(fetch = FetchType.EAGER, optional = false)
+  @OnDelete(action = OnDeleteAction.CASCADE)
+  @JoinColumn(name = "sponsor_id", nullable = false)
+  private Sponsor sponsorId;
 
-  @NotNull
-  @Column(name = "asset_project_id", nullable = false)
-  private Integer assetProjectId;
+
+  @ManyToOne(fetch = FetchType.EAGER, optional = false)
+  @OnDelete(action = OnDeleteAction.CASCADE)
+  @JoinColumn(name = "asset_project_id", nullable = false)
+  private AssetProject assetProject;
 
   @Size(max = 11)
   @Column(name = "sponsorship_type", length = 11)
