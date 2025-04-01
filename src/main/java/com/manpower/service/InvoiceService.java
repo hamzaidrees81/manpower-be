@@ -5,6 +5,7 @@ import com.manpower.dto.InvoiceMetadata;
 import com.manpower.mapper.CompanyMapper;
 import com.manpower.mapper.InvoiceStatusMapper;
 import com.manpower.model.*;
+import com.manpower.model.InvoiceSponsorPayable;
 import com.manpower.model.dto.*;
 import com.manpower.repository.*;
 import com.manpower.specification.InvoiceSpecifications;
@@ -33,6 +34,9 @@ public class InvoiceService {
     private final ClientRepository clientRepository;
     private final CompanyRepository companyRepository;
     private final PreferenceService preferenceService;
+    private final ProjectAssetSponsorshipRepository projectAssetSponsorshipRepository;
+    private final InvoiceSponsorPayableRepository invoiceSponsorPayableRepository;
+    private final AssetPayableRepository assetPayableRepository;
 
     public List<Invoice> getAllInvoices() {
         return invoiceRepository.findAll();
@@ -155,7 +159,7 @@ public class InvoiceService {
         return Optional.ofNullable(detailedInvoiceBuilder.build());
     }
 
-    private BigDecimal calculateAssetPayable(BigDecimal rate, BigDecimal hours) {
+    private BigDecimal calcuatePriceFromRateAndHours(BigDecimal rate, BigDecimal hours) {
         if (rate != null && hours != null && rate.compareTo(BigDecimal.ZERO) != 0 && hours.compareTo(BigDecimal.ZERO) != 0) {
             return rate.multiply(hours);
         }
@@ -204,38 +208,64 @@ public class InvoiceService {
             //for every project, make entry of asset
             for(DetailedAssetInvoice detailedAssetInvoice: detailedProjectInvoice.getAssetInvoicesList())
             {
-                InvoiceAsset.InvoiceAssetBuilder invoiceAsset = InvoiceAsset.builder();
+                InvoiceAsset.InvoiceAssetBuilder invoiceAssetBuilder = InvoiceAsset.builder();
 
                 AssetProject assetProject =assetProjectService.getAssetProjectById(detailedAssetInvoice.getAssetProjectId())
                   .orElseThrow(() -> new RuntimeException("Asset Project not found"));
-                invoiceAsset.assetProject(assetProject);
+                invoiceAssetBuilder.assetProject(assetProject);
 
                 Integer assetId = detailedAssetInvoice.getAssetId();
-                invoiceAsset.asset(Asset.builder().id(assetId).build());
-                invoiceAsset.invoice(invoice);
-                invoiceAsset.standardHours(detailedAssetInvoice.getRegularHours());
-                invoiceAsset.otHours(detailedAssetInvoice.getOvertimeHours());
-                invoiceAsset.standardRate(detailedAssetInvoice.getRegularRate());
-                invoiceAsset.otRate(detailedAssetInvoice.getOvertimeRate());
+                invoiceAssetBuilder.asset(Asset.builder().id(assetId).build());
+                invoiceAssetBuilder.invoice(invoice);
+                invoiceAssetBuilder.standardHours(detailedAssetInvoice.getRegularHours());
+                invoiceAssetBuilder.otHours(detailedAssetInvoice.getOvertimeHours());
+                invoiceAssetBuilder.standardRate(detailedAssetInvoice.getRegularRate());
+                invoiceAssetBuilder.otRate(detailedAssetInvoice.getOvertimeRate());
 
 
-                InvoiceAsset asset = invoiceAssetRepository.save(invoiceAsset.build());
+                InvoiceAsset invoiceAsset = invoiceAssetRepository.save(invoiceAssetBuilder.build());
 
-
-                // calculate payable to asset and sponsor
-                BigDecimal currentAssetPayable = BigDecimal.ZERO;
 
                 // Calculate current asset payable (Standard + OT)
-                currentAssetPayable = currentAssetPayable.add(calculateAssetPayable(asset.getStandardRate(), asset.getStandardHours()));
-                currentAssetPayable = currentAssetPayable.add(calculateAssetPayable(asset.getOtRate(), asset.getOtHours()));
+                BigDecimal currentAssetRevenue = BigDecimal.ZERO
+                  .add(calcuatePriceFromRateAndHours(invoiceAsset.getStandardRate(), invoiceAsset.getStandardHours()))
+                  .add(calcuatePriceFromRateAndHours(invoiceAsset.getOtRate(), invoiceAsset.getOtHours()));
 
-                // Calculate sponsor payable for this asset
-                BigDecimal assetSponsorPayable = BigDecimal.ZERO;
-                assetSponsorPayable = calculateSponsorPayable(asset, assetSponsorPayable, currentAssetPayable);
+                //get list of all sponsors for this asset so we can calculate shares of them all
+                List<ProjectAssetSponsorship> projectAssetSponsors = projectAssetSponsorshipRepository.findByAssetProject_IdAndAsset_Id(assetProject.getId(), assetId);
 
-                // Add the calculated sponsor payable and asset payable to the totals
-                totalSponsorPayable = totalSponsorPayable.add(assetSponsorPayable);
-                totalAssetPayable = totalAssetPayable.add(currentAssetPayable);
+                //calculate sponsorship payments and store
+                for(ProjectAssetSponsorship projectAssetSponsor: projectAssetSponsors)
+                {
+                    //calculate payable amount
+                    BigDecimal currentSponsorRevenue = calculateSponsorshipAmount(projectAssetSponsor, currentAssetRevenue);
+
+                    InvoiceSponsorPayable.InvoiceSponsorPayableBuilder ispBuilder = InvoiceSponsorPayable.builder();
+                    ispBuilder.projectSponsorshipId(projectAssetSponsor)
+                      .sponsorshipAsset(projectAssetSponsor.getAsset())
+                      .sponsorshipPayable(currentSponsorRevenue)
+                      .paymentStatus(Contants.PaymentStatus.UNPAID)
+                      .status(Contants.Status.ACTIVE.getValue());
+
+                    invoiceSponsorPayableRepository.save(ispBuilder.build());
+
+                //we will keep total sponsorship so we can calculate profit of whole invoice
+                    totalSponsorPayable = totalSponsorPayable.add(currentSponsorRevenue);
+                }
+
+                //calculate payable for this asset
+                AssetPayable.AssetPayableBuilder assetPayableBuilder = AssetPayable.builder()
+                  .assetProject(assetProject)
+                  .assetPayable(
+                    BigDecimal.ZERO
+                      .add(calcuatePriceFromRateAndHours(assetProject.getRegularRatePaid(), detailedAssetInvoice.getRegularHours()))
+                      .add(calcuatePriceFromRateAndHours(assetProject.getOvertimeRatePaid(), detailedAssetInvoice.getOvertimeHours()))
+                  )
+                  .paymentStatus(Contants.PaymentStatusString.UNPAID.name());
+
+                AssetPayable assetPayable  = assetPayableRepository.save(assetPayableBuilder.build());
+
+                totalAssetPayable = totalAssetPayable.add(assetPayable.getAssetPayable());
 
             }
         }
@@ -243,30 +273,20 @@ public class InvoiceService {
         //store payables and profits in db
         invoice.setSponsorPayable(totalSponsorPayable);
         invoice.setAssetsPayable(totalAssetPayable);
-        invoice.setProfit(totalAssetPayable.subtract(totalSponsorPayable).subtract(totalAssetPayable));
+        //get total before tax and subtract payables
+        invoice.setProfit(invoice.getTotalBeforeTax().subtract(totalSponsorPayable).subtract(totalAssetPayable));
         invoiceRepository.save(invoice);
 
         preferenceService.updateInvoiceNumber();
         return invoice;
     }
 
-    private static BigDecimal calculateSponsorPayable(InvoiceAsset asset, BigDecimal assetSponsorPayable, BigDecimal currentAssetPayable) {
-        if (asset.getAsset().getSponsoredBy() != null) {
-            String sponsorshipType = asset.getAsset().getSponsorshipType();
-            BigDecimal sponsorshipValue = asset.getAsset().getSponsorshipValue();
+    private BigDecimal calculateSponsorshipAmount(ProjectAssetSponsorship projectAssetSponsor, BigDecimal currentAssetRevenue) {
 
-            // Check if sponsorship type is fixed or percentage
-            if (Contants.SponsorshipType.FIXED.name().equals(sponsorshipType)) {
-                // Fixed sponsorship: add fixed amount
-                assetSponsorPayable = assetSponsorPayable.add(sponsorshipValue != null ? sponsorshipValue : BigDecimal.ZERO);
-            } else if (Contants.SponsorshipType.PERCENTAGE.name().equals(sponsorshipType)) {
-                // Percentage sponsorship: calculate based on earned amount
-                if (sponsorshipValue != null && sponsorshipValue.compareTo(BigDecimal.ZERO) != 0) {
-                    assetSponsorPayable = assetSponsorPayable.add(sponsorshipValue.multiply(currentAssetPayable));
-                }
-            }
-        }
-        return assetSponsorPayable;
+        if(Contants.SponsorshipType.FIXED.equals(projectAssetSponsor.getSponsorshipType()))
+            return projectAssetSponsor.getSponsorshipValue();
+        else //if sponsorship is in percentage
+            return currentAssetRevenue.multiply(BigDecimal.valueOf(0.01)).multiply(projectAssetSponsor.getSponsorshipValue());
     }
 
     public void deleteInvoice(Integer id) {
