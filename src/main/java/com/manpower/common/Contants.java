@@ -135,6 +135,14 @@ public class Contants {
   }
 
 
+  @Getter
+  public enum PaymentStatusString {
+    DELETED,
+    UNPAID,
+    PAID,
+    ALL;
+  }
+
 
   @Getter
   public enum PaymentStatus {

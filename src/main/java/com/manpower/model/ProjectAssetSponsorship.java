@@ -14,8 +14,8 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @Entity
-@Table(name = "project_sponsorship")
-public class ProjectSponsorship {
+@Table(name = "project_asset_sponsorship")
+public class ProjectAssetSponsorship {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id", nullable = false)
@@ -26,6 +26,10 @@ public class ProjectSponsorship {
   @JoinColumn(name = "sponsor_id", nullable = false)
   private Sponsor sponsorId;
 
+  @ManyToOne(fetch = FetchType.EAGER, optional = false)
+  @OnDelete(action = OnDeleteAction.CASCADE)
+  @JoinColumn(name = "sponsor_id", nullable = false)
+  private Asset asset;
 
   @ManyToOne(fetch = FetchType.EAGER, optional = false)
   @OnDelete(action = OnDeleteAction.CASCADE)
