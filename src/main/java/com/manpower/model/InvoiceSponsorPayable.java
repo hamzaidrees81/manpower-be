@@ -41,4 +41,8 @@ public class InvoiceSponsorPayable {
   @JoinColumn(name = "sponsorship_asset")
   private Asset sponsorshipAsset;
 
+  @Size(max = 11)
+  @Column(name = "sponsorship_determinant", length = 11)
+  private String sponsorshipDeterminant;
+
 }

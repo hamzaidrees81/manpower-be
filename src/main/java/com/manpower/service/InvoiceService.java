@@ -231,28 +231,6 @@ public class InvoiceService {
                   .add(calcuatePriceFromRateAndHours(invoiceAsset.getStandardRate(), invoiceAsset.getStandardHours()))
                   .add(calcuatePriceFromRateAndHours(invoiceAsset.getOtRate(), invoiceAsset.getOtHours()));
 
-                //get list of all sponsors for this asset so we can calculate shares of them all
-                List<ProjectAssetSponsorship> projectAssetSponsors = projectAssetSponsorshipRepository.findByAssetProject_IdAndAsset_Id(assetProject.getId(), assetId);
-
-                //calculate sponsorship payments and store
-                for(ProjectAssetSponsorship projectAssetSponsor: projectAssetSponsors)
-                {
-                    //calculate payable amount
-                    BigDecimal currentSponsorRevenue = calculateSponsorshipAmount(projectAssetSponsor, currentAssetRevenue);
-
-                    InvoiceSponsorPayable.InvoiceSponsorPayableBuilder ispBuilder = InvoiceSponsorPayable.builder();
-                    ispBuilder.projectSponsorshipId(projectAssetSponsor)
-                      .sponsorshipAsset(projectAssetSponsor.getAsset())
-                      .sponsorshipPayable(currentSponsorRevenue)
-                      .paymentStatus(Contants.PaymentStatus.UNPAID)
-                      .status(Contants.Status.ACTIVE.getValue());
-
-                    invoiceSponsorPayableRepository.save(ispBuilder.build());
-
-                //we will keep total sponsorship so we can calculate profit of whole invoice
-                    totalSponsorPayable = totalSponsorPayable.add(currentSponsorRevenue);
-                }
-
                 //calculate payable for this asset
                 AssetPayable.AssetPayableBuilder assetPayableBuilder = AssetPayable.builder()
                   .assetProject(assetProject)
@@ -267,6 +245,57 @@ public class InvoiceService {
 
                 totalAssetPayable = totalAssetPayable.add(assetPayable.getAssetPayable());
 
+
+                //get list of all sponsors for this asset so we can calculate shares of them all
+                List<ProjectAssetSponsorship> projectAssetSponsors = projectAssetSponsorshipRepository.findByAssetProject_IdAndAsset_Id(assetProject.getId(), assetId);
+
+                //calculate sponsorship payments and store
+                List<ProjectAssetSponsorship> sponsorsOnProfit = new ArrayList<>();
+                for(ProjectAssetSponsorship projectAssetSponsor: projectAssetSponsors)
+                {
+                    if(Contants.SponsorshipDeterminant.PROFIT.name().equals(projectAssetSponsor.getSponsorshipDeterminant()))
+                    {
+                        sponsorsOnProfit.add(projectAssetSponsor);
+                        continue;
+                    }
+                    //calculate payable amount
+                    BigDecimal currentSponsorRevenue = calculateSponsorshipAmount(projectAssetSponsor, currentAssetRevenue);
+
+                    InvoiceSponsorPayable.InvoiceSponsorPayableBuilder ispBuilder = InvoiceSponsorPayable.builder();
+                    ispBuilder.projectSponsorshipId(projectAssetSponsor)
+                      .sponsorshipAsset(projectAssetSponsor.getAsset())
+                      .sponsorshipPayable(currentSponsorRevenue)
+                      .paymentStatus(Contants.PaymentStatus.UNPAID)
+                      .sponsorshipDeterminant(Contants.SponsorshipDeterminant.REVENUE.name())
+                      .status(Contants.Status.ACTIVE.getValue());
+
+                    invoiceSponsorPayableRepository.save(ispBuilder.build());
+
+                //we will keep total sponsorship so we can calculate profit of whole invoice
+                    totalSponsorPayable = totalSponsorPayable.add(currentSponsorRevenue);
+                }
+
+                //calculate payable for sponsorship on profit
+                BigDecimal profitBeforeProfitSponsorshipShare = currentAssetRevenue.subtract(totalAssetPayable).subtract(totalSponsorPayable);
+                for(ProjectAssetSponsorship projectAssetProfitSponsor: sponsorsOnProfit)
+                {
+                    //calculate payable amount
+                    BigDecimal currentSponsorRevenue = calculateSponsorshipAmount(projectAssetProfitSponsor, profitBeforeProfitSponsorshipShare);
+
+                    InvoiceSponsorPayable.InvoiceSponsorPayableBuilder ispBuilder = InvoiceSponsorPayable.builder();
+                    ispBuilder.projectSponsorshipId(projectAssetProfitSponsor)
+                      .sponsorshipAsset(projectAssetProfitSponsor.getAsset())
+                      .sponsorshipPayable(currentSponsorRevenue)
+                      .paymentStatus(Contants.PaymentStatus.UNPAID)
+                      .sponsorshipDeterminant(Contants.SponsorshipDeterminant.PROFIT.name())
+                      .status(Contants.Status.ACTIVE.getValue());
+
+                    invoiceSponsorPayableRepository.save(ispBuilder.build());
+
+                    //we will keep total sponsorship so we can calculate profit of whole invoice
+                    totalSponsorPayable = totalSponsorPayable.add(currentSponsorRevenue);
+
+                }
             }
         }
 
@@ -281,12 +310,12 @@ public class InvoiceService {
         return invoice;
     }
 
-    private BigDecimal calculateSponsorshipAmount(ProjectAssetSponsorship projectAssetSponsor, BigDecimal currentAssetRevenue) {
+    private BigDecimal calculateSponsorshipAmount(ProjectAssetSponsorship projectAssetSponsor, BigDecimal amount) {
 
         if(Contants.SponsorshipType.FIXED.equals(projectAssetSponsor.getSponsorshipType()))
             return projectAssetSponsor.getSponsorshipValue();
         else //if sponsorship is in percentage
-            return currentAssetRevenue.multiply(BigDecimal.valueOf(0.01)).multiply(projectAssetSponsor.getSponsorshipValue());
+            return amount.multiply(BigDecimal.valueOf(0.01)).multiply(projectAssetSponsor.getSponsorshipValue());
     }
 
     public void deleteInvoice(Integer id) {
