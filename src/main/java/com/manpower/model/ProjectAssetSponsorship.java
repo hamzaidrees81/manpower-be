@@ -21,11 +21,6 @@ public class ProjectAssetSponsorship {
   @Column(name = "id", nullable = false)
   private Integer id;
 
-  @ManyToOne(fetch = FetchType.EAGER, optional = false)
-  @OnDelete(action = OnDeleteAction.CASCADE)
-  @JoinColumn(name = "sponsor_id", nullable = false)
-  private Sponsor sponsorId;
-
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @OnDelete(action = OnDeleteAction.CASCADE)
   @JoinColumn(name = "sponsor_id", nullable = false)
