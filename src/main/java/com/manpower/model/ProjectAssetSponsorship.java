@@ -26,10 +26,10 @@ public class ProjectAssetSponsorship {
   @JoinColumn(name = "sponsor_id", nullable = false)
   private Sponsor sponsorId;
 
-  @ManyToOne(fetch = FetchType.EAGER, optional = false)
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @OnDelete(action = OnDeleteAction.CASCADE)
   @JoinColumn(name = "sponsor_id", nullable = false)
-  private Asset asset;
+  private Sponsor sponsor;
 
   @ManyToOne(fetch = FetchType.EAGER, optional = false)
   @OnDelete(action = OnDeleteAction.CASCADE)
@@ -43,4 +43,12 @@ public class ProjectAssetSponsorship {
   @Column(name = "sponsorship_value", precision = 10, scale = 2)
   private BigDecimal sponsorshipValue;
 
+  @NotNull
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "asset_id", nullable = false)
+  private Asset asset;
+
+  @Size(max = 11)
+  @Column(name = "sponsorship_determinant", length = 11)
+  private String sponsorshipDeterminant;
 }

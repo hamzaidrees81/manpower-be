@@ -134,6 +134,13 @@ public class Contants {
     FIXED;
   }
 
+  @Getter
+  public enum SponsorshipDeterminant //how will this sponsorship apply on invoice
+  {
+    REVENUE,
+    PROFIT
+  }
+
 
   @Getter
   public enum PaymentStatusString {
