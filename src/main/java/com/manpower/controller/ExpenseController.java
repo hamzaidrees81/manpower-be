@@ -1,6 +1,10 @@
 package com.manpower.controller;
 
+import com.manpower.mapper.ExpenseMapper;
 import com.manpower.model.Expense;
+import com.manpower.model.ExpenseCategory;
+import com.manpower.model.dto.ExpenseDTO;
+import com.manpower.service.ExpenseCategoryService;
 import com.manpower.service.ExpenseService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,25 +15,32 @@ import java.util.List;
 @RequestMapping("/api/expenses")
 public class ExpenseController {
     private final ExpenseService expenseService;
+    private final ExpenseCategoryService expenseCategoryService;
 
-    public ExpenseController(ExpenseService expenseService) {
+    public ExpenseController(ExpenseService expenseService, ExpenseCategoryService expenseCategoryService) {
         this.expenseService = expenseService;
+        this.expenseCategoryService = expenseCategoryService;
     }
 
     @GetMapping
-    public List<Expense> getAllExpenses() {
+    public List<ExpenseDTO> getAllExpenses() {
         return expenseService.getAllExpenses();
     }
 
+    @GetMapping("/categories")
+    public List<ExpenseCategory> getAllExpenseCategories() {
+        return expenseCategoryService.getAllCategories();
+    }
+
     @GetMapping("/{id}")
-    public ResponseEntity<Expense> getExpenseById(@PathVariable Integer id) {
+    public ResponseEntity<ExpenseDTO> getExpenseById(@PathVariable Integer id) {
         return expenseService.getExpenseById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+          .map(expense -> ResponseEntity.ok(ExpenseMapper.toDTO(expense)))
+          .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public Expense createExpense(@RequestBody Expense expense) {
+    public Expense createExpense(@RequestBody ExpenseDTO expense) {
         return expenseService.createExpense(expense);
     }
 
