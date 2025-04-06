@@ -26,7 +26,7 @@ public class Expense {
   private Asset asset;
 
   @Column(name = "expense_type", nullable = false)
-  private Byte expenseType;
+  private Byte expenseType; //self or project based
 
   @Column(name = "amount", nullable = false)
   private Integer amount;
