@@ -31,5 +31,6 @@ public class ProjectAssetSponsorshipDTO {
         this.sponsorshipValue = sponsorshipValue;
         this.assetId = assetId;
         this.sponsorshipDeterminant = sponsorshipDeterminant;
+        this.sponsorshipBasis = sponsorshipBasis;
     }
 }

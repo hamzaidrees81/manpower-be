@@ -1,7 +1,7 @@
 package com.manpower.controller;
 
 import com.manpower.model.dto.ProjectAssetSponsorshipDTO;
-import com.manpower.service.impl.ProjectAssetSponsorshipService;
+import com.manpower.service.ProjectAssetSponsorshipService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
