@@ -12,7 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/asset-sponsorships")
 @RequiredArgsConstructor
-public class ProjectAssetSponsorshipController {
+public class AssetSponsorshipsController {
 
     private final ProjectAssetSponsorshipService sponsorshipService;
 
