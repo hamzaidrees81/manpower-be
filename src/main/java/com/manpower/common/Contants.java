@@ -144,8 +144,8 @@ public class Contants {
   @Getter
   public enum SponsorshipBasis //apply on all projects or only this project
   {
-    ASSETBASED,
-    PROJECTBASED
+    ASSET_BASED,
+    PROJECT_BASED
   }
 
   @Getter
