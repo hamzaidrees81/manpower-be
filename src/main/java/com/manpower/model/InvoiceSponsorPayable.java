@@ -2,6 +2,7 @@ package com.manpower.model;
 
 import com.manpower.common.Contants;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
@@ -44,5 +45,14 @@ public class InvoiceSponsorPayable {
   @Size(max = 11)
   @Column(name = "sponsorship_determinant", length = 11)
   private String sponsorshipDeterminant;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "sponsor_id")
+  private Sponsor sponsor;
+
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "invoice_id")
+  private Invoice invoice;
 
 }

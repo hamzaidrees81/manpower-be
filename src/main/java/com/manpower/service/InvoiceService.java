@@ -200,7 +200,8 @@ public class InvoiceService {
         Invoice invoice = invoiceRepository.save(invoiceBuilder.build()); // Save invoice
 
         BigDecimal totalAssetPayable = BigDecimal.ZERO;
-        BigDecimal totalSponsorPayable = BigDecimal.ZERO;
+        BigDecimal totalSponsorPayableRevenue = BigDecimal.ZERO;
+        BigDecimal totalSponsorPayableProfit = BigDecimal.ZERO;
 
         //create invoice asset
         for(DetailedProjectInvoice detailedProjectInvoice: detailedInvoice.getDetailedProjectInvoiceList())
@@ -239,6 +240,8 @@ public class InvoiceService {
                       .add(calcuatePriceFromRateAndHours(assetProject.getRegularRatePaid(), detailedAssetInvoice.getRegularHours()))
                       .add(calcuatePriceFromRateAndHours(assetProject.getOvertimeRatePaid(), detailedAssetInvoice.getOvertimeHours()))
                   )
+                .asset(assetProject.getAsset())
+                .invoice(invoice)
                   .paymentStatus(Contants.PaymentStatusString.UNPAID.name());
 
                 AssetPayable assetPayable  = assetPayableRepository.save(assetPayableBuilder.build());
@@ -272,16 +275,18 @@ public class InvoiceService {
                       .sponsorshipPayable(currentSponsorRevenue)
                       .paymentStatus(Contants.PaymentStatus.UNPAID)
                       .sponsorshipDeterminant(Contants.SponsorshipDeterminant.REVENUE.name())
+                        .invoice(invoice)
+                        .sponsor(projectAssetSponsor.getSponsor())
                       .status(Contants.Status.ACTIVE.getValue());
 
                     invoiceSponsorPayableRepository.save(ispBuilder.build());
 
                 //we will keep total sponsorship so we can calculate profit of whole invoice
-                    totalSponsorPayable = totalSponsorPayable.add(currentSponsorRevenue);
+                    totalSponsorPayableRevenue = totalSponsorPayableRevenue.add(currentSponsorRevenue);
                 }
 
                 //calculate payable for sponsorship on profit
-                BigDecimal profitBeforeProfitSponsorshipShare = currentAssetRevenue.subtract(totalAssetPayable).subtract(totalSponsorPayable);
+                BigDecimal profitBeforeProfitSponsorshipShare = currentAssetRevenue.subtract(totalAssetPayable).subtract(totalSponsorPayableRevenue);
                 for(ProjectAssetSponsorship projectAssetProfitSponsor: sponsorsOnProfit)
                 {
                     //calculate payable amount
@@ -293,22 +298,24 @@ public class InvoiceService {
                       .sponsorshipPayable(currentSponsorRevenue)
                       .paymentStatus(Contants.PaymentStatus.UNPAID)
                       .sponsorshipDeterminant(Contants.SponsorshipDeterminant.PROFIT.name())
-                      .status(Contants.Status.ACTIVE.getValue());
+                            .invoice(invoice)
+                            .sponsor(projectAssetProfitSponsor.getSponsor())
+                            .status(Contants.Status.ACTIVE.getValue());
 
                     invoiceSponsorPayableRepository.save(ispBuilder.build());
 
                     //we will keep total sponsorship so we can calculate profit of whole invoice
-                    totalSponsorPayable = totalSponsorPayable.add(currentSponsorRevenue);
+                    totalSponsorPayableProfit = totalSponsorPayableProfit.add(currentSponsorRevenue);
 
                 }
             }
         }
 
         //store payables and profits in db
-        invoice.setSponsorPayable(totalSponsorPayable);
+        invoice.setSponsorPayable(totalSponsorPayableRevenue.add(totalSponsorPayableProfit));
         invoice.setAssetsPayable(totalAssetPayable);
         //get total before tax and subtract payables
-        invoice.setProfit(invoice.getTotalBeforeTax().subtract(totalSponsorPayable).subtract(totalAssetPayable));
+        invoice.setProfit(invoice.getTotalBeforeTax().subtract(invoice.getSponsorPayable()).subtract(totalAssetPayable));
         invoiceRepository.save(invoice);
 
         preferenceService.updateInvoiceNumber();

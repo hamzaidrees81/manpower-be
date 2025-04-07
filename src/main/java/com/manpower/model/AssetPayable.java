@@ -1,6 +1,7 @@
 package com.manpower.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
@@ -31,4 +32,11 @@ public class AssetPayable {
   @Column(name = "status")
   private Byte status;
 
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "asset_id")
+  private Asset asset;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "invoice_id")
+  private Invoice invoice;
 }
