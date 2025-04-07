@@ -16,7 +16,8 @@ public class ProjectAssetSponsorshipMapper {
             entity.getSponsorshipType(),
             entity.getSponsorshipValue(),
             entity.getAsset() != null ? entity.getAsset().getId() : null,
-          Contants.SponsorshipDeterminant.valueOf(entity.getSponsorshipDeterminant())
+            entity.getSponsorshipDeterminant(),
+            entity.getSponsorshipBasis()
         );
     }
 
@@ -41,7 +42,8 @@ public class ProjectAssetSponsorshipMapper {
 
         entity.setSponsorshipType(dto.getSponsorshipType());
         entity.setSponsorshipValue(dto.getSponsorshipValue());
-        entity.setSponsorshipDeterminant(dto.getSponsorshipDeterminant().name());
+        entity.setSponsorshipDeterminant(dto.getSponsorshipDeterminant());
+        entity.setSponsorshipBasis(dto.getSponsorshipBasis());
 
         return entity;
     }

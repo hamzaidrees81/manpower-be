@@ -247,7 +247,9 @@ public class InvoiceService {
 
 
                 //get list of all sponsors for this asset so we can calculate shares of them all
-                List<ProjectAssetSponsorship> projectAssetSponsors = projectAssetSponsorshipRepository.findByAssetProject_IdAndAsset_Id(assetProject.getId(), assetId);
+                List<ProjectAssetSponsorship> projectAssetSponsors = projectAssetSponsorshipRepository.findByAssetProject_Id(assetProject.getId());
+
+                //todo: ALSO CALCULATE FOR ASSETS BASED STUFF...
 
                 //calculate sponsorship payments and store
                 List<ProjectAssetSponsorship> sponsorsOnProfit = new ArrayList<>();

@@ -24,6 +24,16 @@ public class ProjectAssetSponsorshipService {
           .collect(Collectors.toList());
     }
 
+    public List<ProjectAssetSponsorshipDTO> findAllByAssetId(Integer id) {
+        return repository.findByAsset_Id(id).stream()
+                .map(ProjectAssetSponsorshipMapper::toDTO).toList();
+    }
+
+    public List<ProjectAssetSponsorshipDTO> findAllByAssetProjectId(Integer id) {
+        return repository.findByAssetProject_Id(id).stream()
+                .map(ProjectAssetSponsorshipMapper::toDTO).toList();
+    }
+
     public Optional<ProjectAssetSponsorshipDTO> findById(Long id) {
         return repository.findById(id)
           .map(ProjectAssetSponsorshipMapper::toDTO);

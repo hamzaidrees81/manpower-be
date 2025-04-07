@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/project-asset-sponsorships")
+@RequestMapping("/api/asset-sponsorships")
 @RequiredArgsConstructor
 public class ProjectAssetSponsorshipController {
 
@@ -22,11 +22,22 @@ public class ProjectAssetSponsorshipController {
         return ResponseEntity.ok(dtos);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ProjectAssetSponsorshipDTO> getSponsorshipById(@PathVariable Long id) {
-        return sponsorshipService.findById(id)
-            .map(ResponseEntity::ok)
-            .orElse(ResponseEntity.notFound().build());
+    @GetMapping("/asset-project/{id}")
+    public ResponseEntity<List<ProjectAssetSponsorshipDTO>> getSponsorshipByAssetProjectId(@PathVariable Integer id) {
+        List<ProjectAssetSponsorshipDTO> list = sponsorshipService.findAllByAssetProjectId(id);
+        if (list.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(list);
+    }
+
+    @GetMapping("/asset/{id}")
+    public ResponseEntity<List<ProjectAssetSponsorshipDTO>> getSponsorshipByAssetId(@PathVariable Integer id) {
+        List<ProjectAssetSponsorshipDTO> list = sponsorshipService.findAllByAssetId(id);
+        if (list.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(list);
     }
 
     @DeleteMapping("/{id}")

@@ -17,11 +17,13 @@ public class ProjectAssetSponsorshipDTO {
     private BigDecimal sponsorshipValue;
     private Integer assetId;
     private Contants.SponsorshipDeterminant sponsorshipDeterminant;
+    private Contants.SponsorshipBasis sponsorshipBasis;
 
     // Optional constructor
     public ProjectAssetSponsorshipDTO(Integer id, Integer sponsorId, Integer assetProjectId,
                                       Contants.SponsorshipType sponsorshipType, BigDecimal sponsorshipValue,
-                                      Integer assetId, Contants.SponsorshipDeterminant sponsorshipDeterminant) {
+                                      Integer assetId, Contants.SponsorshipDeterminant sponsorshipDeterminant,
+                                      Contants.SponsorshipBasis sponsorshipBasis) {
         this.id = id;
         this.sponsorId = sponsorId;
         this.assetProjectId = assetProjectId;
