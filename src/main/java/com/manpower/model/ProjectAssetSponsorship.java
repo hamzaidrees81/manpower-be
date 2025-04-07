@@ -33,7 +33,7 @@ public class ProjectAssetSponsorship {
 
     @Size(max = 11)
     @Column(name = "sponsorship_type", length = 11)
-    private Contants.SponsorshipType sponsorshipType;
+    private String sponsorshipType;
 
     @Column(name = "sponsorship_value", precision = 10, scale = 2)
     private BigDecimal sponsorshipValue;
@@ -45,11 +45,11 @@ public class ProjectAssetSponsorship {
 
     @Size(max = 11)
     @Column(name = "sponsorship_determinant", length = 11)
-    private Contants.SponsorshipDeterminant sponsorshipDeterminant;
+    private String sponsorshipDeterminant;
 
     @Size(max = 20)
     @NotNull
     @Column(name = "sponsorship_basis", nullable = false, length = 20)
-    private Contants.SponsorshipBasis sponsorshipBasis;
+    private String sponsorshipBasis;
 
 }

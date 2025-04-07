@@ -13,6 +13,7 @@ public class ProjectAssetSponsorshipDTO {
     private Integer id;
     private Integer sponsorId;
     private Integer assetProjectId;
+    private String sponsorName;
     private Contants.SponsorshipType sponsorshipType;
     private BigDecimal sponsorshipValue;
     private Integer assetId;
@@ -23,7 +24,7 @@ public class ProjectAssetSponsorshipDTO {
     public ProjectAssetSponsorshipDTO(Integer id, Integer sponsorId, Integer assetProjectId,
                                       Contants.SponsorshipType sponsorshipType, BigDecimal sponsorshipValue,
                                       Integer assetId, Contants.SponsorshipDeterminant sponsorshipDeterminant,
-                                      Contants.SponsorshipBasis sponsorshipBasis) {
+                                      Contants.SponsorshipBasis sponsorshipBasis, String sponsorName) {
         this.id = id;
         this.sponsorId = sponsorId;
         this.assetProjectId = assetProjectId;
@@ -32,5 +33,6 @@ public class ProjectAssetSponsorshipDTO {
         this.assetId = assetId;
         this.sponsorshipDeterminant = sponsorshipDeterminant;
         this.sponsorshipBasis = sponsorshipBasis;
+        this.sponsorName = sponsorName;
     }
 }

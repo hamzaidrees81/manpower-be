@@ -35,12 +35,12 @@ public class ProjectAssetSponsorshipService {
     }
 
     public List<ProjectAssetSponsorshipDTO> findAllByAssetId(Integer id) {
-        return repository.findByAsset_Id(id).stream()
+        return repository.findAllByAsset_Id(id).stream()
                 .map(ProjectAssetSponsorshipMapper::toDTO).toList();
     }
 
     public List<ProjectAssetSponsorshipDTO> findAllByAssetProjectId(Integer id) {
-        return repository.findByAssetProject_Id(id).stream()
+        return repository.findAllByAssetProject_Id(id).stream()
                 .map(ProjectAssetSponsorshipMapper::toDTO).toList();
     }
 
