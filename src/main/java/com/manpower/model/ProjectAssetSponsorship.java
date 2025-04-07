@@ -26,9 +26,9 @@ public class ProjectAssetSponsorship {
     @JoinColumn(name = "sponsor_id", nullable = false)
     private Sponsor sponsor;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "asset_project_id", nullable = false)
+    @JoinColumn(name = "asset_project_id")
     private AssetProject assetProject;
 
     @Size(max = 11)

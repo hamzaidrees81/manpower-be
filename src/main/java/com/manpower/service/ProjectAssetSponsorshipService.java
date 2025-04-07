@@ -62,8 +62,13 @@ public class ProjectAssetSponsorshipService {
 
         //create associations
         Sponsor sponsor = sponsorRepository.findById(dto.getSponsorId()).orElse(null);
-        AssetProject assetProject = assetProjectRepository.findById(dto.getAssetProjectId()).orElse(null);
         Asset asset = assetRepository.findById(dto.getAssetId()).orElse(null);
+
+        AssetProject assetProject = null;
+
+        if(dto.getAssetProjectId() != null) {
+            assetProject = assetProjectRepository.findById(dto.getAssetProjectId()).orElse(null);
+        }
 
         entity.setAsset(asset);
         entity.setSponsor(sponsor);

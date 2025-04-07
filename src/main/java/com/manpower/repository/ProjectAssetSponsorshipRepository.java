@@ -8,6 +8,6 @@ import java.util.List;
 public interface ProjectAssetSponsorshipRepository  extends JpaRepository<ProjectAssetSponsorship, Long> {
   List<ProjectAssetSponsorship> findAllByAssetProject_Id(Integer assetProjectId);
   List<ProjectAssetSponsorship> findAllByAsset_Id(Integer assetId);
-  List<ProjectAssetSponsorship> findProjectAssetSponsorshipsByAsset_Id(Integer assetId);
+  List<ProjectAssetSponsorship> findAllByAsset_IdAndAssetProjectIsNull(Integer assetId);
 
 }
