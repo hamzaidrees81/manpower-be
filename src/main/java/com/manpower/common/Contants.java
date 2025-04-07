@@ -141,6 +141,12 @@ public class Contants {
     PROFIT
   }
 
+  @Getter
+  public enum SponsorshipBasis //apply on all projects or only this project
+  {
+    ASSETBASED,
+    PROJECTBASED
+  }
 
   @Getter
   public enum PaymentStatusString {
