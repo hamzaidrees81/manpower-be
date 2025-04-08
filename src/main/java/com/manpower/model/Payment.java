@@ -1,7 +1,5 @@
-package com.manpower;
+package com.manpower.model;
 
-import com.manpower.model.Asset;
-import com.manpower.model.Invoice;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -19,55 +17,62 @@ import java.time.LocalDate;
 @Table(name = "payment")
 public class Payment {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @NotNull
-    @Column(name = "amount", nullable = false, precision = 10, scale = 2)
-    private BigDecimal amount;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "main_account_id")
+    private Account mainAccount;
 
     @NotNull
-    @Column(name = "paymentDate", nullable = false)
+    @Column(name = "amount", nullable = false, precision = 15, scale = 2)
+    private BigDecimal amount;
+
+    @Column(name = "payment_date")
     private LocalDate paymentDate;
 
     @Size(max = 50)
-    @NotNull
-    @Column(name = "paymentMethod", nullable = false, length = 50)
+    @Column(name = "payment_method", length = 50)
     private String paymentMethod;
 
     @Size(max = 100)
     @Column(name = "reference", length = 100)
     private String reference;
 
-    @NotNull
     @Lob
-    @Column(name = "paidToType", nullable = false)
+    @Column(name = "paid_to_type")
     private String paidToType;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "paidToId", nullable = false)
-    private Asset paidTo;
+    @Column(name = "paid_to_id")
+    private Integer paidToId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "invoiceId")
-    private Invoice invoice;
+    @Column(name = "invoice_id")
+    private Integer invoiceId;
 
     @Lob
     @Column(name = "remarks")
     private String remarks;
 
-    @NotNull
+    @ColumnDefault("'COMPLETED'")
     @Lob
-    @Column(name = "status", nullable = false)
+    @Column(name = "status")
     private String status;
 
+    @Lob
+    @Column(name = "payment_type")
+    private String paymentType;
+
+    @NotNull
+    @Column(name = "payment_timestamp", nullable = false)
+    private Instant paymentTimestamp;
+
     @ColumnDefault("CURRENT_TIMESTAMP")
-    @Column(name = "createdAt")
+    @Column(name = "created_at")
     private Instant createdAt;
 
     @ColumnDefault("CURRENT_TIMESTAMP")
-    @Column(name = "updatedAt")
+    @Column(name = "updated_at")
     private Instant updatedAt;
 
 }
