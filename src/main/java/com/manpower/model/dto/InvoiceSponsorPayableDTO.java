@@ -13,8 +13,10 @@ public class InvoiceSponsorPayableDTO {
     private Contants.PaymentStatusString paymentStatus;
     private Byte status;
     private Integer sponsorshipAssetId;
+    private String sponsorshipAssetName;
     private String sponsorshipDeterminant;
     private Integer sponsorId;
+    private String sponsorName;
     private Integer invoiceId;
     private BigDecimal paidAmount;
 }

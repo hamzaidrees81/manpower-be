@@ -1,38 +1,29 @@
 package com.manpower.model.dto;
 
 import com.manpower.common.Contants;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 import java.math.BigDecimal;
 
-@Getter
-@Setter
+
+@Data
+@Builder
+@AllArgsConstructor
+@RequiredArgsConstructor
 public class ProjectAssetSponsorshipDTO {
 
     private Integer id;
     private Integer sponsorId;
+    private Integer assetId;
+    private String assetName;
     private Integer assetProjectId;
+    private String assetProjectName;
     private String sponsorName;
     private Contants.SponsorshipType sponsorshipType;
     private BigDecimal sponsorshipValue;
-    private Integer assetId;
     private Contants.SponsorshipDeterminant sponsorshipDeterminant;
     private Contants.SponsorshipBasis sponsorshipBasis;
-
-    // Optional constructor
-    public ProjectAssetSponsorshipDTO(Integer id, Integer sponsorId, Integer assetProjectId,
-                                      Contants.SponsorshipType sponsorshipType, BigDecimal sponsorshipValue,
-                                      Integer assetId, Contants.SponsorshipDeterminant sponsorshipDeterminant,
-                                      Contants.SponsorshipBasis sponsorshipBasis, String sponsorName) {
-        this.id = id;
-        this.sponsorId = sponsorId;
-        this.assetProjectId = assetProjectId;
-        this.sponsorshipType = sponsorshipType;
-        this.sponsorshipValue = sponsorshipValue;
-        this.assetId = assetId;
-        this.sponsorshipDeterminant = sponsorshipDeterminant;
-        this.sponsorshipBasis = sponsorshipBasis;
-        this.sponsorName = sponsorName;
-    }
 }

@@ -16,8 +16,10 @@ public class InvoiceSponsorPayableMapper {
         dto.setPaymentStatus(Contants.PaymentStatusString.valueOf(entity.getPaymentStatus()));
         dto.setStatus(entity.getStatus());
         dto.setSponsorshipAssetId(entity.getSponsorshipAsset() != null ? entity.getSponsorshipAsset().getId() : null);
+        dto.setSponsorshipAssetName(entity.getSponsorshipAsset() != null ? entity.getSponsorshipAsset().getName() : null);
         dto.setSponsorshipDeterminant(entity.getSponsorshipDeterminant());
         dto.setSponsorId(entity.getSponsor() != null ? entity.getSponsor().getId() : null);
+        dto.setSponsorName(entity.getSponsor() != null ? entity.getSponsor().getName() : null);
         dto.setInvoiceId(entity.getInvoice() != null ? entity.getInvoice().getId() : null);
         dto.setPaidAmount(entity.getPaidAmount());
         return dto;

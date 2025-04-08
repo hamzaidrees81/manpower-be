@@ -4,12 +4,16 @@ import com.manpower.common.Contants;
 import com.manpower.mapper.AssetPayableMapper;
 import com.manpower.model.AssetPayable;
 import com.manpower.model.dto.AssetPayableDTO;
+import com.manpower.model.dto.AssetPayableDTOWithStats;
+import com.manpower.model.dto.InvoiceSponsorPayableDTO;
+import com.manpower.model.dto.InvoiceSponsorPayableDTOWithStats;
 import com.manpower.repository.AssetPayableRepository;
 import com.manpower.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -46,6 +50,30 @@ public class AssetPayableService {
 
     public void deleteById(Long id) {
         assetPayableRepository.deleteById(id);
+    }
+
+    public AssetPayableDTOWithStats findPayablesWithStats(Integer id, Contants.PaymentStatusString paymentStatus) {
+        List<AssetPayableDTO> payables = findPayablesByStatus(paymentStatus);
+
+        BigDecimal totalPayable = BigDecimal.ZERO;
+        BigDecimal totalPaidAmount = BigDecimal.ZERO;
+        BigDecimal pendingAmount;
+
+        //calculate total payable
+        for(AssetPayableDTO payable : payables) {
+            totalPayable = totalPayable.add(payable.getAssetPayable());
+            totalPaidAmount = totalPaidAmount.add(payable.getPaidAmount());
+        }
+
+        pendingAmount = totalPayable.subtract(totalPaidAmount);
+
+        return AssetPayableDTOWithStats.builder()
+                .totalAmount(totalPayable)
+                .paidAmount(totalPaidAmount)
+                .pendingAmount(pendingAmount)
+                .payables(payables)
+                .build();
+
     }
 
     public List<AssetPayableDTO> findPayables(Integer id, Contants.PaymentStatusString paymentStatus) {

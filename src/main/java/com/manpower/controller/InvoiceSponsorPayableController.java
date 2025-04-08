@@ -3,6 +3,7 @@ package com.manpower.controller;
 import com.manpower.common.Contants;
 import com.manpower.model.dto.AssetPayableDTO;
 import com.manpower.model.dto.InvoiceSponsorPayableDTO;
+import com.manpower.model.dto.InvoiceSponsorPayableDTOWithStats;
 import com.manpower.service.InvoiceSponsorPayableService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -23,10 +24,10 @@ public class InvoiceSponsorPayableController {
     }
 
     @GetMapping("status/{paymentStatus}/sponsor")
-    public ResponseEntity<List<InvoiceSponsorPayableDTO>> findPayables(
+    public ResponseEntity<InvoiceSponsorPayableDTOWithStats> findPayables(
             @PathVariable Contants.PaymentStatusString paymentStatus,
             @RequestParam(required = false) Integer sponsorId) {
-        return ResponseEntity.ok(invoiceSponsorPayableService.findPayables(sponsorId, paymentStatus));
+        return ResponseEntity.ok(invoiceSponsorPayableService.findPayablesWithStats(sponsorId, paymentStatus));
     }
 
 

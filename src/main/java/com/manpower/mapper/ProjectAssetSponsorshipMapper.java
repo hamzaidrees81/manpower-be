@@ -9,17 +9,20 @@ public class ProjectAssetSponsorshipMapper {
     public static ProjectAssetSponsorshipDTO toDTO(ProjectAssetSponsorship entity) {
         if (entity == null) return null;
 
-        return new ProjectAssetSponsorshipDTO(
-            entity.getId(),
-            entity.getSponsor() != null ? entity.getSponsor().getId() : null,
-            entity.getAssetProject() != null ? entity.getAssetProject().getId() : null,
-            Contants.SponsorshipType.valueOf(entity.getSponsorshipType()),
-            entity.getSponsorshipValue(),
-            entity.getAsset() != null ? entity.getAsset().getId() : null,
-            Contants.SponsorshipDeterminant.valueOf(entity.getSponsorshipDeterminant()),
-            Contants.SponsorshipBasis.valueOf(entity.getSponsorshipBasis()),
-                entity.getSponsor().getName()
-        );
+        return ProjectAssetSponsorshipDTO.builder()
+                .id(entity.getId())
+                .sponsorId(entity.getSponsor() != null ? entity.getSponsor().getId() : null)
+                .sponsorName(entity.getSponsor() != null ? entity.getSponsor().getName() : null)
+                .assetProjectId(entity.getAssetProject() != null ? entity.getAssetProject().getId() : null)
+                .assetProjectName(entity.getAssetProject() != null ? entity.getAssetProject().getAssetProjectName() : null)
+                .sponsorshipType(entity.getSponsorshipType() != null ? Contants.SponsorshipType.valueOf(entity.getSponsorshipType()) : null)
+                .sponsorshipValue(entity.getSponsorshipValue())
+                .assetId(entity.getAsset() != null ? entity.getAsset().getId() : null)
+                .assetName(entity.getAsset() != null ? entity.getAsset().getName() : null)
+                .sponsorshipDeterminant(entity.getSponsorshipDeterminant() != null ? Contants.SponsorshipDeterminant.valueOf(entity.getSponsorshipDeterminant()) : null)
+                .sponsorshipBasis(entity.getSponsorshipBasis() != null ? Contants.SponsorshipBasis.valueOf(entity.getSponsorshipBasis()) : null)
+
+                .build();
     }
 
     public static ProjectAssetSponsorship toEntity(ProjectAssetSponsorshipDTO dto) {

@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 public class AssetPayableDTO {
     private Integer id;
     private Integer assetProjectId;
+    private String assetProjectName;
     private BigDecimal assetPayable;
     private Contants.PaymentStatusString paymentStatus;
     private Byte status;
