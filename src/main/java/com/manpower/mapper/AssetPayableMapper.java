@@ -16,10 +16,12 @@ public class AssetPayableMapper {
         dto.setPaymentStatus(Contants.PaymentStatusString.valueOf(entity.getPaymentStatus()));
         dto.setStatus(entity.getStatus());
         dto.setAssetId(entity.getAsset() != null ? entity.getAsset().getId() : null);
+        dto.setAssetName(entity.getAsset() != null ? entity.getAsset().getName() : null);
         dto.setInvoiceId(entity.getInvoice() != null ? entity.getInvoice().getId() : null);
         dto.setPaidAmount(entity.getPaidAmount());
         if(entity.getAssetProject() != null)
             dto.setAssetProjectName(entity.getAssetProject().getAssetProjectName());
+
         return dto;
     }
 

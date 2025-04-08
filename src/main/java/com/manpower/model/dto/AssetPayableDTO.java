@@ -14,6 +14,7 @@ public class AssetPayableDTO {
     private Contants.PaymentStatusString paymentStatus;
     private Byte status;
     private Integer assetId;
+    private String assetName;
     private Integer invoiceId;
     private BigDecimal paidAmount;
 }

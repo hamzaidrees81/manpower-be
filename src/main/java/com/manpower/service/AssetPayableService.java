@@ -53,7 +53,8 @@ public class AssetPayableService {
     }
 
     public AssetPayableDTOWithStats findPayablesWithStats(Integer id, Contants.PaymentStatusString paymentStatus) {
-        List<AssetPayableDTO> payables = findPayablesByStatus(paymentStatus);
+
+        List<AssetPayableDTO> payables = findPayables(id,paymentStatus);
 
         BigDecimal totalPayable = BigDecimal.ZERO;
         BigDecimal totalPaidAmount = BigDecimal.ZERO;
