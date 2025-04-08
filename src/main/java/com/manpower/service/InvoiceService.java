@@ -241,6 +241,8 @@ public class InvoiceService {
                       .add(calcuatePriceFromRateAndHours(assetProject.getOvertimeRatePaid(), detailedAssetInvoice.getOvertimeHours()))
                   )
                 .asset(assetProject.getAsset())
+                .companyId(SecurityUtil.getCompanyClaim())
+                        .paidAmount(BigDecimal.ZERO)
                 .invoice(invoice)
                   .paymentStatus(Contants.PaymentStatusString.UNPAID.name());
 
@@ -277,6 +279,8 @@ public class InvoiceService {
                       .sponsorshipDeterminant(Contants.SponsorshipDeterminant.REVENUE.name())
                         .invoice(invoice)
                         .sponsor(projectAssetSponsor.getSponsor())
+                            .companyId(SecurityUtil.getCompanyClaim())
+                            .paidAmount(BigDecimal.ZERO)
                       .status(Contants.Status.ACTIVE.getValue());
 
                     invoiceSponsorPayableRepository.save(ispBuilder.build());
@@ -300,6 +304,8 @@ public class InvoiceService {
                       .sponsorshipDeterminant(Contants.SponsorshipDeterminant.PROFIT.name())
                             .invoice(invoice)
                             .sponsor(projectAssetProfitSponsor.getSponsor())
+                            .companyId(SecurityUtil.getCompanyClaim())
+                            .paidAmount(BigDecimal.ZERO)
                             .status(Contants.Status.ACTIVE.getValue());
 
                     invoiceSponsorPayableRepository.save(ispBuilder.build());

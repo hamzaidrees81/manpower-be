@@ -219,5 +219,8 @@ public class Contants {
     }
   }
 
+  public enum PaidToType {
+    ASSET, SPONSOR
+  }
 
 }

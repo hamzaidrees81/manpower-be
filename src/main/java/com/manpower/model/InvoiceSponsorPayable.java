@@ -55,4 +55,12 @@ public class InvoiceSponsorPayable {
   @JoinColumn(name = "invoice_id")
   private Invoice invoice;
 
+  @NotNull
+  @Column(name = "paidAmount", nullable = false, precision = 10, scale = 2)
+  private BigDecimal paidAmount;
+
+  @NotNull
+  @Column(name = "company_id", nullable = false)
+  private Integer companyId;
+
 }
