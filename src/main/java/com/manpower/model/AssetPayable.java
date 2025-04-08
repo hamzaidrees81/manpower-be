@@ -41,7 +41,7 @@ public class AssetPayable {
   private Invoice invoice;
 
   @NotNull
-  @Column(name = "paidAmount", nullable = false, precision = 10, scale = 2)
+  @Column(name = "paid_amount", nullable = false, precision = 10, scale = 2)
   private BigDecimal paidAmount;
 
   @NotNull

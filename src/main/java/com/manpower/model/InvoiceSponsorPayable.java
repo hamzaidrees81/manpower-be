@@ -32,7 +32,7 @@ public class InvoiceSponsorPayable {
 
   @Size(max = 7)
   @Column(name = "payment_status", length = 7)
-  private Contants.PaymentStatus paymentStatus;
+  private String paymentStatus;
 
   @Column(name = "status")
   private Byte status;

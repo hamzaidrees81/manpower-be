@@ -10,7 +10,7 @@ public class InvoiceSponsorPayableDTO {
     private Integer id;
     private Integer projectSponsorshipId;
     private BigDecimal sponsorshipPayable;
-    private Contants.PaymentStatus paymentStatus;
+    private Contants.PaymentStatusString paymentStatus;
     private Byte status;
     private Integer sponsorshipAssetId;
     private String sponsorshipDeterminant;

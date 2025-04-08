@@ -1,5 +1,7 @@
 package com.manpower.controller;
 
+import com.manpower.common.Contants;
+import com.manpower.model.dto.AssetPayableDTO;
 import com.manpower.model.dto.InvoiceSponsorPayableDTO;
 import com.manpower.service.InvoiceSponsorPayableService;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +21,14 @@ public class InvoiceSponsorPayableController {
     public ResponseEntity<List<InvoiceSponsorPayableDTO>> getAll() {
         return ResponseEntity.ok(invoiceSponsorPayableService.findAll());
     }
+
+    @GetMapping("status/{paymentStatus}/sponsor")
+    public ResponseEntity<List<InvoiceSponsorPayableDTO>> findPayables(
+            @PathVariable Contants.PaymentStatusString paymentStatus,
+            @RequestParam(required = false) Integer sponsorId) {
+        return ResponseEntity.ok(invoiceSponsorPayableService.findPayables(sponsorId, paymentStatus));
+    }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<InvoiceSponsorPayableDTO> getById(@PathVariable Long id) {

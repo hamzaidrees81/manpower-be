@@ -1,5 +1,6 @@
 package com.manpower.model.dto;
 
+import com.manpower.common.Contants;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -9,7 +10,7 @@ public class AssetPayableDTO {
     private Integer id;
     private Integer assetProjectId;
     private BigDecimal assetPayable;
-    private String paymentStatus;
+    private Contants.PaymentStatusString paymentStatus;
     private Byte status;
     private Integer assetId;
     private Integer invoiceId;

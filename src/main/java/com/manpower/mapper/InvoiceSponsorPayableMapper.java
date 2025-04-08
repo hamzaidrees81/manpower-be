@@ -1,5 +1,6 @@
 package com.manpower.mapper;
 
+import com.manpower.common.Contants;
 import com.manpower.model.dto.InvoiceSponsorPayableDTO;
 import com.manpower.model.InvoiceSponsorPayable;
 
@@ -12,7 +13,7 @@ public class InvoiceSponsorPayableMapper {
         dto.setId(entity.getId());
         dto.setProjectSponsorshipId(entity.getProjectSponsorshipId() != null ? entity.getProjectSponsorshipId().getId() : null);
         dto.setSponsorshipPayable(entity.getSponsorshipPayable());
-        dto.setPaymentStatus(entity.getPaymentStatus());
+        dto.setPaymentStatus(Contants.PaymentStatusString.valueOf(entity.getPaymentStatus()));
         dto.setStatus(entity.getStatus());
         dto.setSponsorshipAssetId(entity.getSponsorshipAsset() != null ? entity.getSponsorshipAsset().getId() : null);
         dto.setSponsorshipDeterminant(entity.getSponsorshipDeterminant());
@@ -28,7 +29,7 @@ public class InvoiceSponsorPayableMapper {
         InvoiceSponsorPayable entity = new InvoiceSponsorPayable();
         entity.setId(dto.getId());
         entity.setSponsorshipPayable(dto.getSponsorshipPayable());
-        entity.setPaymentStatus(dto.getPaymentStatus());
+        entity.setPaymentStatus(dto.getPaymentStatus().name());
         entity.setStatus(dto.getStatus());
         entity.setSponsorshipDeterminant(dto.getSponsorshipDeterminant());
         entity.setPaidAmount(dto.getPaidAmount());

@@ -1,7 +1,10 @@
 package com.manpower.service;
 
+import com.manpower.common.Contants;
+import com.manpower.mapper.AssetPayableMapper;
 import com.manpower.mapper.InvoiceSponsorPayableMapper;
 import com.manpower.model.InvoiceSponsorPayable;
+import com.manpower.model.dto.AssetPayableDTO;
 import com.manpower.model.dto.InvoiceSponsorPayableDTO;
 import com.manpower.repository.InvoiceSponsorPayableRepository;
 import com.manpower.util.SecurityUtil;
@@ -33,5 +36,31 @@ public class InvoiceSponsorPayableService {
 
     public void deleteById(Long id) {
         invoiceSponsorPayableRepository.deleteById(id);
+    }
+
+    public List<InvoiceSponsorPayableDTO> findPayables(Integer id, Contants.PaymentStatusString paymentStatus) {
+        if (id != null && paymentStatus != Contants.PaymentStatusString.ALL) {
+            return findPayablesByAssetIdAndStatus(id, paymentStatus); // method for both
+        } else if (id != null) {
+            return findPayablesByAssetId(id); // method for asset ID only
+        } else if (paymentStatus != Contants.PaymentStatusString.ALL) {
+            return findPayablesByStatus(paymentStatus); // method for status only
+        } else {
+            return findAll(); // method for no parameters
+        }
+    }
+
+
+    public List<InvoiceSponsorPayableDTO> findPayablesByAssetId(Integer sponsorId) {
+        return invoiceSponsorPayableRepository.findBySponsorIdAndCompanyId(sponsorId, SecurityUtil.getCompanyClaim()).stream().map(InvoiceSponsorPayableMapper::toDTO).toList();
+    }
+
+    public List<InvoiceSponsorPayableDTO> findPayablesByAssetIdAndStatus(Integer sponsorId, Contants.PaymentStatusString paymentStatusString) {
+        return invoiceSponsorPayableRepository.findBySponsorIdAndCompanyIdAndPaymentStatus(sponsorId, SecurityUtil.getCompanyClaim(), paymentStatusString.name()).stream().map(InvoiceSponsorPayableMapper::toDTO).toList();
+    }
+
+    public List<InvoiceSponsorPayableDTO> findPayablesByStatus(Contants.PaymentStatusString paymentStatusString) {
+        return invoiceSponsorPayableRepository.findByCompanyIdAndPaymentStatus(SecurityUtil.getCompanyClaim(), paymentStatusString.name()).stream().map(InvoiceSponsorPayableMapper::toDTO).toList();
+
     }
 }

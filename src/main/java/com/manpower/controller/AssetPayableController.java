@@ -1,5 +1,7 @@
 package com.manpower.controller;
 
+import com.manpower.common.Contants;
+import com.manpower.model.AssetPayable;
 import com.manpower.model.dto.AssetPayableDTO;
 import com.manpower.model.dto.InvoiceSponsorPayableDTO;
 import com.manpower.service.AssetPayableService;
@@ -7,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -30,6 +33,14 @@ public class AssetPayableController {
         return ResponseEntity.ok(assetPayableDTO);
 
     }
+
+    @GetMapping("status/{paymentStatus}/asset")
+    public ResponseEntity<List<AssetPayableDTO>> findPayables(
+            @PathVariable Contants.PaymentStatusString paymentStatus,
+            @RequestParam(required = false) Integer assetId) {
+        return ResponseEntity.ok(assetPayableService.findPayables(assetId, paymentStatus));
+    }
+
 
     @PostMapping
     public ResponseEntity<AssetPayableDTO> create(@RequestBody AssetPayableDTO dto) {
