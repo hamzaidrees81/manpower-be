@@ -59,7 +59,7 @@
 
     @NotNull
     @Column(name = "create_date", nullable = false)
-    private LocalDate createDate;
+    private LocalDate createDate; //should come from FE in Invoice Date
 
     @Column(name = "tax_amount", precision = 10, scale = 2)
     private BigDecimal taxAmount;

@@ -14,6 +14,7 @@ import java.util.List;
 public interface AssetProjectRepository extends JpaRepository<AssetProject, Integer> {
   List<AssetProject> findProjectsByAsset_IdAndStartDateGreaterThanEqualAndEndDateLessThanEqual(@NotNull Integer assetId, LocalDate startDate, LocalDate endDate);
 
+  //THE DB START TIME SHOULD BE LESS THAN EQUALS THE FILTER END TIME...
   @Query("SELECT ap FROM AssetProject ap JOIN ap.project p WHERE p.client = :client AND p.startDate <= :endDate  AND ap.status = 1 ")
   List<AssetProject> findAssetsByClientAndProjectEndDate(@Param("client") Client client,
                                                          @Param("endDate") LocalDate endDate);

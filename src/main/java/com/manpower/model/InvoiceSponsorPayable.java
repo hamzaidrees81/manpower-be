@@ -22,9 +22,8 @@ public class InvoiceSponsorPayable {
   @Column(name = "id", nullable = false)
   private Integer id;
 
-  @ManyToOne(fetch = FetchType.EAGER, optional = false)
-  @OnDelete(action = OnDeleteAction.CASCADE)
-  @JoinColumn(name = "project_sponsorship_id", nullable = false)
+  @ManyToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name = "project_sponsorship_id")
   private ProjectAssetSponsorship projectSponsorshipId;
 
   @Column(name = "sponsorship_payable", precision = 10, scale = 2)

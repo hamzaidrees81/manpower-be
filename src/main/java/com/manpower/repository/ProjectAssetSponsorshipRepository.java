@@ -9,5 +9,6 @@ public interface ProjectAssetSponsorshipRepository  extends JpaRepository<Projec
   List<ProjectAssetSponsorship> findAllByAssetProject_Id(Integer assetProjectId);
   List<ProjectAssetSponsorship> findAllByAsset_Id(Integer assetId);
   List<ProjectAssetSponsorship> findAllByAsset_IdAndAssetProjectIsNull(Integer assetId);
+  List<ProjectAssetSponsorship> findAllByAsset_IdAndAssetProject_Id(Integer assetId, Integer assetProjectId);
 
 }

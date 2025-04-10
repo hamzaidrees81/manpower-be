@@ -210,7 +210,7 @@ public class InvoiceService {
         invoiceBuilder.taxAmount(tax);
         invoiceBuilder.totalAmountWithTax(detailedInvoice.getTotalAmount().add(tax));
         invoiceBuilder.number("INV-"+preferenceService.invoiceSequence());
-        invoiceBuilder.creatorId((Integer) SecurityUtil.getClaim(Contants.RateType.Claims.USER_ID.name()));
+        invoiceBuilder.creatorId(Integer.parseInt((String) Objects.requireNonNull(SecurityUtil.getClaim(Contants.RateType.Claims.USER_ID.name()))));
 
         Invoice invoice = invoiceRepository.save(invoiceBuilder.build()); // Save invoice
 
@@ -267,7 +267,7 @@ public class InvoiceService {
 
 
                 //get list of all sponsors for this asset so we can calculate shares of them all
-                List<ProjectAssetSponsorship> projectAssetSponsors = projectAssetSponsorshipRepository.findAllByAssetProject_Id(assetProject.getId());
+                List<ProjectAssetSponsorship> projectAssetSponsors = projectAssetSponsorshipRepository.findAllByAsset_IdAndAssetProject_Id(assetProject.getAsset().getId(), assetProject.getId());
                 //to get sponsors which are not limited to a certain project
                 List<ProjectAssetSponsorship> assetSponsorsWithoutProject = projectAssetSponsorshipRepository.findAllByAsset_IdAndAssetProjectIsNull(assetProject.getAsset().getId());
                 projectAssetSponsors.addAll(assetSponsorsWithoutProject);
