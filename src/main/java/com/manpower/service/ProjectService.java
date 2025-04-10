@@ -14,11 +14,13 @@ import java.util.Optional;
 public class ProjectService {
     private final ProjectRepository projectRepository;
   private final AssetProjectRepository assetProjectRepository;
+    private final CompanyService companyService;
 
-  public ProjectService(ProjectRepository projectRepository, AssetProjectRepository assetProjectRepository) {
+    public ProjectService(ProjectRepository projectRepository, AssetProjectRepository assetProjectRepository, CompanyService companyService) {
         this.projectRepository = projectRepository;
     this.assetProjectRepository = assetProjectRepository;
-  }
+        this.companyService = companyService;
+    }
 
     public List<Project> getAllProjectsByCompany() {
       Integer companyId = SecurityUtil.getCompanyClaim();
@@ -30,6 +32,7 @@ public class ProjectService {
     }
 
     public Project createProject(Project project) {
+      project.setCompany(companyService.getCompanyById(SecurityUtil.getCompanyClaim()).get());
         return projectRepository.save(project);
     }
 
