@@ -1,6 +1,7 @@
 package com.manpower.model.dto;
 
 import com.manpower.common.AccountConstant;
+import com.manpower.common.Contants;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -15,6 +16,9 @@ public class AccountDTO {
     private BigDecimal balance;
     private BigDecimal accountNumber;
     private String iban;
+    private String bankName;
+    private Contants.isDefaultAccount isDefaultAccount;
+    private Contants.Status status;
     private Instant createdAt;
     private Instant updatedAt;
 }

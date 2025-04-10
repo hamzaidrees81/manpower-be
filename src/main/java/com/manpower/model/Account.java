@@ -13,7 +13,7 @@ import java.time.Instant;
 @Getter
 @Setter
 @Entity
-@Table(name = "main_account")
+@Table(name = "account")
 public class Account {
     @Id
     @Column(name = "id", nullable = false)
@@ -54,5 +54,16 @@ public class Account {
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "updated_at")
     private Instant updatedAt;
+
+    @Size(max = 45)
+    @Column(name = "bank_name", length = 45)
+    private String bankName;
+
+    @NotNull
+    @Column(name = "is_default", nullable = false)
+    private Byte isDefault;
+
+    @Column(name = "status")
+    private Byte status;
 
 }

@@ -1,6 +1,7 @@
 package com.manpower.mapper;
 
 import com.manpower.common.AccountConstant;
+import com.manpower.common.Contants;
 import com.manpower.model.dto.AccountDTO;
 import com.manpower.model.Account;
 import com.manpower.util.SecurityUtil;
@@ -20,6 +21,9 @@ public class AccountMapper {
         dto.setIban(account.getIban());
         dto.setCreatedAt(account.getCreatedAt());
         dto.setUpdatedAt(account.getUpdatedAt());
+        dto.setStatus(Contants.Status.fromValue(account.getStatus()));
+        dto.setBankName(account.getBankName());
+        dto.setIsDefaultAccount(Contants.isDefaultAccount.fromValue(account.getIsDefault()));
 
         return dto;
     }

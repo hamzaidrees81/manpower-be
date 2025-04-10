@@ -180,6 +180,26 @@ public class Contants {
   }
 
   @Getter
+  public enum isDefaultAccount {
+    NO(null),
+    YES((byte) 1);
+
+    private final Byte value;
+    isDefaultAccount(Byte value) {
+      this.value = value;
+    }
+
+    public static isDefaultAccount fromValue(Byte value) {
+      for (isDefaultAccount rate : isDefaultAccount.values()) {
+        if (Objects.equals(rate.getValue(), value)) {
+          return rate;
+        }
+      }
+      throw new IllegalArgumentException("Invalid account value: " + value);
+    }
+  }
+
+  @Getter
   public enum AssetProjectStatus {
     ACTIVE((byte) 1),
     INACTIVE((byte) 0);
