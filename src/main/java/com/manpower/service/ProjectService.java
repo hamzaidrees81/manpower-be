@@ -1,7 +1,9 @@
 package com.manpower.service;
 
+import com.manpower.mapper.ProjectMapper;
 import com.manpower.model.Client;
 import com.manpower.model.Project;
+import com.manpower.model.dto.ProjectDTO;
 import com.manpower.repository.AssetProjectRepository;
 import com.manpower.repository.ProjectRepository;
 import com.manpower.util.SecurityUtil;
@@ -31,9 +33,12 @@ public class ProjectService {
         return projectRepository.findById(id);
     }
 
-    public Project createProject(Project project) {
-      project.setCompany(companyService.getCompanyById(SecurityUtil.getCompanyClaim()).get());
-        return projectRepository.save(project);
+    public ProjectDTO createProject(ProjectDTO projectDTO) {
+        projectDTO.setCompanyId(SecurityUtil.getCompanyClaim());
+        Project project = ProjectMapper.toEntity(projectDTO);
+//      project.setCompany(companyService.getCompanyById(SecurityUtil.getCompanyClaim()).get());
+        project = projectRepository.save(project);
+        return ProjectMapper.toDTO(project);
     }
 
     public Project updateProject(Integer id, Project updatedProject) {

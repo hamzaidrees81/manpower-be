@@ -1,6 +1,7 @@
 package com.manpower.controller;
 
 import com.manpower.model.Project;
+import com.manpower.model.dto.ProjectDTO;
 import com.manpower.service.ProjectService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +30,7 @@ public class ProjectController {
     }
 
     @PostMapping
-    public Project createProject(@RequestBody Project project) {
+    public ProjectDTO createProject(@RequestBody ProjectDTO project) {
         return projectService.createProject(project);
     }
 
