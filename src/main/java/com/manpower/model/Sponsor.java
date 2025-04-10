@@ -21,13 +21,13 @@ public class Sponsor {
   @JoinColumn(name = "company_id", nullable = false)
   private Company company;
 
-  @Column(name = "sponsor_id", nullable = false)
+  @Column(name = "sponsor_id")
   private Integer sponsorId;
 
   @Column(name = "name", nullable = false, length = 50)
   private String name;
 
-  @Column(name = "phone", nullable = false, length = 25)
+  @Column(name = "phone",  length = 25)
   private String phone;
 
 }
