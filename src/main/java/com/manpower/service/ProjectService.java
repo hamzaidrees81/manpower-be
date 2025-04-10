@@ -41,8 +41,8 @@ public class ProjectService {
         return ProjectMapper.toDTO(project);
     }
 
-    public Project updateProject(Integer id, Project updatedProject) {
-        return projectRepository.findById(id)
+    public ProjectDTO updateProject(Integer id, ProjectDTO updatedProject) {
+        Project project1 = projectRepository.findById(id)
                 .map(project -> {
                     project.setName(updatedProject.getName());
                     project.setLocation(updatedProject.getLocation());
@@ -50,6 +50,8 @@ public class ProjectService {
                     project.setEndDate(updatedProject.getEndDate());
                     return projectRepository.save(project);
                 }).orElse(null);
+
+        return ProjectMapper.toDTO(project1);
     }
 
 
