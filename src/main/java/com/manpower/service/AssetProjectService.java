@@ -80,7 +80,7 @@ public class AssetProjectService {
         designation = designationDB.get();
 
         AssetProject assetProject = AssetProjectMapper.toEntity(assetProjectDTO, company, asset,project,designation);
-
+        assetProject.setStatus(Contants.Status.ACTIVE.getValue());
         return AssetProjectMapper.toDTO(assetProjectRepository.save(assetProject));
     }
 
