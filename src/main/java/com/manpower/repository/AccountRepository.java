@@ -11,4 +11,5 @@ import java.util.Optional;
 public interface AccountRepository extends JpaRepository<Account, Integer> {
     Optional<Account> findByNameAndCompanyId(String name, Integer companyId);
     List<Account> findAllByCompanyId(Integer companyId);
+    Optional<Account> findFirstByCompanyIdAndIsDefaultEquals(Integer companyId, Byte isDefault);
 }

@@ -1,10 +1,10 @@
 package com.manpower.service;
 
+import com.manpower.common.Contants;
 import com.manpower.mapper.AccountMapper;
 import com.manpower.model.Account;
 import com.manpower.model.dto.AccountDTO;
 import com.manpower.repository.AccountRepository;
-import com.manpower.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class MainAccountService {
+public class AccountService {
 
     private final AccountRepository mainAccountRepository;
 
@@ -42,5 +42,11 @@ public class MainAccountService {
     public Account getAccountById(Integer id) {
         return mainAccountRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Account not found"));
+    }
+
+    public Account getDefaultAccount(Integer companyId) {
+        return mainAccountRepository.findFirstByCompanyIdAndIsDefaultEquals(companyId, Contants.isDefaultAccount.YES.getValue())
+                .orElseThrow(() -> new RuntimeException("Account not found"));
+
     }
 }

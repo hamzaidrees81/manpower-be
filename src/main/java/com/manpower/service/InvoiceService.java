@@ -37,6 +37,7 @@ public class InvoiceService {
     private final ProjectAssetSponsorshipRepository projectAssetSponsorshipRepository;
     private final InvoiceSponsorPayableRepository invoiceSponsorPayableRepository;
     private final AssetPayableRepository assetPayableRepository;
+    private final AccountService accountService;
 
     public List<Invoice> getAllInvoices() {
         return invoiceRepository.findAll();
@@ -66,9 +67,7 @@ public class InvoiceService {
             throw new RuntimeException("Invoice is empty");
         }
 
-        Company companyDb = companyRepository.findById(invoice.getCompany().getId()).orElse(null);
-        assert companyDb != null;
-        CompanyDTO companyDTO = CompanyMapper.toDTO(companyDb);
+        CompanyDTO companyDTO = prepareCompanyAndBank();
 
         //prepare detailed object
         DetailedInvoice.DetailedInvoiceBuilder detailedInvoiceBuilder = DetailedInvoice.builder();
@@ -157,6 +156,20 @@ public class InvoiceService {
 
 
         return Optional.ofNullable(detailedInvoiceBuilder.build());
+    }
+
+    private CompanyDTO prepareCompanyAndBank() {
+        Integer companyId = SecurityUtil.getCompanyClaim();
+        Company companyDb = companyRepository.findById(companyId).orElse(null);
+        assert companyDb != null;
+        CompanyDTO companyDTO = CompanyMapper.toDTO(companyDb);
+        //assign account number and details to company
+        Account defaultAccount = accountService.getDefaultAccount(companyId);
+        companyDTO.setBankName(defaultAccount.getBankName());
+        companyDTO.setBankIban(defaultAccount.getIban());
+        companyDTO.setBankAccountNumber(String.valueOf(defaultAccount.getAccountNumber()));
+        companyDTO.setBankAccountTitle(defaultAccount.getName());
+        return companyDTO;
     }
 
     private BigDecimal calcuatePriceFromRateAndHours(BigDecimal rate, BigDecimal hours) {
