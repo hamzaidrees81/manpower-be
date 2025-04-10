@@ -42,7 +42,7 @@ public class AssetProjectMapper {
         assetProject.setStartDate(assetProjectDTO.getStartDate());
         assetProject.setEndDate(assetProjectDTO.getEndDate());
         assetProject.setIsActive(assetProjectDTO.getIsActive().getValue());
-        assetProject.setStatus(assetProjectDTO.getStatus().getValue());
+        assetProject.setStatus(assetProjectDTO.getStatus()!=null ? assetProjectDTO.getStatus().getValue() : Contants.Status.ACTIVE.getValue()); //TODO: WHAT SHOULD BE DEFAULT
         return assetProject;
     }
 }
