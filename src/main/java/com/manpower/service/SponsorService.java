@@ -35,7 +35,9 @@ public class SponsorService {
     }
 
     public Sponsor updateSponsor(Integer id, Sponsor sponsor) {
-        throw new RuntimeException("Not implemented yet");
-
+        Sponsor sponsor1 = sponsorRepository.findById(id).get(); //TODO: add is present check
+        sponsor1.setName(sponsor.getName());
+        sponsor1.setPhone(sponsor.getPhone());
+        return sponsorRepository.save(sponsor1);
     }
 }
