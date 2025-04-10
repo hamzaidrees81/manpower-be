@@ -12,6 +12,7 @@ public class ProjectDTO {
     private Integer id;
     private Integer companyId;
     private Integer clientId;
+    private String clientName;
     private String projectId;
     private String name;
     private String location;

@@ -19,6 +19,7 @@ public class ProjectMapper {
                 .location(entity.getLocation())
                 .startDate(entity.getStartDate())
                 .endDate(entity.getEndDate())
+                .clientName(entity.getClient().getName())
                 .build();
     }
 
