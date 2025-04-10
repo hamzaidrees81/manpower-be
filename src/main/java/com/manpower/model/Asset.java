@@ -57,7 +57,7 @@ public class Asset {
   @Column(name = "asset_type", nullable = false)
   private Byte assetType;
 
-  @Column(name = "asset_number", nullable = false)
+  @Column(name = "asset_number")
   private Integer assetNumber; //TODO: WHAT IS THIS?
 
   @Column(name = "asset_ownership", nullable = false)
