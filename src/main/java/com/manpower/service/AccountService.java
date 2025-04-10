@@ -23,6 +23,7 @@ public class AccountService {
     }
 
     public AccountDTO createAccount(AccountDTO accountDTO) {
+
         Account account = mainAccountRepository.save(AccountMapper.toEntity(accountDTO));
         return AccountMapper.toDTO(account);
     }
@@ -46,7 +47,7 @@ public class AccountService {
 
     public Account getDefaultAccount(Integer companyId) {
         return mainAccountRepository.findFirstByCompanyIdAndIsDefaultEquals(companyId, Contants.isDefaultAccount.YES.getValue())
-                .orElseThrow(() -> new RuntimeException("Account not found"));
+                .orElse(null);
 
     }
 }

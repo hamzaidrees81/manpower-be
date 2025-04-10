@@ -40,6 +40,9 @@ public class AccountMapper {
         account.setBalance(dto.getBalance());
         account.setAccountNumber(dto.getAccountNumber());
         account.setIban(dto.getIban());
+        account.setIsDefault(dto.getIsDefaultAccount().getValue());
+        account.setBankName(dto.getBankName());
+        account.setStatus(Contants.Status.ACTIVE.getValue());
         account.setCreatedAt(dto.getCreatedAt());
         account.setUpdatedAt(dto.getUpdatedAt());
 

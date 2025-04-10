@@ -16,6 +16,7 @@ import java.time.Instant;
 @Table(name = "account")
 public class Account {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
 
@@ -60,7 +61,7 @@ public class Account {
     private String bankName;
 
     @NotNull
-    @Column(name = "is_default", nullable = false)
+    @Column(name = "is_default")
     private Byte isDefault;
 
     @Column(name = "status")

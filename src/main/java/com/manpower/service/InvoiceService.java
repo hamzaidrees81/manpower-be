@@ -165,10 +165,12 @@ public class InvoiceService {
         CompanyDTO companyDTO = CompanyMapper.toDTO(companyDb);
         //assign account number and details to company
         Account defaultAccount = accountService.getDefaultAccount(companyId);
-        companyDTO.setBankName(defaultAccount.getBankName());
-        companyDTO.setBankIban(defaultAccount.getIban());
-        companyDTO.setBankAccountNumber(String.valueOf(defaultAccount.getAccountNumber()));
-        companyDTO.setBankAccountTitle(defaultAccount.getName());
+        if(defaultAccount !=null) {
+            companyDTO.setBankName(defaultAccount.getBankName());
+            companyDTO.setBankIban(defaultAccount.getIban());
+            companyDTO.setBankAccountNumber(String.valueOf(defaultAccount.getAccountNumber()));
+            companyDTO.setBankAccountTitle(defaultAccount.getName());
+        }
         return companyDTO;
     }
 
