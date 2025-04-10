@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProjectService {
@@ -24,9 +25,9 @@ public class ProjectService {
         this.companyService = companyService;
     }
 
-    public List<Project> getAllProjectsByCompany() {
+    public List<ProjectDTO> getAllProjectsByCompany() {
       Integer companyId = SecurityUtil.getCompanyClaim();
-      return projectRepository.findProjectByCompany_Id(companyId);
+      return projectRepository.findProjectByCompany_Id(companyId).stream().map(ProjectMapper::toDTO).collect(Collectors.toList());
     }
 
     public Optional<Project> getProjectById(Integer id) {

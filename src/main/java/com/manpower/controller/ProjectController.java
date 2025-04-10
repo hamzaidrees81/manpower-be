@@ -18,7 +18,7 @@ public class ProjectController {
     }
 
     @GetMapping
-    public List<Project> getAllProjects() {
+    public List<ProjectDTO> getAllProjects() {
         return projectService.getAllProjectsByCompany();
     }
 
