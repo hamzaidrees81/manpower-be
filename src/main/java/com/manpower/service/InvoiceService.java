@@ -200,7 +200,7 @@ public class InvoiceService {
           .orElseThrow(() -> new RuntimeException("Company not found"));
         invoiceBuilder.company(existingCompany);
 
-        BigDecimal tax = detailedInvoice.getTotalAmount().multiply(preferenceService.findVATAmount());
+        BigDecimal tax = detailedInvoice.getTotalAmount().multiply((preferenceService.findVATAmount().multiply(BigDecimal.valueOf(0.01f))));
         invoiceBuilder.client(existingClient);
         invoiceBuilder.status(Contants.PaymentStatus.UNPAID.getValue());
         invoiceBuilder.startDate(detailedInvoice.getStartDate());
