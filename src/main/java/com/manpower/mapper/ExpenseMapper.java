@@ -23,7 +23,8 @@ public class ExpenseMapper {
                 expense.getExpenseProject() != null ? expense.getExpenseProject().getName() : null,
             expense.getExpenseMetric(),
             expense.getExpenseCategory() != null ? expense.getExpenseCategory().getId() : null,
-                expense.getExpenseCategory() != null ? expense.getExpenseCategory().getCategoryName() : null
+                expense.getExpenseCategory() != null ? expense.getExpenseCategory().getCategoryName() : null,
+                expense.getComments()
         );
     }
 
@@ -36,6 +37,7 @@ public class ExpenseMapper {
         expense.setAmount(dto.getAmount());
         expense.setExpenseType(dto.getExpenseType().name());
         expense.setExpenseMetric(dto.getExpenseMetric());
+        expense.setComments(dto.getComment());
 
         expense.setCompany(Company.builder()
           .id(SecurityUtil.getCompanyClaim())

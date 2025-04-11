@@ -1,6 +1,8 @@
 package com.manpower.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
@@ -43,5 +45,10 @@ public class Expense {
   @OnDelete(action = OnDeleteAction.CASCADE)
   @JoinColumn(name = "expense_category", nullable = false)
   private ExpenseCategory expenseCategory;
+
+  @Size(max = 100)
+  @NotNull
+  @Column(name = "comments", nullable = false, length = 100)
+  private String comments;
 
 }

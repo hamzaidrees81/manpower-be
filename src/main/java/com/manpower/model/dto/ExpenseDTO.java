@@ -18,4 +18,5 @@ public class ExpenseDTO {
     private Byte expenseMetric;
     private Integer expenseCategoryId; // Expense Category ID
     private String expenseCategoryName;
+    private String comment;
 }
