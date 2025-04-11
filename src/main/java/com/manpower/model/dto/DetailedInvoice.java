@@ -23,6 +23,7 @@ public class DetailedInvoice {
   BigDecimal totalAmount; //this is without VAT
   BigDecimal vatAmount;
   BigDecimal totalWithVAT;
+  BigDecimal vatRate;
   CompanyDTO company; //this is only to get data back, not to create
 
   List<DetailedProjectInvoice> detailedProjectInvoiceList;

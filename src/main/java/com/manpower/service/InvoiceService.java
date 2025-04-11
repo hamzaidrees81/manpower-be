@@ -432,6 +432,7 @@ public class InvoiceService {
 
         //add all projects to final list
         detailedInvoice.detailedProjectInvoiceList(detailedProjectInvoiceList.values().stream().toList());
+        detailedInvoice.vatRate(preferenceService.findVATAmount());
         return detailedInvoice.build();
     }
 
