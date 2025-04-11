@@ -132,7 +132,7 @@ public class InvoiceService {
                 BigDecimal regularTotal = invoiceAsset.getStandardHours().multiply(invoiceAsset.getStandardRate());
                 BigDecimal otTotal = invoiceAsset.getOtHours().multiply(invoiceAsset.getOtRate());
                 BigDecimal grandTotal = regularTotal.add(otTotal);
-                BigDecimal vat = regularTotal.add(grandTotal.multiply(preferenceService.findVATAmount()));
+                BigDecimal vat = regularTotal.add(grandTotal.multiply((preferenceService.findVATAmount().multiply(BigDecimal.valueOf(0.01f)))));
 
                 detailedAssetInvoiceBuilder.assetName(asset.getName());
                 detailedAssetInvoiceBuilder.assetType(Contants.AssetType.fromValue(asset.getAssetType()));
