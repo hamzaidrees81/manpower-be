@@ -239,10 +239,6 @@ public class Contants {
     }
   }
 
-  public enum PaidToType {
-    ASSET, SPONSOR
-  }
-
   public enum ExpenseType {
     Self, Project
   }

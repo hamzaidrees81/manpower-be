@@ -49,7 +49,11 @@ public class InvoiceService {
         return invoiceRepository.findAll(spec, pageable).map(InvoiceStatusMapper::convertToDTO);
     }
 
-    public Optional<DetailedInvoice> getDetailedInvoiceById(Integer id) {
+    public Optional<Invoice> getInvoiceById(Integer id) {
+            return invoiceRepository.findById(id);
+        }
+
+        public Optional<DetailedInvoice> getDetailedInvoiceById(Integer id) {
 
         Optional<Invoice> invoiceOptional = invoiceRepository.findById(id);
         if(invoiceOptional.isEmpty())

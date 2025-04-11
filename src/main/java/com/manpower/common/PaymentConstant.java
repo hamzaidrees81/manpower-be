@@ -21,7 +21,8 @@ public class PaymentConstant {
     public enum PaidToType {
         ASSET,
         SPONSOR,
-        EXPENSE
+        EXPENSE,
+        INVOICE
     }
 
     public enum PaymentType {

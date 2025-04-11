@@ -29,8 +29,8 @@ public class PaymentController {
     }
 
     @GetMapping("/filter")
-    public ResponseEntity<List<Payment>> filterPayments(PaymentFilterDTO filterDTO) {
-        List<Payment> payments = paymentService.filterPayments(filterDTO);
+    public ResponseEntity<List<PaymentDTO>> filterPayments(PaymentFilterDTO filterDTO) {
+        List<PaymentDTO> payments = paymentService.filterPayments(filterDTO);
         return ResponseEntity.ok(payments);
     }
 }
