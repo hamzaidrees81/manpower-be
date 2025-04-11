@@ -19,8 +19,8 @@ public class PaymentController {
     private final PaymentService paymentService;
 
     @PostMapping
-    public ResponseEntity<PaymentDTO> createPayment(@RequestBody PaymentDTO payment) {
-        return ResponseEntity.ok(paymentService.recordPayment(PaymentMapper.toEntity(payment)));
+    public ResponseEntity<PaymentDTO> createPayment(@RequestBody PaymentDTO paymentDTO) {
+        return ResponseEntity.ok(paymentService.recordPayment(paymentDTO));
     }
 
     @GetMapping("/invoice/{invoiceId}")

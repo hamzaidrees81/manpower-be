@@ -25,14 +25,14 @@ public class PaymentService {
     private final SponsorService sponsorService;
     private final InvoiceService invoiceService;
 
-    public PaymentDTO recordPayment(Payment payment) {
-        Account account = mainAccountRepository.findById(payment.getMainAccount().getId())
+    public PaymentDTO recordPayment(PaymentDTO paymentDTO) {
+        Account account = mainAccountRepository.findById(paymentDTO.getMainAccountId())
             .orElseThrow(() -> new RuntimeException("Account not found"));
 
-        account.setBalance(account.getBalance().subtract(payment.getAmount()));
+        account.setBalance(account.getBalance().subtract(paymentDTO.getAmount()));
         mainAccountRepository.save(account);
 
-        payment.setMainAccount(account);
+        Payment payment = PaymentMapper.toEntity(paymentDTO,account);
         Payment payment1 = paymentRepository.save(payment);
 
         Asset asset = null;
