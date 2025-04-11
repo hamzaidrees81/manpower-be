@@ -27,6 +27,16 @@ public class ExpenseController {
         return expenseService.getAllExpenses();
     }
 
+    @GetMapping("/filter")
+    public ResponseEntity<List<ExpenseDTO>> filterExpenses(
+            @RequestParam(required = false) Integer assetId,
+            @RequestParam(required = false) Integer expenseProjectId,
+            @RequestParam(required = false) Integer expenseCategoryId) {
+
+        List<ExpenseDTO> results = expenseService.filterExpenses(assetId, expenseProjectId, expenseCategoryId);
+        return ResponseEntity.ok(results);
+    }
+
     @GetMapping("/categories")
     public List<ExpenseCategory> getAllExpenseCategories() {
         return expenseCategoryService.getAllCategories();

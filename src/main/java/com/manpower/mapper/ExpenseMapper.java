@@ -1,5 +1,6 @@
 package com.manpower.mapper;
 
+import com.manpower.common.Contants;
 import com.manpower.model.*;
 import com.manpower.model.dto.ExpenseDTO;
 import com.manpower.util.SecurityUtil;
@@ -15,11 +16,14 @@ public class ExpenseMapper {
         return new ExpenseDTO(
             expense.getId(),
             expense.getAsset() != null ? expense.getAsset().getId() : null,
-            expense.getExpenseType(),
+                expense.getAsset() != null ? expense.getAsset().getName() : null,
+                Contants.ExpenseType.valueOf(expense.getExpenseType()),
             expense.getAmount(),
             expense.getExpenseProject() != null ? expense.getExpenseProject().getId() : null,
+                expense.getExpenseProject() != null ? expense.getExpenseProject().getName() : null,
             expense.getExpenseMetric(),
-            expense.getExpenseCategory() != null ? expense.getExpenseCategory().getId() : null
+            expense.getExpenseCategory() != null ? expense.getExpenseCategory().getId() : null,
+                expense.getExpenseCategory() != null ? expense.getExpenseCategory().getCategoryName() : null
         );
     }
 
@@ -30,7 +34,7 @@ public class ExpenseMapper {
         Expense expense = new Expense();
         expense.setId(dto.getId());
         expense.setAmount(dto.getAmount());
-        expense.setExpenseType(dto.getExpenseType());
+        expense.setExpenseType(dto.getExpenseType().name());
         expense.setExpenseMetric(dto.getExpenseMetric());
 
         expense.setCompany(Company.builder()

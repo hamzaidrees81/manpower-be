@@ -243,4 +243,8 @@ public class Contants {
     ASSET, SPONSOR
   }
 
+  public enum ExpenseType {
+    Self, Project
+  }
+
 }
