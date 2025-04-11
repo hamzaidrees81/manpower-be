@@ -22,7 +22,8 @@ public class PaymentConstant {
         ASSET,
         SPONSOR,
         EXPENSE,
-        INVOICE
+        INVOICE,
+        OTHER //other and invoice means money is incoming, other 3 are outgoing
     }
 
     public enum PaymentType {

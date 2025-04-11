@@ -58,6 +58,7 @@ public class PaymentMapper {
             case PaymentConstant.PaidToType.EXPENSE -> "Expense - " + expense.getExpenseCategory();
             case PaymentConstant.PaidToType.SPONSOR -> "Sponsor - " + sponsor.getName();
             case PaymentConstant.PaidToType.INVOICE -> "Invoice - " + invoice.getNumber();
+            case PaymentConstant.PaidToType.OTHER -> "";
         };
 
         dto.setPaidToName(paymentName);
