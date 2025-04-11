@@ -4,6 +4,8 @@ import com.manpower.common.PaymentConstant;
 import com.manpower.model.*;
 import com.manpower.model.dto.PaymentDTO;
 
+import java.time.Instant;
+
 public class PaymentMapper {
 
     public static PaymentDTO toDTO(Payment payment) {
@@ -103,7 +105,7 @@ public class PaymentMapper {
         payment.setRemarks(dto.getRemarks());
         payment.setStatus(dto.getStatus().name());
         payment.setPaymentType(dto.getPaymentType().name());
-        payment.setPaymentTimestamp(dto.getPaymentTimestamp());
+        payment.setPaymentTimestamp(Instant.now());
         payment.setCreatedAt(dto.getCreatedAt());
         payment.setUpdatedAt(dto.getUpdatedAt());
 
