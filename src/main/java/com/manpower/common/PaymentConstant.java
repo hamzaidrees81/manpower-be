@@ -24,6 +24,7 @@ public class PaymentConstant {
         SPONSOR,
         EXPENSE,
         INVOICE,
+        INVOICES,
         OTHER //other and invoice means money is incoming, other 3 are outgoing
     }
 
