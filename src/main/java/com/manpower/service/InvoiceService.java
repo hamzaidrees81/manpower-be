@@ -122,8 +122,8 @@ public class InvoiceService {
             //take a project and make an object
             DetailedProjectInvoice.DetailedProjectInvoiceBuilder detailedProjectInvoiceBuilder = DetailedProjectInvoice.builder();
             detailedProjectInvoiceBuilder.projectId(entry.getKey());
-            detailedProjectInvoiceBuilder.projectName(entry.getValue().getFirst().getAssetProject().getProject().getName());
-            detailedProjectInvoiceBuilder.projectNumber(entry.getValue().getFirst().getAssetProject().getProject().getProjectId());
+            detailedProjectInvoiceBuilder.projectName(entry.getValue().get(0).getAssetProject().getProject().getName());
+            detailedProjectInvoiceBuilder.projectNumber(entry.getValue().get(0).getAssetProject().getProject().getProjectId());
             List<DetailedAssetInvoice> detailedAssetInvoiceList = new ArrayList<>();
             detailedProjectInvoiceBuilder.assetInvoicesList(detailedAssetInvoiceList);
 

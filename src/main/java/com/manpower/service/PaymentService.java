@@ -44,13 +44,13 @@ public class PaymentService {
         PaymentConstant.PaidToType paidToType = PaymentConstant.PaidToType.valueOf(payment.getPaidToType());
 
         switch (paidToType) {
-            case PaymentConstant.PaidToType.ASSET ->
+            case ASSET ->
                     asset = assetService.getAssetById(payment1.getPaidToId()).get();
-            case PaymentConstant.PaidToType.EXPENSE ->
+            case EXPENSE ->
                     expense = expenseService.getExpenseById(payment1.getPaidToId()).get();
-            case PaymentConstant.PaidToType.SPONSOR ->
+            case SPONSOR ->
                     sponsor = sponsorService.getSponsorById(payment1.getPaidToId()).get();
-            case PaymentConstant.PaidToType.INVOICE ->
+            case INVOICE ->
                     invoice = invoiceService.getInvoiceById(payment1.getPaidToId()).get();
         };
 
@@ -92,13 +92,13 @@ public class PaymentService {
             PaymentConstant.PaidToType paidToType = PaymentConstant.PaidToType.valueOf(payment.getPaidToType());
 
             switch (paidToType) {
-                case PaymentConstant.PaidToType.ASSET ->
+                case ASSET ->
                         asset = assetService.getAssetById(payment.getPaidToId()).get();
-                case PaymentConstant.PaidToType.EXPENSE ->
+                case EXPENSE ->
                         expense = expenseService.getExpenseById(payment.getPaidToId()).get();
-                case PaymentConstant.PaidToType.SPONSOR ->
+                case SPONSOR ->
                         sponsor = sponsorService.getSponsorById(payment.getPaidToId()).get();
-                case PaymentConstant.PaidToType.INVOICE ->
+                case INVOICE ->
                         invoice = invoiceService.getInvoiceById(payment.getPaidToId()).get();
             };
             paymentDTOS.add(PaymentMapper.toDTO(payment, asset, sponsor, expense, invoice));

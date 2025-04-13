@@ -69,8 +69,8 @@ public class TimesheetService {
         if(timesheets.isEmpty()) {
             return;
         }
-
-        Integer assetId = timesheets.getFirst().getAsset().getId();
+        timesheets.get(0).getId();
+        Integer assetId = timesheets.get(0).getAsset().getId();
         if(assetId == null || assetId.equals(0)) {throw new RuntimeException("Invalid asset id");}
 
         // Get all timesheets for this asset in the given month in ONE query

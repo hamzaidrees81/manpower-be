@@ -58,11 +58,11 @@ public class PaymentMapper {
         PaymentConstant.PaidToType paidToType = PaymentConstant.PaidToType.valueOf(payment.getPaidToType());
 
         String paymentName = switch (paidToType) {
-            case PaymentConstant.PaidToType.ASSET -> "Asset - " + asset.getName();
-            case PaymentConstant.PaidToType.EXPENSE -> "Expense - " + expense.getExpenseCategory();
-            case PaymentConstant.PaidToType.SPONSOR -> "Sponsor - " + sponsor.getName();
-            case PaymentConstant.PaidToType.INVOICE -> "Invoice - " + invoice.getNumber();
-            case PaymentConstant.PaidToType.OTHER -> "";
+            case ASSET -> "Asset - " + asset.getName();
+            case EXPENSE -> "Expense - " + expense.getExpenseCategory();
+            case SPONSOR -> "Sponsor - " + sponsor.getName();
+            case INVOICE -> "Invoice - " + invoice.getNumber();
+            case OTHER -> "";
         };
 
         dto.setPaidToName(paymentName);
