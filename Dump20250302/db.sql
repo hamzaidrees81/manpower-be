@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: Apr 08, 2025 at 08:25 PM
+-- Generation Time: Apr 13, 2025 at 01:01 AM
 -- Server version: 9.2.0
 -- PHP Version: 8.2.27
 
@@ -30,12 +30,25 @@ SET time_zone = "+00:00";
 CREATE TABLE `account` (
                            `id` int NOT NULL,
                            `company_id` int NOT NULL,
-                           `name` varchar(45) DEFAULT NULL,
-                           `iban` varchar(45) DEFAULT NULL,
-                           `account_number` varchar(45) DEFAULT NULL,
-                           `bank_name` varchar(45) DEFAULT NULL,
-                           `status` tinyint DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf32;
+                           `name` varchar(100) NOT NULL,
+                           `type` varchar(50) DEFAULT NULL,
+                           `bank_name` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+                           `description` text,
+                           `balance` decimal(15,2) DEFAULT '0.00',
+                           `account_number` decimal(15,2) DEFAULT NULL,
+                           `iban` varchar(50) DEFAULT NULL,
+                           `is_default` tinyint DEFAULT NULL,
+                           `status` tinyint NOT NULL,
+                           `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+                           `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `account`
+--
+
+INSERT INTO `account` (`id`, `company_id`, `name`, `type`, `bank_name`, `description`, `balance`, `account_number`, `iban`, `is_default`, `status`, `created_at`, `updated_at`) VALUES
+    (2, 1, 'Seemab', 'CASH', NULL, '', 200.00, 4563534535.00, '', 1, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -58,7 +71,7 @@ CREATE TABLE `asset` (
                          `passport_expiry` date DEFAULT NULL,
                          `joining_date` date NOT NULL,
                          `asset_type` tinyint NOT NULL,
-                         `asset_number` int NOT NULL,
+                         `asset_number` int DEFAULT NULL,
                          `asset_ownership` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf32;
 
@@ -70,7 +83,8 @@ INSERT INTO `asset` (`id`, `company_id`, `sponsored_by`, `sponsorship_value`, `s
                                                                                                                                                                                                                                                                    (2, 1, 1, 10.20, 'FIXED', 'Adeel', '12321', '2025-03-20', '', '', 'AB1234', '2025-03-01', '2025-03-01', 1, 123, 1),
                                                                                                                                                                                                                                                                    (3, 1, 1, 5.20, 'PERCENTAGE', 'Hamza', '123', '2025-03-20', NULL, NULL, NULL, NULL, '2025-03-01', 1, 321, 2),
                                                                                                                                                                                                                                                                    (4, 1, NULL, NULL, NULL, 'Adil', 'string', '2025-03-18', 'string', 'string', 'string', '2025-03-18', '2025-03-18', 1, 0, 1),
-                                                                                                                                                                                                                                                                   (6, 1, NULL, NULL, NULL, 'stringAli', 'string2', '2025-03-18', 'string', 'string', 'string', '2025-03-18', '2025-03-18', 1, 0, 1);
+                                                                                                                                                                                                                                                                   (6, 1, NULL, NULL, NULL, 'stringAli', 'string2', '2025-03-18', 'string', 'string', 'string', '2025-03-18', '2025-03-18', 1, 0, 1),
+                                                                                                                                                                                                                                                                   (7, 1, NULL, NULL, NULL, 'Test Asset', '324234', '2025-04-29', '3453535', '', '3453gh', '2025-04-29', '2025-04-10', 2, 22424, 2);
 
 -- --------------------------------------------------------
 
@@ -108,7 +122,8 @@ CREATE TABLE `asset_payable` (
 --
 
 INSERT INTO `asset_payable` (`id`, `company_id`, `asset_project_id`, `asset_id`, `invoice_id`, `asset_payable`, `paid_amount`, `payment_status`, `status`) VALUES
-    (1, 1, 1, 2, 9, 29.23, 9.00, 'UNPAID', NULL);
+                                                                                                                                                               (1, 1, 1, 2, 9, 29.23, 9.00, 'UNPAID', NULL),
+                                                                                                                                                               (7, 1, 5, 7, 17, 400.00, 0.00, 'UNPAID', NULL);
 
 -- --------------------------------------------------------
 
@@ -141,7 +156,8 @@ INSERT INTO `asset_project` (`id`, `company_id`, `asset_id`, `project_id`, `desi
                                                                                                                                                                                                                                                  (1, 1, 2, 1, 1, 'AP-1', 10.00, 12.00, 8.00, 9.00, '2025-02-01', '2025-03-15', 1, 1),
                                                                                                                                                                                                                                                  (2, 1, 3, 1, 1, 'DRILLING', 10.00, 12.00, 8.00, 9.00, '2025-03-01', '2025-03-15', 1, 1),
                                                                                                                                                                                                                                                  (3, 1, 2, 2, 1, NULL, 20.00, 25.00, 15.00, 21.00, '2025-03-01', '2025-03-15', 1, 1),
-                                                                                                                                                                                                                                                 (4, 1, 2, 1, 1, 'AP-2', 10.00, 12.00, 8.00, 9.00, '2025-02-01', '2025-03-15', 1, 1);
+                                                                                                                                                                                                                                                 (4, 1, 2, 1, 1, 'AP-2', 10.00, 12.00, 8.00, 9.00, '2025-02-01', '2025-03-15', 1, 1),
+                                                                                                                                                                                                                                                 (5, 1, 7, 4, 1, NULL, 10.00, 20.00, 5.00, 10.00, '2025-04-10', '2025-04-28', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -162,7 +178,8 @@ CREATE TABLE `client` (
 --
 
 INSERT INTO `client` (`id`, `client_id`, `name`, `address`, `status`) VALUES
-    (1, 'ARM-123', 'ARAMCO', 'DHAHRAN', NULL);
+                                                                          (1, 'ARM-123', 'ARAMCO', 'DHAHRAN', NULL),
+                                                                          (2, 'TEST-CLIENT-1', 'TEST-CLIENT-1', 'ISLAMABAD', 1);
 
 -- --------------------------------------------------------
 
@@ -222,6 +239,7 @@ CREATE TABLE `expense` (
                            `asset_id` int NOT NULL,
                            `expense_category` int NOT NULL,
                            `expense_type` varchar(10) NOT NULL COMMENT '''project/self''',
+                           `comments` varchar(100) NOT NULL,
                            `amount` int NOT NULL,
                            `expense_project` int DEFAULT NULL,
                            `expense_metric` tinyint DEFAULT NULL
@@ -231,8 +249,9 @@ CREATE TABLE `expense` (
 -- Dumping data for table `expense`
 --
 
-INSERT INTO `expense` (`id`, `company_id`, `asset_id`, `expense_category`, `expense_type`, `amount`, `expense_project`, `expense_metric`) VALUES
-    (1, 1, 2, 1, 'BILL', 100, 1, NULL);
+INSERT INTO `expense` (`id`, `company_id`, `asset_id`, `expense_category`, `expense_type`, `comments`, `amount`, `expense_project`, `expense_metric`) VALUES
+                                                                                                                                                          (1, 1, 2, 1, 'Self', '', 100, 1, NULL),
+                                                                                                                                                          (2, 1, 2, 2, 'Project', '', 100, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -284,7 +303,8 @@ CREATE TABLE `invoice` (
 --
 
 INSERT INTO `invoice` (`id`, `company_id`, `client_id`, `number`, `status`, `cleared_date`, `start_date`, `end_date`, `create_date`, `total_before_tax`, `tax_amount`, `total_amount_with_tax`, `assets_payable`, `sponsor_payable`, `profit`, `creator_id`) VALUES
-    (9, 1, 1, 'INV-123', 1, NULL, '2025-03-06', '2025-03-06', '2025-03-11', 5000.00, 750.00, 5750.00, NULL, NULL, NULL, NULL);
+                                                                                                                                                                                                                                                                 (9, 1, 1, 'INV-123', 1, NULL, '2025-03-06', '2025-03-06', '2025-03-11', 5000.00, 750.00, 5750.00, NULL, NULL, NULL, NULL),
+                                                                                                                                                                                                                                                                 (17, 1, 2, 'INV-20', 1, NULL, '2025-04-03', '2025-04-29', '2025-04-03', 640.00, 96.00, 736.00, 400.00, 128.00, 112.00, 5);
 
 -- --------------------------------------------------------
 
@@ -310,7 +330,8 @@ CREATE TABLE `invoice_asset` (
 INSERT INTO `invoice_asset` (`id`, `invoice_id`, `asset_id`, `asset_project_id`, `standard_hours`, `standard_rate`, `ot_rate`, `ot_hours`) VALUES
                                                                                                                                                (13, 9, 2, 1, 0.00, 0.00, 12.00, 9.00),
                                                                                                                                                (14, 9, 3, 2, 0.00, 0.00, 0.00, 0.00),
-                                                                                                                                               (15, 9, 2, 3, 0.00, 0.00, 12.00, 5.00);
+                                                                                                                                               (15, 9, 2, 3, 0.00, 0.00, 12.00, 5.00),
+                                                                                                                                               (23, 17, 7, 5, 40.00, 10.00, 12.00, 20.00);
 
 -- --------------------------------------------------------
 
@@ -338,7 +359,9 @@ CREATE TABLE `invoice_sponsor_payable` (
 
 INSERT INTO `invoice_sponsor_payable` (`id`, `company_id`, `project_sponsorship_id`, `sponsor_id`, `invoice_id`, `sponsorship_payable`, `paid_amount`, `sponsorship_asset`, `payment_status`, `sponsorship_determinant`, `status`) VALUES
                                                                                                                                                                                                                                        (1, 1, 2, 1, 9, 19.29, 0.00, 4, 'UNPAID', 'REVENUE', NULL),
-                                                                                                                                                                                                                                       (2, 1, NULL, 1, 9, 19.29, 0.00, 4, 'UNPAID', 'REVENUE', NULL);
+                                                                                                                                                                                                                                       (2, 1, NULL, 1, 9, 19.29, 0.00, 4, 'UNPAID', 'REVENUE', NULL),
+                                                                                                                                                                                                                                       (8, 1, 6, 5, 17, 64.00, 0.00, 7, 'UNPAID', 'REVENUE', 1),
+                                                                                                                                                                                                                                       (9, 1, 7, 1, 17, 64.00, 0.00, 7, 'UNPAID', 'REVENUE', 1);
 
 -- --------------------------------------------------------
 
@@ -372,16 +395,26 @@ CREATE TABLE `payment` (
                            `payment_date` date DEFAULT NULL,
                            `payment_method` varchar(50) DEFAULT NULL,
                            `reference` varchar(100) DEFAULT NULL,
-                           `paid_to_type` enum('ASSET','SPONSOR') DEFAULT NULL,
+                           `paid_to_type` enum('ASSET','SPONSOR','EXPENSE','INVOICE','OTHER') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
                            `paid_to_id` int DEFAULT NULL,
                            `invoice_id` int DEFAULT NULL,
                            `remarks` text,
                            `status` enum('COMPLETED','PENDING','FAILED') DEFAULT 'COMPLETED',
-                           `payment_type` enum('REGULAR','ADVANCE','ADJUSTMENT') DEFAULT NULL,
+                           `payment_type` enum('INITIAL','ADJUSTMENT','FULL','REFUND','ADVANCE') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+                           `payment_direction` enum('INCOMING','OUTGOING') NOT NULL DEFAULT 'OUTGOING' COMMENT '1. incoming, 2.outgoing',
                            `payment_timestamp` timestamp NOT NULL,
                            `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
                            `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `payment`
+--
+
+INSERT INTO `payment` (`id`, `main_account_id`, `amount`, `payment_date`, `payment_method`, `reference`, `paid_to_type`, `paid_to_id`, `invoice_id`, `remarks`, `status`, `payment_type`, `payment_direction`, `payment_timestamp`, `created_at`, `updated_at`) VALUES
+                                                                                                                                                                                                                                                                    (2, 2, 100.00, '2025-04-10', 'BANK_TRANSFER', 'test', 'ASSET', 7, NULL, 'testing payment', 'COMPLETED', 'INITIAL', 'OUTGOING', '2025-04-11 14:40:32', NULL, '2025-04-11 14:46:11'),
+                                                                                                                                                                                                                                                                    (3, 2, 100.00, '2025-04-10', 'BANK_TRANSFER', 'test', 'ASSET', 7, NULL, 'testing payment', 'COMPLETED', 'INITIAL', 'OUTGOING', '2025-04-11 14:41:05', NULL, '2025-04-11 14:46:08'),
+                                                                                                                                                                                                                                                                    (4, 2, 100.00, '2025-04-10', 'BANK_TRANSFER', 'test', 'ASSET', 7, NULL, 'testing payment', 'COMPLETED', 'INITIAL', 'OUTGOING', '2025-04-11 14:41:54', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -401,7 +434,7 @@ CREATE TABLE `preferences` (
 --
 
 INSERT INTO `preferences` (`id`, `company_id`, `tax_amount`, `invoice_seq`) VALUES
-    (1, 1, 15.00, 20);
+    (1, 1, 15.00, 21);
 
 -- --------------------------------------------------------
 
@@ -426,7 +459,8 @@ CREATE TABLE `project` (
 
 INSERT INTO `project` (`id`, `company_id`, `client_id`, `project_id`, `name`, `location`, `start_date`, `end_date`) VALUES
                                                                                                                         (1, 1, 1, 'PROJ-1', 'ARAMCO HALL', 'DAMMAM', '2025-03-01 00:00:00', '2025-04-22 00:00:00'),
-                                                                                                                        (2, 1, 1, 'PROJ-2', 'Halliburton', 'RIYADH', '2025-03-01 00:00:00', '2025-04-22 00:00:00');
+                                                                                                                        (2, 1, 1, 'PROJ-2', 'Halliburton', 'RIYADH', '2025-03-01 00:00:00', '2025-04-22 00:00:00'),
+                                                                                                                        (4, 1, 2, 'PR-TEST-01', 'STELLA AI', 'ISLAMABAD', '2025-04-13 00:00:00', '2025-04-29 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -452,7 +486,9 @@ CREATE TABLE `project_asset_sponsorship` (
 INSERT INTO `project_asset_sponsorship` (`id`, `sponsor_id`, `asset_id`, `asset_project_id`, `sponsorship_type`, `sponsorship_value`, `sponsorship_determinant`, `sponsorship_basis`) VALUES
                                                                                                                                                                                           (2, 1, 2, 1, 'PERCENTAGE', 0.50, 'REVENUE', 'ASSET_BASED'),
                                                                                                                                                                                           (3, 1, 2, 1, 'PERCENTAGE', 0.50, 'REVENUE', 'ASSET_BASED'),
-                                                                                                                                                                                          (4, 1, 2, NULL, 'PERCENTAGE', 0.50, 'REVENUE', 'ASSET_BASED');
+                                                                                                                                                                                          (4, 1, 2, NULL, 'PERCENTAGE', 0.50, 'REVENUE', 'ASSET_BASED'),
+                                                                                                                                                                                          (6, 5, 7, NULL, 'PERCENTAGE', 10.00, 'REVENUE', 'ASSET_BASED'),
+                                                                                                                                                                                          (7, 1, 7, NULL, 'FIXED', 10.00, 'REVENUE', 'ASSET_BASED');
 
 -- --------------------------------------------------------
 
@@ -463,9 +499,9 @@ INSERT INTO `project_asset_sponsorship` (`id`, `sponsor_id`, `asset_id`, `asset_
 CREATE TABLE `sponsor` (
                            `id` int NOT NULL,
                            `company_id` int NOT NULL,
-                           `sponsor_id` int NOT NULL,
+                           `sponsor_id` int DEFAULT NULL,
                            `name` varchar(50) NOT NULL,
-                           `phone` varchar(25) NOT NULL
+                           `phone` varchar(25) CHARACTER SET utf32 COLLATE utf32_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf32;
 
 --
@@ -474,7 +510,9 @@ CREATE TABLE `sponsor` (
 
 INSERT INTO `sponsor` (`id`, `company_id`, `sponsor_id`, `name`, `phone`) VALUES
                                                                               (1, 1, 1, 'HAMZA_SPONSOR', '+921234'),
-                                                                              (2, 1, 2, 'HAMZA_SPONSOR2', '+921234');
+                                                                              (2, 1, 2, 'HAMZA_SPONSOR2', '+921234'),
+                                                                              (3, 1, NULL, 'Seemab Sponsor profit', ''),
+                                                                              (5, 1, NULL, 'Seemab revenue', '');
 
 -- --------------------------------------------------------
 
@@ -510,7 +548,17 @@ INSERT INTO `timesheet` (`id`, `asset_id`, `asset_project_id`, `timesheet_date`,
                                                                                                                                                                              (10, 2, 2, '2025-03-02', 5.00, 1, 12.00, 9.00, NULL, NULL, NULL),
                                                                                                                                                                              (11, 2, 2, '2025-03-02', 5.00, 2, 12.00, 9.00, NULL, NULL, NULL),
                                                                                                                                                                              (12, 2, 2, '2025-03-05', 5.00, 1, 12.00, 9.00, NULL, NULL, NULL),
-                                                                                                                                                                             (13, 2, 3, '2025-03-06', 5.00, 2, 12.00, 9.00, NULL, NULL, NULL);
+                                                                                                                                                                             (13, 2, 3, '2025-03-06', 5.00, 2, 12.00, 9.00, NULL, NULL, NULL),
+                                                                                                                                                                             (14, 7, 5, '2025-04-14', 8.00, 1, 10.00, 8.00, 0, 3, 3),
+                                                                                                                                                                             (15, 7, 5, '2025-04-15', 8.00, 1, 10.00, 8.00, 0, 3, 3),
+                                                                                                                                                                             (16, 7, 5, '2025-04-16', 8.00, 1, 10.00, 8.00, 0, 3, 3),
+                                                                                                                                                                             (17, 7, 5, '2025-04-17', 8.00, 1, 10.00, 8.00, 0, 3, 3),
+                                                                                                                                                                             (18, 7, 5, '2025-04-18', 8.00, 1, 10.00, 8.00, 0, 3, 3),
+                                                                                                                                                                             (19, 7, 5, '2025-04-14', 4.00, 2, 12.00, 9.00, 0, 3, 3),
+                                                                                                                                                                             (20, 7, 5, '2025-04-15', 4.00, 2, 12.00, 9.00, 0, 3, 3),
+                                                                                                                                                                             (21, 7, 5, '2025-04-16', 4.00, 2, 12.00, 9.00, 0, 3, 3),
+                                                                                                                                                                             (22, 7, 5, '2025-04-17', 4.00, 2, 12.00, 9.00, 0, 3, 3),
+                                                                                                                                                                             (23, 7, 5, '2025-04-18', 4.00, 2, 12.00, 9.00, 0, 3, 3);
 
 -- --------------------------------------------------------
 
@@ -544,8 +592,7 @@ INSERT INTO `user` (`id`, `username`, `password`, `create_date`, `update_date`, 
 -- Indexes for table `account`
 --
 ALTER TABLE `account`
-    ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_acct_company_idx` (`company_id`);
+    ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `asset`
@@ -642,7 +689,8 @@ ALTER TABLE `invoice_asset`
 ALTER TABLE `invoice_sponsor_payable`
     ADD PRIMARY KEY (`id`),
   ADD KEY `fk_inv_sponsor_idx` (`project_sponsorship_id`),
-  ADD KEY `fk_inv_sponsor_asset_idx` (`sponsorship_asset`);
+  ADD KEY `fk_inv_sponsor_asset_idx` (`sponsorship_asset`),
+  ADD KEY `fk_inv_sponsor` (`sponsor_id`);
 
 --
 -- Indexes for table `main_account`
@@ -712,13 +760,13 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `account`
 --
 ALTER TABLE `account`
-    MODIFY `id` int NOT NULL AUTO_INCREMENT;
+    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `asset`
 --
 ALTER TABLE `asset`
-    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `asset_designation`
@@ -730,19 +778,19 @@ ALTER TABLE `asset_designation`
 -- AUTO_INCREMENT for table `asset_payable`
 --
 ALTER TABLE `asset_payable`
-    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `asset_project`
 --
 ALTER TABLE `asset_project`
-    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `client`
 --
 ALTER TABLE `client`
-    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `company`
@@ -760,7 +808,7 @@ ALTER TABLE `designation`
 -- AUTO_INCREMENT for table `expense`
 --
 ALTER TABLE `expense`
-    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `expense_category`
@@ -772,19 +820,19 @@ ALTER TABLE `expense_category`
 -- AUTO_INCREMENT for table `invoice`
 --
 ALTER TABLE `invoice`
-    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `invoice_asset`
 --
 ALTER TABLE `invoice_asset`
-    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `invoice_sponsor_payable`
 --
 ALTER TABLE `invoice_sponsor_payable`
-    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `main_account`
@@ -796,7 +844,7 @@ ALTER TABLE `main_account`
 -- AUTO_INCREMENT for table `payment`
 --
 ALTER TABLE `payment`
-    MODIFY `id` int NOT NULL AUTO_INCREMENT;
+    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `preferences`
@@ -808,25 +856,25 @@ ALTER TABLE `preferences`
 -- AUTO_INCREMENT for table `project`
 --
 ALTER TABLE `project`
-    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `project_asset_sponsorship`
 --
 ALTER TABLE `project_asset_sponsorship`
-    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `sponsor`
 --
 ALTER TABLE `sponsor`
-    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `timesheet`
 --
 ALTER TABLE `timesheet`
-    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `user`
@@ -837,12 +885,6 @@ ALTER TABLE `user`
 --
 -- Constraints for dumped tables
 --
-
---
--- Constraints for table `account`
---
-ALTER TABLE `account`
-    ADD CONSTRAINT `fk_acct_company` FOREIGN KEY (`company_id`) REFERENCES `company` (`id`);
 
 --
 -- Constraints for table `asset`
@@ -902,14 +944,14 @@ ALTER TABLE `invoice_asset`
 -- Constraints for table `invoice_sponsor_payable`
 --
 ALTER TABLE `invoice_sponsor_payable`
-    ADD CONSTRAINT `fk_inv_sponsor` FOREIGN KEY (`project_sponsorship_id`) REFERENCES `sponsor` (`id`),
+    ADD CONSTRAINT `fk_inv_sponsor` FOREIGN KEY (`sponsor_id`) REFERENCES `sponsor` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   ADD CONSTRAINT `fk_inv_sponsor_asset` FOREIGN KEY (`sponsorship_asset`) REFERENCES `asset` (`id`);
 
 --
 -- Constraints for table `payment`
 --
 ALTER TABLE `payment`
-    ADD CONSTRAINT `payment_ibfk_1` FOREIGN KEY (`main_account_id`) REFERENCES `main_account` (`id`);
+    ADD CONSTRAINT `payment_ibfk_1` FOREIGN KEY (`main_account_id`) REFERENCES `account` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 --
 -- Constraints for table `preferences`
