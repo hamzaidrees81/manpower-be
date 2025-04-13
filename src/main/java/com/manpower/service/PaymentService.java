@@ -77,7 +77,8 @@ public class PaymentService {
                 filterDTO.getStartDate(),
                 filterDTO.getEndDate(),
                 filterDTO.getStartTimestamp(),
-                filterDTO.getEndTimestamp());
+                filterDTO.getEndTimestamp(),
+                filterDTO.getPaymentDirection().name());
 
         List<PaymentDTO> paymentDTOS = new ArrayList<>();
         for(Payment payment : payments) {

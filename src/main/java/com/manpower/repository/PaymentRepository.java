@@ -35,7 +35,9 @@ public interface PaymentRepository extends JpaRepository<Payment, Integer> {
             "AND (COALESCE(:startDate, null) IS NULL OR p.paymentDate >= :startDate) " +
             "AND (COALESCE(:endDate, null) IS NULL OR p.paymentDate <= :endDate) " +
             "AND (COALESCE(:startTimestamp, null) IS NULL OR p.paymentTimestamp >= :startTimestamp) " +
-            "AND (COALESCE(:endTimestamp, null) IS NULL OR p.paymentTimestamp <= :endTimestamp)")
+            "AND (COALESCE(:endTimestamp, null) IS NULL OR p.paymentTimestamp <= :endTimestamp) " +
+            "AND (COALESCE(:paymentDirection, null) IS NULL OR p.paymentDirection = :paymentDirection)"
+    )
     List<Payment> filterPayments(
             @Param("mainAccountId") Integer mainAccountId,
             @Param("minAmount") BigDecimal minAmount,
@@ -51,5 +53,7 @@ public interface PaymentRepository extends JpaRepository<Payment, Integer> {
             @Param("startDate") LocalDate startDate,
             @Param("endDate") LocalDate endDate,
             @Param("startTimestamp") Instant startTimestamp,
-            @Param("endTimestamp") Instant endTimestamp);
+            @Param("endTimestamp") Instant endTimestamp,
+            @Param("paymentDirection") String paymentDirection
+            );
 }

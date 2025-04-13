@@ -22,6 +22,7 @@ public class PaymentFilterDTO {
     private String remarks;
     private PaymentConstant.PaymentStatus status;
     private PaymentConstant.PaymentType paymentType;
+    private PaymentConstant.PaymentDirection paymentDirection;
     private LocalDate startDate;
     private LocalDate endDate;
     private Instant startTimestamp;

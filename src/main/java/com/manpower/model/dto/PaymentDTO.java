@@ -24,6 +24,7 @@ public class PaymentDTO {
     private String remarks;
     private PaymentConstant.PaymentStatus status;
     private PaymentConstant.PaymentType paymentType;
+    private PaymentConstant.PaymentDirection paymentDirection;
     private Instant paymentTimestamp;
     private Instant createdAt;
     private Instant updatedAt;

@@ -75,4 +75,9 @@ public class Payment {
     @Column(name = "updated_at")
     private Instant updatedAt;
 
+    @NotNull
+    @ColumnDefault("OUTGOING") //1. incoming, 2.outgoing
+    @Column(name = "payment_direction", nullable = false)
+    private String paymentDirection;
+
 }

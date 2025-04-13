@@ -25,6 +25,7 @@ public class PaymentMapper {
         dto.setRemarks(payment.getRemarks());
         dto.setStatus(PaymentConstant.PaymentStatus.valueOf(payment.getStatus()));
         dto.setPaymentType(PaymentConstant.PaymentType.valueOf(payment.getPaymentType()));
+        dto.setPaymentDirection(PaymentConstant.PaymentDirection.valueOf(payment.getPaymentDirection()));
         dto.setPaymentTimestamp(payment.getPaymentTimestamp());
         dto.setCreatedAt(payment.getCreatedAt());
         dto.setUpdatedAt(payment.getUpdatedAt());
@@ -48,6 +49,7 @@ public class PaymentMapper {
         dto.setRemarks(payment.getRemarks());
         dto.setStatus(PaymentConstant.PaymentStatus.valueOf(payment.getStatus()));
         dto.setPaymentType(PaymentConstant.PaymentType.valueOf(payment.getPaymentType()));
+        dto.setPaymentDirection(PaymentConstant.PaymentDirection.valueOf(payment.getPaymentDirection()));
         dto.setPaymentTimestamp(payment.getPaymentTimestamp());
         dto.setCreatedAt(payment.getCreatedAt());
         dto.setUpdatedAt(payment.getUpdatedAt());
@@ -83,6 +85,8 @@ public class PaymentMapper {
         payment.setStatus(dto.getStatus().name());
         payment.setPaymentType(dto.getPaymentType().name());
         payment.setPaymentTimestamp(dto.getPaymentTimestamp());
+        payment.setPaymentDirection(dto.getPaymentDirection() != null ?
+                dto.getPaymentDirection().name() : PaymentConstant.PaymentDirection.OUTGOING.name());
         payment.setCreatedAt(dto.getCreatedAt());
         payment.setUpdatedAt(dto.getUpdatedAt());
 
@@ -108,6 +112,8 @@ public class PaymentMapper {
         payment.setPaymentTimestamp(Instant.now());
         payment.setCreatedAt(dto.getCreatedAt());
         payment.setUpdatedAt(dto.getUpdatedAt());
+        payment.setPaymentDirection(dto.getPaymentDirection() != null ?
+                dto.getPaymentDirection().name() : PaymentConstant.PaymentDirection.OUTGOING.name());
 
         return payment;
     }

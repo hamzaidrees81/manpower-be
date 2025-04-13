@@ -34,5 +34,9 @@ public class PaymentConstant {
         ADVANCE
     }
 
+    public enum PaymentDirection {
+        INCOMING,
+        OUTGOING
+    }
 
 }
