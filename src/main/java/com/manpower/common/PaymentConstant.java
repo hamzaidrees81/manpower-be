@@ -15,7 +15,8 @@ public class PaymentConstant {
     public enum PaymentStatus {
         COMPLETED,
         PENDING,
-        FAILED
+        FAILED,
+        DELETED //if a record is deleted, ignore this in calculations TODO
     }
 
     public enum PaidToType {

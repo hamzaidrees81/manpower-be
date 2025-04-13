@@ -106,4 +106,10 @@ public class PaymentService {
 
         return paymentDTOS;
     }
+
+    public void deletePayment(Integer id) {
+        Payment payment = paymentRepository.findById(id).orElseThrow(() -> new RuntimeException("Payment not found"));
+        payment.setStatus(PaymentConstant.PaymentStatus.DELETED.name());
+        paymentRepository.save(payment);
+    }
 }

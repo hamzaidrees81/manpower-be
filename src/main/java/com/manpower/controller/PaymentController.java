@@ -33,4 +33,11 @@ public class PaymentController {
         List<PaymentDTO> payments = paymentService.filterPayments(filterDTO);
         return ResponseEntity.ok(payments);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletePayment(@PathVariable Integer id) {
+        paymentService.deletePayment(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }
