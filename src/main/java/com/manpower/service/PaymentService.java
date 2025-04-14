@@ -64,7 +64,7 @@ public class PaymentService {
     }
 
     public List<PaymentDTO> filterPayments(PaymentFilterDTO filterDTO) {
-        List<Payment>   payments = paymentRepository.filterPayments(
+        List<Payment>   payments = paymentRepository.filterPayments( //TODO: BRING BOTH INVOICE AND INVOICES...
                 filterDTO.getMainAccountId(),
                 filterDTO.getMinAmount(),
                 filterDTO.getMaxAmount(),
