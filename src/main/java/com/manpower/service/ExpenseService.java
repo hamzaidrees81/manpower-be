@@ -53,8 +53,9 @@ public class ExpenseService {
         return expenseRepository.findById(id);
     }
 
-    public Expense createExpense(ExpenseDTO expense) {
-        return expenseRepository.save(ExpenseMapper.toEntity(expense));
+    public ExpenseDTO createExpense(ExpenseDTO expense) {
+        Expense expenseResponse = expenseRepository.save(ExpenseMapper.toEntity(expense));
+        return ExpenseMapper.toDTO(expenseResponse);
     }
 
     public void deleteExpense(Integer id) {

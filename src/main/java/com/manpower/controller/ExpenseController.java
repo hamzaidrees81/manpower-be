@@ -50,7 +50,7 @@ public class ExpenseController {
     }
 
     @PostMapping
-    public Expense createExpense(@RequestBody ExpenseDTO expense) {
+    public ExpenseDTO createExpense(@RequestBody ExpenseDTO expense) {
         return expenseService.createExpense(expense);
     }
 
