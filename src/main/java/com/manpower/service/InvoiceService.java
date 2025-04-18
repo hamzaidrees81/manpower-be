@@ -10,6 +10,7 @@ import com.manpower.model.dto.*;
 import com.manpower.repository.*;
 import com.manpower.specification.InvoiceSpecifications;
 import com.manpower.util.SecurityUtil;
+import com.manpower.util.TimestampUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -39,6 +40,7 @@ public class InvoiceService {
     private final AssetPayableRepository assetPayableRepository;
     private final AccountService accountService;
     private final PaymentRepository paymentRepository;
+    private final ZatkaService zatkaService;
 
     public List<Invoice> getAllInvoices() {
         return invoiceRepository.findAll();
@@ -68,7 +70,7 @@ public class InvoiceService {
             return invoiceRepository.findById(id);
         }
 
-        public Optional<DetailedInvoice> getDetailedInvoiceById(Integer id) {
+        public Optional<DetailedInvoice> getDetailedInvoiceById(Integer id) throws Exception {
 
         Optional<Invoice> invoiceOptional = invoiceRepository.findById(id);
         if(invoiceOptional.isEmpty())
@@ -103,6 +105,15 @@ public class InvoiceService {
         detailedInvoiceBuilder.vatAmount(invoice.getTaxAmount());
         detailedInvoiceBuilder.totalWithVAT(invoice.getTotalAmountWithTax());
         detailedInvoiceBuilder.clientAddress(invoice.getClient().getAddress());
+        detailedInvoiceBuilder.QRCode(zatkaService.generateQR(
+                invoice.getClient().getName(),
+                companyDTO.getVAT(),
+                TimestampUtil.convertLocalDateToZatcaTimestamp(invoice.getCreateDate()),
+                invoice.getTotalAmountWithTax().toString(),
+                invoice.getTaxAmount().toString()
+        ));
+
+//        String sellerName , String vatNumber, String timestamp, String totalWithVat, String vatAmount
 
 
         //for this invoice, get list of all projects from asset project against assets

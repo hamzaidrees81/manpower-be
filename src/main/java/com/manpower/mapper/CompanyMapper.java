@@ -21,6 +21,7 @@ public class CompanyMapper {
                 .bankAccountNumber(company.getBankAccountNumber())
                 .bankIban(company.getBankIban())
                 .bankName(company.getBankName())
+                .VAT(company.getVat())
                 .build();
     }
 

@@ -1,6 +1,7 @@
 package com.manpower.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
@@ -51,5 +52,10 @@ public class Company {
 
   @Column(name = "status")
   private Integer status;
+
+    @Size(max = 20)
+    @NotNull
+    @Column(name = "vat", nullable = false, length = 20)
+    private String vat;
 
 }

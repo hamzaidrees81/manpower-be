@@ -18,4 +18,5 @@ public class CompanyDTO {
     private String bankAccountNumber;
     private String bankIban;
     private String bankName;
+    private String VAT;
 }
