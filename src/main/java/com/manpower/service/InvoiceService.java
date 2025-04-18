@@ -43,10 +43,13 @@ public class InvoiceService {
         return invoiceRepository.findAll();
     }
 
-    public Page<InvoiceStatusDTO> getFilteredInvoices(Integer clientId, Contants.PaymentStatus status, LocalDate invoiceStartDate, LocalDate invoiceEndDate, LocalDate createdStartDate, LocalDate createdEndDate, LocalDate clearedStartDate, LocalDate clearedEndDate, Pageable pageable) {
+    public ListInvoicesResponse getFilteredInvoices(Integer clientId, Contants.PaymentStatus status, LocalDate invoiceStartDate, LocalDate invoiceEndDate, LocalDate createdStartDate, LocalDate createdEndDate, LocalDate clearedStartDate, LocalDate clearedEndDate, Pageable pageable) {
         Integer companyId = SecurityUtil.getCompanyClaim();
         Specification<Invoice> spec = InvoiceSpecifications.filterInvoices(companyId, clientId, status, invoiceStartDate, invoiceEndDate, createdStartDate, clearedEndDate, clearedStartDate, clearedEndDate);
-        return invoiceRepository.findAll(spec, pageable).map(InvoiceStatusMapper::convertToDTO);
+        Page<InvoiceStatusDTO> invoices = invoiceRepository.findAll(spec, pageable).map(InvoiceStatusMapper::convertToDTO);
+        BigDecimal total = BigDecimal.ZERO; //TODO create 3 , total, pending, paid
+        return new ListInvoicesResponse(invoices, total, total, total);
+
     }
 
     public Optional<Invoice> getInvoiceById(Integer id) {

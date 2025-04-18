@@ -6,6 +6,7 @@ import com.manpower.model.Invoice;
 import com.manpower.model.dto.InvoiceStatusCompanyDTO;
 import com.manpower.model.dto.InvoiceStatusDTO;
 import com.manpower.model.dto.DetailedInvoice;
+import com.manpower.model.dto.ListInvoicesResponse;
 import com.manpower.service.InvoiceService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -33,7 +34,7 @@ public class InvoiceController {
     }
 
     @GetMapping("/list")
-    public Page<InvoiceStatusDTO> listInvoices(
+    public ListInvoicesResponse listInvoices(
       @RequestParam(required = false) Integer clientId,
       @RequestParam(required = false) Contants.PaymentStatus status,
       @RequestParam(required = false) LocalDate invoiceStartDate,
