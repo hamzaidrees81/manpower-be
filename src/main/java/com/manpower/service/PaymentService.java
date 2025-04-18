@@ -1,15 +1,19 @@
 package com.manpower.service;
 
 import com.manpower.common.PaymentConstant;
+import com.manpower.common.Contants;
 import com.manpower.mapper.PaymentMapper;
 import com.manpower.model.*;
 import com.manpower.model.dto.PaymentDTO;
 import com.manpower.model.dto.PaymentFilterDTO;
 import com.manpower.repository.AccountRepository;
+import com.manpower.repository.InvoiceRepository;
 import com.manpower.repository.PaymentRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,7 +28,9 @@ public class PaymentService {
     private final ExpenseService expenseService;
     private final SponsorService sponsorService;
     private final InvoiceService invoiceService;
+    private final InvoiceRepository invoiceRepository;
 
+    @Transactional
     public PaymentDTO recordPayment(PaymentDTO paymentDTO) {
         Account account = mainAccountRepository.findById(paymentDTO.getMainAccountId())
             .orElseThrow(() -> new RuntimeException("Account not found"));
@@ -32,8 +38,32 @@ public class PaymentService {
         account.setBalance(account.getBalance().subtract(paymentDTO.getAmount()));
         mainAccountRepository.save(account);
 
+        boolean clearInvoice = false;
+        Invoice invoiceUnderPayment = null;
+
+        //if it is invoice, see if it is paid or not...
+        if(paymentDTO.getPaidToType().equals(PaymentConstant.PaidToType.INVOICE)) {
+
+            invoiceUnderPayment = invoiceRepository.findById(paymentDTO.getInvoiceId()).orElseThrow(() -> new RuntimeException("Invoice not found"));
+
+            //find total of payments already made for this invoice
+            List<Payment> invoicePayments = paymentRepository.findAllByInvoiceId(paymentDTO.getInvoiceId());
+            //find total paid
+            BigDecimal totalPaid = invoicePayments.stream().map(Payment::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
+            //if after this payment, invoice will be cleared
+            if (totalPaid.add(paymentDTO.getAmount()).compareTo(invoiceUnderPayment.getTotalAmountWithTax()) >= 0) {
+                //clear the invoice
+                clearInvoice = true;
+            }
+        }
+
         Payment payment = PaymentMapper.toEntity(paymentDTO,account);
         Payment payment1 = paymentRepository.save(payment);
+
+        if(clearInvoice) {
+            invoiceUnderPayment.setStatus(Contants.PaymentStatus.PAID.getValue());
+            invoiceRepository.save(invoiceUnderPayment);
+        }
 
         Asset asset = null;
         Sponsor sponsor = null;
