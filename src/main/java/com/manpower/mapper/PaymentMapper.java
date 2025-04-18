@@ -62,7 +62,6 @@ public class PaymentMapper {
             case EXPENSE -> "Expense - " + expense.getExpenseCategory();
             case SPONSOR -> "Sponsor - " + sponsor.getName();
             case INVOICE -> "Invoice - " + invoice.getNumber();
-            case INVOICES -> "Multiple Invoices";
             case OTHER -> "";
         };
 

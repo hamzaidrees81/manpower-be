@@ -23,8 +23,7 @@ public class PaymentConstant {
         ASSET,
         SPONSOR,
         EXPENSE,
-        INVOICE,
-        INVOICES,
+        INVOICE, //when this type is invoice, paid to type has client id
         OTHER //other and invoice means money is incoming, other 3 are outgoing
     }
 
