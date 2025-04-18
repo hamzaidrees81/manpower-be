@@ -12,7 +12,7 @@ public class ListInvoicesResponse {
     private BigDecimal pendingAmount;
     private BigDecimal paidAmount;
 
-    public ListInvoicesResponse(Page<InvoiceStatusDTO> page, BigDecimal totalAmount, BigDecimal pendingAmount, BigDecimal paidAmount) {
+    public ListInvoicesResponse(Page<InvoiceStatusDTO> page, BigDecimal totalAmount,  BigDecimal paidAmount, BigDecimal pendingAmount) {
         this.page = page;
         this.totalAmount = totalAmount;
         this.pendingAmount = pendingAmount;

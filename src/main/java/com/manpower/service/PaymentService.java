@@ -80,7 +80,8 @@ public class PaymentService {
                 filterDTO.getEndDate(),
                 filterDTO.getStartTimestamp(),
                 filterDTO.getEndTimestamp(),
-                filterDTO.getPaymentDirection().name());
+                filterDTO.getPaymentDirection() != null ? filterDTO.getPaymentDirection().name() : null
+        );
 
         List<PaymentDTO> paymentDTOS = new ArrayList<>();
         for(Payment payment : payments) {

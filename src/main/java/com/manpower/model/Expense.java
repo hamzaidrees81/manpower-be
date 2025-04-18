@@ -15,6 +15,7 @@ import org.hibernate.annotations.OnDeleteAction;
 public class Expense {
   @Id
   @Column(name = "id", nullable = false)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
 
   @ManyToOne(fetch = FetchType.EAGER, optional = false)

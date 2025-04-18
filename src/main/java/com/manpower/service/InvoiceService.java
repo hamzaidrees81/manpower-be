@@ -38,6 +38,7 @@ public class InvoiceService {
     private final InvoiceSponsorPayableRepository invoiceSponsorPayableRepository;
     private final AssetPayableRepository assetPayableRepository;
     private final AccountService accountService;
+    private final PaymentRepository paymentRepository;
 
     public List<Invoice> getAllInvoices() {
         return invoiceRepository.findAll();
@@ -46,10 +47,14 @@ public class InvoiceService {
     public ListInvoicesResponse getFilteredInvoices(Integer clientId, Contants.PaymentStatus status, LocalDate invoiceStartDate, LocalDate invoiceEndDate, LocalDate createdStartDate, LocalDate createdEndDate, LocalDate clearedStartDate, LocalDate clearedEndDate, Pageable pageable) {
         Integer companyId = SecurityUtil.getCompanyClaim();
         Specification<Invoice> spec = InvoiceSpecifications.filterInvoices(companyId, clientId, status, invoiceStartDate, invoiceEndDate, createdStartDate, clearedEndDate, clearedStartDate, clearedEndDate);
-        Page<InvoiceStatusDTO> invoices = invoiceRepository.findAll(spec, pageable).map(InvoiceStatusMapper::convertToDTO);
-        BigDecimal total = BigDecimal.ZERO; //TODO create 3 , total, pending, paid
-        return new ListInvoicesResponse(invoices, total, total, total);
+        Page<Invoice> invoicePage = invoiceRepository.findAll(spec, pageable);
+        Page<InvoiceStatusDTO> invoices = invoicePage.map(InvoiceStatusMapper::convertToDTO);
 
+        BigDecimal totalAmount = invoiceRepository.sumTotalAmountWithTax(spec);
+        List<Integer> invoiceIds = invoiceRepository.findInvoiceIds(spec);
+
+        BigDecimal paidAmount = paymentRepository.sumPaidAmountByInvoiceIds(invoiceIds);
+        return new ListInvoicesResponse(invoices, totalAmount, paidAmount, totalAmount.subtract(paidAmount));
     }
 
     public Optional<Invoice> getInvoiceById(Integer id) {

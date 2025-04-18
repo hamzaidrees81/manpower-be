@@ -240,7 +240,7 @@ public class Contants {
   }
 
   public enum ExpenseType {
-    Self, Project
+    SELF, PROJECT
   }
 
 }
