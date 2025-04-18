@@ -81,7 +81,7 @@ public class PaymentService {
             case SPONSOR ->
                     sponsor = sponsorService.getSponsorById(payment1.getPaidToId()).get();
             case INVOICE ->
-                    invoice = invoiceService.getInvoiceById(payment1.getPaidToId()).get();
+                    invoice = invoiceService.getInvoiceById(payment1.getInvoiceId()).get();
         };
 
         return PaymentMapper.toDTO(payment1, asset, sponsor, expense, invoice);
