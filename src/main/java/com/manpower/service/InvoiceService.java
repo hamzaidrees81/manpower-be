@@ -50,6 +50,13 @@ public class InvoiceService {
         Page<Invoice> invoicePage = invoiceRepository.findAll(spec, pageable);
         Page<InvoiceStatusDTO> invoices = invoicePage.map(InvoiceStatusMapper::convertToDTO);
 
+        //for every invoice, calculate how much is paid
+        for(InvoiceStatusDTO invoiceStatusDTO : invoices) {
+            BigDecimal paidAmount = paymentRepository.sumPaidAmountByInvoiceIds(Collections.singletonList(invoiceStatusDTO.getId()));
+            invoiceStatusDTO.setAmountPaid(paidAmount);
+            invoiceStatusDTO.setToBePaid(invoiceStatusDTO.getTotalAmountWithTax().subtract(paidAmount));
+        }
+
         BigDecimal totalAmount = invoiceRepository.sumTotalAmountWithTax(spec);
         List<Integer> invoiceIds = invoiceRepository.findInvoiceIds(spec);
 

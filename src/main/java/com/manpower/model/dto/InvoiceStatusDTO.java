@@ -20,4 +20,6 @@ public class InvoiceStatusDTO {
   private LocalDate endDate;
   private BigDecimal taxAmount;
   private BigDecimal totalAmountWithTax;
+  private BigDecimal amountPaid;
+  private BigDecimal toBePaid;
 }
