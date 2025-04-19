@@ -3,6 +3,8 @@ package com.manpower.mapper;
 import com.manpower.common.Contants;
 import com.manpower.model.*;
 import com.manpower.model.dto.AssetProjectDTO;
+import com.manpower.model.dto.DesignationDTO;
+import com.manpower.model.dto.ProjectDTO;
 
 public class AssetProjectMapper {
 
@@ -23,6 +25,12 @@ public class AssetProjectMapper {
                 .endDate(assetProject.getEndDate())
                 .isActive(Contants.AssetProjectStatus.fromValue(assetProject.getIsActive()))
                 .status(Contants.Status.fromValue(assetProject.getStatus()))
+                .project(
+                        ProjectDTO.builder()
+                            .projectId(String.valueOf(assetProject.getProject().getId()))
+                            .name(assetProject.getProject().getName()).build())
+                .designation(new DesignationDTO(assetProject.getDesignation().getId(),
+                        assetProject.getDesignation().getName()))
                 .build();
     }
 

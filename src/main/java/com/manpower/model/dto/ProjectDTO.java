@@ -7,7 +7,7 @@ import java.time.LocalDate;
 @Data
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
+@RequiredArgsConstructor
 public class ProjectDTO {
     private Integer id;
     private Integer companyId;
