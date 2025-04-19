@@ -152,7 +152,7 @@ public class Contants {
   public enum PaymentStatusString {
     UNPAID,
     DELETED,
-    INVOICE_UNPAID,
+    INVOICE_PENDING,
     PAID,
     ALL;
   }

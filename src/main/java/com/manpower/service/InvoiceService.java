@@ -289,7 +289,7 @@ public class InvoiceService {
                 .companyId(SecurityUtil.getCompanyClaim())
                         .paidAmount(BigDecimal.ZERO)
                 .invoice(invoice)
-                  .paymentStatus(Contants.PaymentStatusString.INVOICE_UNPAID.name());
+                  .paymentStatus(Contants.PaymentStatusString.INVOICE_PENDING.name());
 
                 AssetPayable assetPayable  = assetPayableRepository.save(assetPayableBuilder.build());
 
@@ -320,7 +320,7 @@ public class InvoiceService {
                     ispBuilder.projectSponsorshipId(projectAssetSponsor)
                       .sponsorshipAsset(projectAssetSponsor.getAsset())
                       .sponsorshipPayable(currentSponsorRevenue)
-                      .paymentStatus(Contants.PaymentStatusString.INVOICE_UNPAID.name())
+                      .paymentStatus(Contants.PaymentStatusString.INVOICE_PENDING.name())
                       .sponsorshipDeterminant(Contants.SponsorshipDeterminant.REVENUE.name())
                         .invoice(invoice)
                         .sponsor(projectAssetSponsor.getSponsor())
@@ -345,7 +345,7 @@ public class InvoiceService {
                     ispBuilder.projectSponsorshipId(projectAssetProfitSponsor)
                       .sponsorshipAsset(projectAssetProfitSponsor.getAsset())
                       .sponsorshipPayable(currentSponsorRevenue)
-                      .paymentStatus(Contants.PaymentStatusString.INVOICE_UNPAID.name())
+                      .paymentStatus(Contants.PaymentStatusString.INVOICE_PENDING.name())
                       .sponsorshipDeterminant(Contants.SponsorshipDeterminant.PROFIT.name())
                             .invoice(invoice)
                             .sponsor(projectAssetProfitSponsor.getSponsor())
