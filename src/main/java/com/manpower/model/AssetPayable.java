@@ -19,7 +19,7 @@ public class AssetPayable {
   @Column(name = "id", nullable = false)
   private Integer id;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "asset_project_id")
   private AssetProject assetProject;
 
