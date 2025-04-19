@@ -1,6 +1,7 @@
 package com.manpower.model.dto;
 
 import com.manpower.common.Contants;
+import com.manpower.model.Designation;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,7 +25,7 @@ public class AssetDTO {
   private String idNumber;
   private LocalDate iqamaExpiry;
   private String phone;
-  private String designation;
+  private Designation designation;
   private String passport;
   private LocalDate passportExpiry;
   private LocalDate joiningDate;

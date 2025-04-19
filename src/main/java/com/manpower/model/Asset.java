@@ -42,9 +42,6 @@ public class Asset {
   @Column(name = "phone", length = 25)
   private String phone;
 
-  @Column(name = "designation", length = 25)
-  private String designation;
-
   @Column(name = "passport")
   private String passport;
 
@@ -68,4 +65,11 @@ public class Asset {
 
   @Column(name = "sponsorship_type")
   private String sponsorshipType;
+
+  @ManyToOne(fetch = FetchType.EAGER)
+  @OnDelete(action = OnDeleteAction.SET_NULL)
+  @JoinColumn(name = "designation_id")
+  private com.manpower.model.Designation designation;
+
+
 }
