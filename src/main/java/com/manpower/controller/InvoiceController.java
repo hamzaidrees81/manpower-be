@@ -27,7 +27,7 @@ public class InvoiceController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<DetailedInvoice> getDetailedInvoiceById(@PathVariable Integer id) {
+    public ResponseEntity<DetailedInvoice> getDetailedInvoiceById(@PathVariable Integer id) throws Exception {
         return invoiceService.getDetailedInvoiceById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());

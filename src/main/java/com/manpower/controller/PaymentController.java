@@ -34,6 +34,12 @@ public class PaymentController {
         return ResponseEntity.ok(payments);
     }
 
+    @GetMapping("/ledger/filter")
+    public ResponseEntity<List<PaymentDTO>> filterLedgerPayments(PaymentFilterDTO filterDTO) {
+        List<PaymentDTO> payments = paymentService.filterPayments(filterDTO);
+        return ResponseEntity.ok(payments);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePayment(@PathVariable Integer id) {
         paymentService.deletePayment(id);
