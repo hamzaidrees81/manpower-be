@@ -2,6 +2,7 @@ package com.manpower.controller;
 
 import com.manpower.model.Company;
 import com.manpower.service.CompanyService;
+import com.manpower.util.SecurityUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +25,14 @@ public class CompanyController {
     @GetMapping("/{id}")
     public ResponseEntity<Company> getCompanyById(@PathVariable Integer id) {
         return companyService.getCompanyById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/myCompany")
+    public ResponseEntity<Company> getMyCompany() {
+        Integer companyId = SecurityUtil.getCompanyClaim();
+        return companyService.getCompanyById(companyId)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
