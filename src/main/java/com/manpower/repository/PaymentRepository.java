@@ -57,7 +57,7 @@ public interface PaymentRepository extends JpaRepository<Payment, Integer> {
             @Param("paymentDirection") String paymentDirection
             );
 
-    @Query("SELECT COALESCE(SUM(p.amount), 0) FROM Payment p WHERE p.paidToType = 'INVOICE' AND p.paidToId IN :invoiceIds")
+    @Query("SELECT COALESCE(SUM(p.amount), 0) FROM Payment p WHERE p.paidToType = 'INVOICE' AND p.invoiceId IN :invoiceIds")
     BigDecimal sumPaidAmountByInvoiceIds(@Param("invoiceIds") List<Integer> invoiceIds);
 
 }
