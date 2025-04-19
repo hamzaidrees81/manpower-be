@@ -150,6 +150,7 @@ public class Contants {
 
   @Getter
   public enum PaymentStatusString {
+    INVOICE_UNPAID,
     DELETED,
     UNPAID,
     PAID,
