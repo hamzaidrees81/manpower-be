@@ -106,7 +106,7 @@ public class InvoiceService {
         detailedInvoiceBuilder.totalWithVAT(invoice.getTotalAmountWithTax());
         detailedInvoiceBuilder.clientAddress(invoice.getClient().getAddress());
         detailedInvoiceBuilder.QRCode(zatkaService.generateQR(
-                invoice.getClient().getName(),
+                companyDTO.getName(),
                 companyDTO.getVAT(),
                 TimestampUtil.convertLocalDateToZatcaTimestamp(invoice.getCreateDate()),
                 invoice.getTotalAmountWithTax().toString(),
