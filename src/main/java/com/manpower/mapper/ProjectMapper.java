@@ -3,6 +3,7 @@ package com.manpower.mapper;
 import com.manpower.model.Project;
 import com.manpower.model.Company;
 import com.manpower.model.Client;
+import com.manpower.model.dto.ClientDTO;
 import com.manpower.model.dto.ProjectDTO;
 
 public class ProjectMapper {
@@ -14,6 +15,7 @@ public class ProjectMapper {
                 .id(entity.getId())
                 .companyId(entity.getCompany() != null ? entity.getCompany().getId() : null)
                 .clientId(entity.getClient() != null ? entity.getClient().getId() : null)
+                .client(entity.getClient() != null ? new ClientDTO(entity.getClient().getId(), entity.getClient().getName()) : null)
                 .projectId(entity.getProjectId())
                 .name(entity.getName())
                 .location(entity.getLocation())

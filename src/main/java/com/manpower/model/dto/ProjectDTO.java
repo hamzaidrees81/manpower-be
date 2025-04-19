@@ -11,6 +11,7 @@ import java.time.LocalDate;
 public class ProjectDTO {
     private Integer id;
     private Integer companyId;
+    private ClientDTO client;
     private Integer clientId;
     private String clientName;
     private String projectId;
