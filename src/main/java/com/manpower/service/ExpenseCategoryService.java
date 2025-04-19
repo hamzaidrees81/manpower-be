@@ -21,8 +21,8 @@ public class ExpenseCategoryService {
         return expenseCategoryRepository.findAll();
     }
 
-    public Optional<Expense> getExpenseById(Integer id) {
-        throw new RuntimeException("Not implemented yet");
+    public Optional<ExpenseCategory> getExpenseCategoryById(Long id) {
+        return expenseCategoryRepository.findById(id);
     }
 
     public Expense createExpense(ExpenseDTO expense) {

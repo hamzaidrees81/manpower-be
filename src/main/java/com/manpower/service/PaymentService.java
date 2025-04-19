@@ -25,10 +25,10 @@ public class PaymentService {
     private final PaymentRepository paymentRepository;
     private final AccountRepository mainAccountRepository;
     private final AssetService assetService;
-    private final ExpenseService expenseService;
     private final SponsorService sponsorService;
     private final InvoiceService invoiceService;
     private final InvoiceRepository invoiceRepository;
+    private final ExpenseCategoryService expenseCategoryService;
 
     @Transactional
     public PaymentDTO recordPayment(PaymentDTO paymentDTO) {
@@ -67,7 +67,7 @@ public class PaymentService {
 
         Asset asset = null;
         Sponsor sponsor = null;
-        Expense expense = null;
+        ExpenseCategory expenseCategory = null;
         Invoice invoice = null;
 
         //if PAID_TO is asset, sponsor, or invoice
@@ -77,14 +77,22 @@ public class PaymentService {
             case ASSET ->
                     asset = assetService.getAssetById(payment1.getPaidToId()).get();
             case EXPENSE ->
-                    expense = expenseService.getExpenseById(payment1.getPaidToId()).get();
+                    {
+                    // expenseCategory = expenseService.getExpenseById(payment1.getPaidToId()).get();
+                    //IN CASE OF TYPE EXPENSE, INVOICE ID will be EXPENSE_CATEGORY
+                    expenseCategory = expenseCategoryService.getExpenseCategoryById(Long.valueOf(payment1.getInvoiceId())).get();
+                    //if paid to is selected as an asset, add it too
+                    if(payment1.getPaidToId() !=null)
+                        asset = assetService.getAssetById(payment1.getPaidToId()).get();
+
+                    }
             case SPONSOR ->
                     sponsor = sponsorService.getSponsorById(payment1.getPaidToId()).get();
             case INVOICE ->
                     invoice = invoiceService.getInvoiceById(payment1.getInvoiceId()).get();
         };
 
-        return PaymentMapper.toDTO(payment1, asset, sponsor, expense, invoice);
+        return PaymentMapper.toDTO(payment1, asset, sponsor, expenseCategory, invoice);
     }
 
     public List<PaymentDTO> getPaymentsForInvoice(Integer invoiceId) {
@@ -116,7 +124,7 @@ public class PaymentService {
 
             Asset asset = null;
             Sponsor sponsor = null;
-            Expense expense = null;
+            ExpenseCategory expenseCategory = null;
             Invoice invoice = null;
 
             //if PAID_TO is asset, sponsor, or invoice
@@ -126,7 +134,15 @@ public class PaymentService {
                 case ASSET ->
                         asset = assetService.getAssetById(payment.getPaidToId()).get();
                 case EXPENSE ->
-                        expense = expenseService.getExpenseById(payment.getPaidToId()).get();
+                {
+                    // expenseCategory = expenseService.getExpenseById(payment1.getPaidToId()).get();
+                    //IN CASE OF TYPE EXPENSE, INVOICE ID will be EXPENSE_CATEGORY
+                    expenseCategory = expenseCategoryService.getExpenseCategoryById(Long.valueOf(payment.getInvoiceId())).get();
+                    //if paid to is selected as an asset, add it too
+                    if(payment.getPaidToId() !=null)
+                        asset = assetService.getAssetById(payment.getPaidToId()).get();
+
+                }
                 case SPONSOR ->
                         sponsor = sponsorService.getSponsorById(payment.getPaidToId()).get();
                 case INVOICE ->
@@ -134,7 +150,7 @@ public class PaymentService {
 //                        invoice = invoiceService.getInvoiceById(payment.getPaidToId()).get();
                         invoice = invoiceService.getInvoiceById(payment.getInvoiceId()).get();
             };
-            paymentDTOS.add(PaymentMapper.toDTO(payment, asset, sponsor, expense, invoice));
+            paymentDTOS.add(PaymentMapper.toDTO(payment, asset, sponsor, expenseCategory, invoice));
         }
 
         return paymentDTOS;

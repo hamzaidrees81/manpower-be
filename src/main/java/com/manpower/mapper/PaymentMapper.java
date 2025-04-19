@@ -32,7 +32,7 @@ public class PaymentMapper {
         return dto;
     }
 
-    public static PaymentDTO toDTO(Payment payment, Asset asset, Sponsor sponsor, Expense expense, Invoice invoice) {
+    public static PaymentDTO toDTO(Payment payment, Asset asset, Sponsor sponsor, ExpenseCategory expenseCategory, Invoice invoice) {
         if (payment == null) return null;
 
         PaymentDTO dto = new PaymentDTO();
@@ -59,7 +59,7 @@ public class PaymentMapper {
 
         String paymentName = switch (paidToType) {
             case ASSET -> "Asset - " + asset.getName();
-            case EXPENSE -> "Expense - " + expense.getExpenseCategory();
+            case EXPENSE -> "Expense - " + ((asset!=null) ? asset.getName() + " - " : "") + expenseCategory.getCategoryName();
             case SPONSOR -> "Sponsor - " + sponsor.getName();
             case INVOICE -> "Invoice - " + invoice.getNumber();
             case OTHER -> "";
