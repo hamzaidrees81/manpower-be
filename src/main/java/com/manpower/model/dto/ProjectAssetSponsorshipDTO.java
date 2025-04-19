@@ -1,6 +1,7 @@
 package com.manpower.model.dto;
 
 import com.manpower.common.Contants;
+import com.manpower.model.Sponsor;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,6 +23,7 @@ public class ProjectAssetSponsorshipDTO {
     private Integer assetProjectId;
     private String assetProjectName;
     private String sponsorName;
+    private Sponsor sponsor;
     private Contants.SponsorshipType sponsorshipType;
     private BigDecimal sponsorshipValue;
     private Contants.SponsorshipDeterminant sponsorshipDeterminant;

@@ -11,6 +11,7 @@ public class ProjectAssetSponsorshipMapper {
 
         return ProjectAssetSponsorshipDTO.builder()
                 .id(entity.getId())
+                .sponsor(entity.getSponsor() != null ? entity.getSponsor(): null)
                 .sponsorId(entity.getSponsor() != null ? entity.getSponsor().getId() : null)
                 .sponsorName(entity.getSponsor() != null ? entity.getSponsor().getName() : null)
                 .assetProjectId(entity.getAssetProject() != null ? entity.getAssetProject().getId() : null)
