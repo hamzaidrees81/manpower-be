@@ -3,6 +3,7 @@ package com.manpower.service;
 import com.manpower.mapper.ExpenseMapper;
 import com.manpower.model.Expense;
 import com.manpower.model.dto.ExpenseDTO;
+import com.manpower.model.dto.PaymentDTO;
 import com.manpower.repository.ExpenseRepository;
 import com.manpower.util.SecurityUtil;
 import jakarta.persistence.criteria.Predicate;
@@ -55,6 +56,10 @@ public class ExpenseService {
 
     public ExpenseDTO createExpense(ExpenseDTO expense) {
         Expense expenseResponse = expenseRepository.save(ExpenseMapper.toEntity(expense));
+
+        //also add it to payable
+        PaymentDTO  paymentDTO = new PaymentDTO();
+
         return ExpenseMapper.toDTO(expenseResponse);
     }
 

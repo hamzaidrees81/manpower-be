@@ -1,7 +1,6 @@
 package com.manpower.controller;
 
-import com.manpower.mapper.PaymentMapper;
-import com.manpower.model.Payment;
+import com.manpower.model.dto.LedgerDTO;
 import com.manpower.model.dto.PaymentDTO;
 import com.manpower.model.dto.PaymentFilterDTO;
 import com.manpower.service.PaymentService;
@@ -9,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -35,9 +35,20 @@ public class PaymentController {
     }
 
     @GetMapping("/ledger/filter")
-    public ResponseEntity<List<PaymentDTO>> filterLedgerPayments(PaymentFilterDTO filterDTO) {
+    public ResponseEntity<LedgerDTO> filterLedgerPayments(PaymentFilterDTO filterDTO) {
         List<PaymentDTO> payments = paymentService.filterPayments(filterDTO);
-        return ResponseEntity.ok(payments);
+
+        LedgerDTO.LedgerDTOBuilder ledger = LedgerDTO.builder();
+        ledger.payments(payments)
+                .totalIncome(BigDecimal.ONE)
+                .totalExpense(BigDecimal.TEN)
+                .totalAssetExpenses(BigDecimal.ONE)
+                .totalCompanyExpenses(BigDecimal.TEN)
+                .totalPaidToAssets(BigDecimal.TEN)
+                .totalPaidToSponsors(BigDecimal.TEN)
+                .profit(BigDecimal.TEN);
+
+        return ResponseEntity.ok(ledger.build());
     }
 
     @DeleteMapping("/{id}")
