@@ -23,7 +23,7 @@ public class ProjectAssetSponsorshipDTO {
     private Integer assetProjectId;
     private String assetProjectName;
     private String sponsorName;
-    private Sponsor sponsor;
+    private SponsorDTO sponsor;
     private Contants.SponsorshipType sponsorshipType;
     private BigDecimal sponsorshipValue;
     private Contants.SponsorshipDeterminant sponsorshipDeterminant;

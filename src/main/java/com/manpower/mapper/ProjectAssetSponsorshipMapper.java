@@ -3,6 +3,7 @@ package com.manpower.mapper;
 import com.manpower.common.Contants;
 import com.manpower.model.*;
 import com.manpower.model.dto.ProjectAssetSponsorshipDTO;
+import com.manpower.model.dto.SponsorDTO;
 
 public class ProjectAssetSponsorshipMapper {
 
@@ -11,7 +12,7 @@ public class ProjectAssetSponsorshipMapper {
 
         return ProjectAssetSponsorshipDTO.builder()
                 .id(entity.getId())
-                .sponsor(entity.getSponsor() != null ? entity.getSponsor(): null)
+                .sponsor(entity.getSponsor() != null ? new SponsorDTO(entity.getSponsor().getId(), entity.getSponsor().getName()): null)
                 .sponsorId(entity.getSponsor() != null ? entity.getSponsor().getId() : null)
                 .sponsorName(entity.getSponsor() != null ? entity.getSponsor().getName() : null)
                 .assetProjectId(entity.getAssetProject() != null ? entity.getAssetProject().getId() : null)
