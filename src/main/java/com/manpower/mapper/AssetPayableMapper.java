@@ -20,7 +20,7 @@ public class AssetPayableMapper {
         dto.setInvoiceId(entity.getInvoice() != null ? entity.getInvoice().getId() : null);
         dto.setPaidAmount(entity.getPaidAmount());
         if(entity.getAssetProject() != null)
-            dto.setAssetProjectName(entity.getAssetProject().getProject().getName());
+            dto.setAssetProjectName(entity.getAssetProject().getProject().getName()); //RETURNING PROJECTNAME INSTEAD OF ASSET PROJECT NAME
 
         return dto;
     }
