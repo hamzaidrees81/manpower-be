@@ -20,36 +20,36 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-  private final JWTTokenFilter jwtTokenFilter;
+    private final JWTTokenFilter jwtTokenFilter;
 
-  @Bean
-  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    return http
-            // Enable CORS and disable CSRF
-            .cors(cors -> cors.configurationSource(request -> {
-              CorsConfiguration config = new CorsConfiguration();
-              config.setAllowedOrigins(List.of("http://localhost:4200")); // Allow frontend origin
-              config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-              config.setAllowedHeaders(List.of("*"));
-              config.setAllowCredentials(true);
-              return config;
-            }))
-            .csrf(AbstractHttpConfigurer::disable)
-            .sessionManagement(AbstractHttpConfigurer::disable)
-            // Setup authorization
-            .authorizeHttpRequests(auth -> {
-              auth.requestMatchers("/public/**").permitAll()
-                      .requestMatchers("/api/login").permitAll()
-                      .requestMatchers("/swagger-ui/*").permitAll()
-                      .requestMatchers("/v3/*").permitAll()
-                      .requestMatchers("/v3/api-docs/swagger-config").permitAll()
-                      .anyRequest().authenticated();
-            })
-            .exceptionHandling(exceptionHandling -> exceptionHandling
-                    .accessDeniedPage("/error") // Redirect to /error page on access denied
-            )
-            .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
-            .build();
-  }
-
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        return http
+                .cors(cors -> cors.configurationSource(request -> {
+                    CorsConfiguration config = new CorsConfiguration();
+                    config.setAllowedOrigins(List.of(
+                            "http://localhost:4200",
+                            "https://manpower-fe-production.up.railway.app"
+                    ));
+                    config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+                    config.setAllowedHeaders(List.of("*"));
+                    config.setAllowCredentials(true);
+                    return config;
+                }))
+                .csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(auth -> {
+                    auth.requestMatchers("/public/**").permitAll()
+                            .requestMatchers("/api/login").permitAll()
+                            .requestMatchers("/swagger-ui/*").permitAll()
+                            .requestMatchers("/v3/*").permitAll()
+                            .requestMatchers("/v3/api-docs/swagger-config").permitAll()
+                            .anyRequest().authenticated();
+                })
+                .exceptionHandling(exceptionHandling -> exceptionHandling
+                        .accessDeniedPage("/error")
+                )
+                .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
+                .build();
+    }
 }
