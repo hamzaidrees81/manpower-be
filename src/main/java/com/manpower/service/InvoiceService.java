@@ -232,7 +232,7 @@ public class InvoiceService {
 
         BigDecimal tax = detailedInvoice.getTotalAmount().multiply((preferenceService.findVATAmount().multiply(BigDecimal.valueOf(0.01f))));
         invoiceBuilder.client(existingClient);
-        invoiceBuilder.status(Contants.PaymentStatus.UNPAID.getValue());
+        invoiceBuilder.status(Contants.PaymentStatus.INVOICE_PENDING.getValue());
         invoiceBuilder.startDate(detailedInvoice.getStartDate());
         invoiceBuilder.endDate(detailedInvoice.getEndDate());
         invoiceBuilder.createDate(detailedInvoice.getInvoiceDate());

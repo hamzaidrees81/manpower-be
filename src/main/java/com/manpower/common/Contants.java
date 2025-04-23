@@ -163,6 +163,7 @@ public class Contants {
     DELETED((byte) 0),
     UNPAID((byte) 1),
     PAID((byte) 2),
+    INVOICE_PENDING((byte) 3),
     ALL((byte)-1);
 
     private final Byte value;
