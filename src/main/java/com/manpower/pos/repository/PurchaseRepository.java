@@ -1,0 +1,7 @@
+package com.manpower.pos.repository;
+
+import com.manpower.pos.model.Purchase;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface PurchaseRepository extends JpaRepository<Purchase, Long> {
+}

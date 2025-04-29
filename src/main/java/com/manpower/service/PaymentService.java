@@ -63,6 +63,9 @@ public class PaymentService {
         if(clearInvoice) {
             invoiceUnderPayment.setStatus(Contants.PaymentStatus.PAID.getValue());
             invoiceRepository.save(invoiceUnderPayment);
+
+            //now for assets and sponsors, change their payment type to unpaid...
+//            TODO
         }
 
         Asset asset = null;
