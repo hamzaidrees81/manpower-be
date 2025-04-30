@@ -1,10 +1,10 @@
 package com.manpower.pos.dto;
 
 import com.manpower.pos.enums.STATUS;
-import com.manpower.pos.model.Brand;
-import com.manpower.pos.model.ProductCategory;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.math.BigDecimal;
 
 @Getter
 @Setter
@@ -22,4 +22,5 @@ public class ProductDto {
     private ProductCategoryDto category;
     private BrandDto brand;
     private Integer brandId;
+    private BigDecimal sellingPrice;
 }

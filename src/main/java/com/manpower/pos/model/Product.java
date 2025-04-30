@@ -77,6 +77,9 @@ public class Product {
     @JoinColumn(name = "company_id")
     private Company company;
 
+    @Column(name = "selling_price", precision = 15, scale = 2)
+    private BigDecimal sellingPrice;
+
     @OneToMany(mappedBy = "product")
     private Set<ProductUnit> productUnits = new LinkedHashSet<>();
 

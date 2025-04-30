@@ -41,6 +41,7 @@ public class ProductMapper {
         dto.setCategoryId(product.getCategory() != null ? product.getCategory().getId() : null);
         dto.setBrand(product.getBrand() != null ? brandMapper.toDto(product.getBrand()) : null);
         dto.setBrandId(product.getBrand() != null ? product.getBrand().getId() : null);
+        dto.setSellingPrice(product.getSellingPrice());
         return dto;
     }
 
@@ -62,6 +63,7 @@ public class ProductMapper {
         product.setCompany(Company.builder().id(SecurityUtil.getCompanyClaim()).build());
         product.setCategory(ProductCategory.builder().id(dto.getCategoryId()).build());
         product.setBrand(Brand.builder().id(dto.getBrandId()).build());
+        product.setSellingPrice(dto.getSellingPrice());
         return product;
     }
 }
