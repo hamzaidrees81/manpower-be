@@ -3,6 +3,7 @@ package com.manpower.pos.mapper;
 import com.manpower.model.Company;
 import com.manpower.pos.dto.ProductCategoryDto;
 import com.manpower.pos.model.ProductCategory;
+import com.manpower.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -16,12 +17,11 @@ public class ProductCategoryMapper {
         ProductCategoryDto dto = new ProductCategoryDto();
         dto.setId(category.getId());
         dto.setCategoryName(category.getCategoryName());
-        dto.setCompanyId(category.getCompany().getId());
         return dto;
     }
 
     public ProductCategory toEntity(ProductCategoryDto dto) {
-        Company company = companyRepository.findById(dto.getCompanyId())
+        Company company = companyRepository.findById(SecurityUtil.getCompanyClaim())
                 .orElseThrow(() -> new IllegalArgumentException("Company not found"));
         return ProductCategory.builder()
                 .id(dto.getId())
