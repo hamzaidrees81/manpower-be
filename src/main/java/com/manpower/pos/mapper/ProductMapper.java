@@ -9,7 +9,7 @@ import com.manpower.pos.model.ProductCategory;
 import com.manpower.util.SecurityUtil;
 import org.springframework.stereotype.Component;
 
-import java.security.Security;
+import java.math.BigDecimal;
 
 @Component
 public class ProductMapper {
@@ -42,7 +42,11 @@ public class ProductMapper {
         dto.setBrand(product.getBrand() != null ? brandMapper.toDto(product.getBrand()) : null);
         dto.setBrandId(product.getBrand() != null ? product.getBrand().getId() : null);
         dto.setSellingPrice(product.getSellingPrice());
-        return dto;
+        dto.setStockQty(
+                product.getStocks().stream()
+                        .map(stock -> stock.getQuantity())
+                        .reduce(BigDecimal.ZERO, BigDecimal::add)
+        );        return dto;
     }
 
     public Product toEntity(ProductDto dto) {

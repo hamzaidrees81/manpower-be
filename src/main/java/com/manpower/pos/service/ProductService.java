@@ -1,6 +1,5 @@
 package com.manpower.pos.service;
 
-import com.manpower.model.Company;
 import com.manpower.pos.dto.ProductDto;
 import com.manpower.pos.mapper.ProductMapper;
 import com.manpower.pos.model.Product;

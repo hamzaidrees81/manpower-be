@@ -1,13 +1,17 @@
 package com.manpower.pos.dto;
 
 import com.manpower.pos.enums.STATUS;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
 
 @Getter
 @Setter
+@RequiredArgsConstructor
+@AllArgsConstructor
 public class ProductDto {
     private Integer id;
     private String name;
@@ -23,4 +27,5 @@ public class ProductDto {
     private BrandDto brand;
     private Integer brandId;
     private BigDecimal sellingPrice;
+    private BigDecimal stockQty;
 }
