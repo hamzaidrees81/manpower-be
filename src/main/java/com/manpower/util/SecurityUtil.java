@@ -15,6 +15,10 @@ public class SecurityUtil {
     }
 
 
+    public static Integer getUserClaim() {
+        return Integer.parseInt((String)getClaim(Contants.RateType.Claims.USER_ID.name()));
+    }
+
         public static Object getClaim(String claimKey) {
         // Retrieve the authentication object from SecurityContext
         UsernamePasswordAuthenticationToken authentication =
