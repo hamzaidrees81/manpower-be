@@ -8,5 +8,4 @@ import lombok.Setter;
 public class BrandDto {
     private Integer id;
     private String brandName;
-    private Integer companyId;
 }
