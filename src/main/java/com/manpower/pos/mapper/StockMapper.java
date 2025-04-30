@@ -7,6 +7,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class StockMapper {
 
+    private final ProductMapper productMapper;
+    private final SupplierMapper supplierMapper;
+
+    public StockMapper(ProductMapper productMapper, SupplierMapper supplierMapper) {
+        this.productMapper = productMapper;
+        this.supplierMapper = supplierMapper;
+    }
+
     public StockDto toDto(Stock stock) {
         if (stock == null) {
             return null;
@@ -15,9 +23,11 @@ public class StockMapper {
         StockDto dto = new StockDto();
         dto.setId(stock.getId());
         dto.setProductId(stock.getProduct().getId());
+        dto.setProduct(productMapper.toDto(stock.getProduct()));
         dto.setQuantity(stock.getQuantity());
         dto.setPrice(stock.getPrice());
         dto.setSupplierId(stock.getSupplier() != null ? stock.getSupplier().getId() : null);
+        dto.setSupplier(stock.getSupplier() != null ? supplierMapper.toDTO(stock.getSupplier()) : null);
         return dto;
     }
 
