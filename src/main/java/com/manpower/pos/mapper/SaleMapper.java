@@ -8,6 +8,7 @@ import com.manpower.pos.dto.SaleResponseDTO;
 import com.manpower.pos.model.Sale;
 import com.manpower.pos.model.SaleItem;
 import com.manpower.pos.repository.ProductRepository;
+import com.manpower.pos.repository.ShopRepository;
 import com.manpower.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class SaleMapper {
     private final ProductRepository productRepository;
+    private final ShopRepository shopRepository;
 
     public Sale toEntity(SaleRequestDTO dto, Company company, User user) {
         Sale sale = new Sale();
@@ -28,6 +30,8 @@ public class SaleMapper {
         sale.setTotalAmount(dto.getTotalAmount());
         sale.setCompany(Company.builder().id(SecurityUtil.getCompanyClaim()).build());
         sale.setCustomerId(dto.getCustomerId());
+        sale.setShop(shopRepository.findById(Long.valueOf(dto.getShopId())).get());
+        sale.setPoNumber(dto.getPoNumber());
 
         List<SaleItem> items = dto.getSaleItems().stream().map(itemDTO -> {
             SaleItem item = new SaleItem();
@@ -53,6 +57,9 @@ public class SaleMapper {
         responseDTO.setTotalAmount(sale.getTotalAmount());
         responseDTO.setStatus(sale.getStatus());
         responseDTO.setCustomerId(sale.getCustomerId());
+        responseDTO.setShopId(sale.getShop().getId());
+        responseDTO.setShop(sale.getShop());
+        responseDTO.setPoNumber(sale.getPoNumber());
 
         List<SaleItemResponseDTO> itemDTOs = sale.getSaleItems().stream().map(item -> {
             SaleItemResponseDTO itemDTO = new SaleItemResponseDTO();
@@ -68,6 +75,8 @@ public class SaleMapper {
             );
             return itemDTO;
         }).collect(Collectors.toList());
+
+        //TODO: HANDLE PAYMENTS LIKE SALE ITEMS
 
         responseDTO.setSaleItems(itemDTOs);
         return responseDTO;

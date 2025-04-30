@@ -1,5 +1,7 @@
 package com.manpower.pos.dto;
 
+import com.manpower.model.dto.PaymentDTO;
+import com.manpower.pos.model.Shop;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -14,4 +16,8 @@ public class SaleResponseDTO {
     private String status;
     private Integer customerId;
     private List<SaleItemResponseDTO> saleItems;
+    private String poNumber;
+    private Integer shopId;
+    private Shop shop;
+    private List<PaymentDTO> payments;
 }

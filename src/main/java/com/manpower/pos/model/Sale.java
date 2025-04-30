@@ -3,6 +3,7 @@ package com.manpower.pos.model;
 import com.manpower.model.Company;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
@@ -43,5 +44,16 @@ public class Sale {
 
     @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SaleItem> saleItems = new ArrayList<>();
+
+    @Column(name = "sale_date")
+    private Instant saleDate;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "shop_id")
+    private Shop shop;
+
+    @Size(max = 50)
+    @Column(name = "po_number", length = 50)
+    private String poNumber;
 
 }
