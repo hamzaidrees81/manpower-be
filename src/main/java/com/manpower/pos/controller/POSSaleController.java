@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/sales")
+@RequestMapping("/pos/api/sales")
 @RequiredArgsConstructor
 public class POSSaleController {
     private final SaleService saleService;
