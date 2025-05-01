@@ -37,9 +37,9 @@ public class User {
   //@JsonIgnoreProperties("users") // Prevent infinite recursion //LEARN IT
   private Company company;
 
-  @ColumnDefault("2")
+  @ColumnDefault("12")
   @Column(name = "role")
-  private Integer role;
+  private String role;
 
   @ColumnDefault("1")
   @Column(name = "status")

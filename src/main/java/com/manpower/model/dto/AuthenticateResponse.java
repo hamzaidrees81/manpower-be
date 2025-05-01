@@ -1,6 +1,7 @@
 package com.manpower.model.dto;
 
 import com.manpower.common.Contants;
+import com.manpower.dto.UserRole;
 import lombok.Builder;
 import lombok.Data;
 
@@ -9,7 +10,7 @@ import lombok.Data;
 public class AuthenticateResponse {
   boolean success;
   String JWToken;
-  Contants.Role role;
+  UserRole role;
   boolean allowERP = false;
   boolean allowPOS = false;
 }

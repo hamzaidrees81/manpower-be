@@ -40,8 +40,8 @@ public class AuthenticationController {
 
     AuthenticateResponse authenticateResponse = AuthenticateResponse.builder()
       .success(true)
-      .JWToken(tokenService.generateToken(UserRole.ADMIN, userId, companyId, allowERP, allowPOS).getAccessToken())
-      .role(Contants.Role.fromValue(user.get().getRole()))
+      .JWToken(tokenService.generateToken(UserRole.valueOf(user.get().getRole()), userId, companyId, allowERP, allowPOS).getAccessToken())
+      .role(UserRole.valueOf(user.get().getRole()))
       .allowERP(allowERP)
       .allowPOS(allowPOS)
       .build();
