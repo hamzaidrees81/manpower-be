@@ -1,6 +1,5 @@
 package com.manpower.controller;
 
-import com.manpower.common.Contants;
 import com.manpower.dto.UserRole;
 import com.manpower.model.User;
 import com.manpower.model.dto.AuthenticateRequest;
@@ -35,8 +34,44 @@ public class AuthenticationController {
     String userId = user.get().getId().toString();
     String companyId = user.get().getCompany().getId().toString();
 
-    boolean allowERP = user.get().getCompany().getAllowErp() !=null && user.get().getCompany().getAllowErp();
-    boolean allowPOS = user.get().getCompany().getAllowPos() !=null && user.get().getCompany().getAllowPos();
+    boolean allowERP;
+    boolean allowPOS;
+    boolean isAdmin = false;
+
+    switch (UserRole.valueOf(user.get().getRole())) {
+      case ADMIN:
+        allowERP = true;
+        allowPOS = true;
+        isAdmin = true;
+        break;
+      case POS_ADMIN:
+        allowERP = false;
+        allowPOS = true;
+        isAdmin = true;
+          break;
+      case ERP_ADMIN:
+        allowERP = true;
+        allowPOS = false;
+        isAdmin = true;
+        break;
+      case POS_ERP_USER:
+        allowERP = true;
+        allowPOS = true;
+          break;
+      case ERP_USER:
+        allowERP = true;
+        allowPOS = false;
+        break;
+      case POS_USER:
+        allowERP = false;
+        allowPOS = true;
+        break;
+              default:
+                allowERP = false;
+                allowPOS = false;
+                break;
+    }
+
 
     AuthenticateResponse authenticateResponse = AuthenticateResponse.builder()
       .success(true)
@@ -44,6 +79,7 @@ public class AuthenticationController {
       .role(UserRole.valueOf(user.get().getRole()))
       .allowERP(allowERP)
       .allowPOS(allowPOS)
+      .isAdmin(isAdmin)
       .build();
 
     return ResponseEntity.ok(authenticateResponse);

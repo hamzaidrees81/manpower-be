@@ -13,4 +13,5 @@ public class AuthenticateResponse {
   UserRole role;
   boolean allowERP = false;
   boolean allowPOS = false;
+  boolean isAdmin  = false;
 }
