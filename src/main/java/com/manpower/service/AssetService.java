@@ -48,6 +48,7 @@ public class AssetService {
     Asset asset = AssetMapper.toEntity(assetDTO, company.get(), sponsor);
     asset.setIdNumber(preferenceService.assetSequence().toString());
     asset = assetRepository.save(asset);
+    preferenceService.updateAssetNumber();
     return AssetMapper.toDTO(asset);
   }
 
