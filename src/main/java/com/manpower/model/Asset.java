@@ -33,7 +33,7 @@ public class Asset {
   @Column(name = "name", nullable = false, length = 50)
   private String name;
 
-  @Column(name = "id_number", nullable = false, length = 15)
+  @Column(name = "id_number", nullable = true, length = 15)
   private String idNumber;
 
   @Column(name = "iqama_expiry")
