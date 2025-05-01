@@ -33,5 +33,32 @@ public class PreferenceService {
     preferencesRepository.save(preference);
   }
 
+  Integer assetSequence()
+  {
+    Integer companyId = SecurityUtil.getCompanyClaim();
+    return preferencesRepository.findByCompany_Id(companyId).getAssetIdSeq();
+  }
+
+  void updateAssetNumber()
+  {
+    Integer companyId = SecurityUtil.getCompanyClaim();
+    Preference preference = preferencesRepository.findByCompany_Id(companyId);
+    preference.setInvoiceSeq(preference.getAssetIdSeq() + 1);
+    preferencesRepository.save(preference);
+  }
+
+  Integer userIdSequence()
+  {
+    Integer companyId = SecurityUtil.getCompanyClaim();
+    return preferencesRepository.findByCompany_Id(companyId).getUserIdSeq();
+  }
+
+  void updateUserIdNumber()
+  {
+    Integer companyId = SecurityUtil.getCompanyClaim();
+    Preference preference = preferencesRepository.findByCompany_Id(companyId);
+    preference.setInvoiceSeq(preference.getUserIdSeq() + 1);
+    preferencesRepository.save(preference);
+  }
 
 }

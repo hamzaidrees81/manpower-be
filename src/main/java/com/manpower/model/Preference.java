@@ -28,4 +28,9 @@ public class Preference {
   @Column(name = "invoice_seq")
   private Integer invoiceSeq;
 
+  @Column(name = "asset_id_sequence")
+  private Integer assetIdSeq;
+
+  @Column(name = "user_id_sequence")
+  private Integer userIdSeq;
 }

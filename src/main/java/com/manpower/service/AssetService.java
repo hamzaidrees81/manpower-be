@@ -19,8 +19,9 @@ public class AssetService {
   private final AssetRepository assetRepository;
   private final CompanyService companyService;
   private final SponsorService sponsorService;
+    private final PreferenceService preferenceService;
 
-  public List<Asset> getAllAssets() {
+    public List<Asset> getAllAssets() {
     return assetRepository.findAll();
   }
 
@@ -45,6 +46,7 @@ public class AssetService {
     }
 
     Asset asset = AssetMapper.toEntity(assetDTO, company.get(), sponsor);
+    asset.setIdNumber(preferenceService.assetSequence().toString());
     asset = assetRepository.save(asset);
     return AssetMapper.toDTO(asset);
   }
