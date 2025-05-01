@@ -43,7 +43,7 @@ public class PreferenceService {
   {
     Integer companyId = SecurityUtil.getCompanyClaim();
     Preference preference = preferencesRepository.findByCompany_Id(companyId);
-    preference.setInvoiceSeq(preference.getAssetIdSeq() + 1);
+    preference.setAssetIdSeq(preference.getAssetIdSeq() + 1);
     preferencesRepository.save(preference);
   }
 
@@ -57,7 +57,7 @@ public class PreferenceService {
   {
     Integer companyId = SecurityUtil.getCompanyClaim();
     Preference preference = preferencesRepository.findByCompany_Id(companyId);
-    preference.setInvoiceSeq(preference.getUserIdSeq() + 1);
+    preference.setUserIdSeq(preference.getUserIdSeq() + 1);
     preferencesRepository.save(preference);
   }
 
