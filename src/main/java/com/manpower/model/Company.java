@@ -58,4 +58,11 @@ public class Company {
     @Column(name = "vat", nullable = false, length = 20)
     private String vat;
 
+
+  @Column(name = "allow_erp")
+  private Boolean allowErp;
+
+  @Column(name = "allow_pos")
+  private Boolean allowPos;
+
 }

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 
@@ -28,7 +29,7 @@ public class TokenServiceImpl implements TokenService {
   private long expiryOffset;
 
   @Override
-  public Token generateToken(UserRole role, String userID, String companyId) {
+  public Token generateToken(UserRole role, String userID, String companyId, boolean allowERP, boolean allowPOS) {
 
     String jwtToken = JWT.create()
       .withJWTId(UUID.randomUUID().toString())
@@ -39,6 +40,8 @@ public class TokenServiceImpl implements TokenService {
       .withClaim(Claims.USER_ID.name(), userID)
       .withClaim(Claims.COMPANY_ID.name(), companyId)
       .withExpiresAt(new Date().toInstant().plusMillis(expiryOffset))
+      .withClaim(Claims.ALLOW_ERP.name(),allowERP)
+      .withClaim(Claims.ALLOW_POS.name(),allowPOS)
       .sign(algorithm); //sign the token
 
     return Token.builder()

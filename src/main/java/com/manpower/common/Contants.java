@@ -99,7 +99,7 @@ public class Contants {
 
     public enum Claims {
       USER_ID,
-      COMPANY_ID
+        ALLOW_ERP, ALLOW_POS, COMPANY_ID
     }
   }
 

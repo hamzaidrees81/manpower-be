@@ -35,10 +35,15 @@ public class AuthenticationController {
     String userId = user.get().getId().toString();
     String companyId = user.get().getCompany().getId().toString();
 
+    boolean allowERP = user.get().getCompany().getAllowErp() !=null && user.get().getCompany().getAllowErp();
+    boolean allowPOS = user.get().getCompany().getAllowPos() !=null && user.get().getCompany().getAllowPos();
+
     AuthenticateResponse authenticateResponse = AuthenticateResponse.builder()
       .success(true)
-      .JWToken(tokenService.generateToken(UserRole.ADMIN, userId, companyId).getAccessToken())
+      .JWToken(tokenService.generateToken(UserRole.ADMIN, userId, companyId, allowERP, allowPOS).getAccessToken())
       .role(Contants.Role.fromValue(user.get().getRole()))
+      .allowERP(allowERP)
+      .allowPOS(allowPOS)
       .build();
 
     return ResponseEntity.ok(authenticateResponse);

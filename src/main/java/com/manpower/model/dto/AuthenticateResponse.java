@@ -10,4 +10,6 @@ public class AuthenticateResponse {
   boolean success;
   String JWToken;
   Contants.Role role;
+  boolean allowERP = false;
+  boolean allowPOS = false;
 }
