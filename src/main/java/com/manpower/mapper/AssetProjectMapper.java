@@ -27,6 +27,7 @@ public class AssetProjectMapper {
                 .status(Contants.Status.fromValue(assetProject.getStatus()))
                 .project(
                         ProjectDTO.builder()
+                            .id(assetProject.getProject().getId())
                             .projectId(String.valueOf(assetProject.getProject().getId()))
                             .name(assetProject.getProject().getName()).build())
                 .designation(new DesignationDTO(assetProject.getDesignation().getId(),
