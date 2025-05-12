@@ -36,7 +36,8 @@ public interface PaymentRepository extends JpaRepository<Payment, Integer> {
             "AND (COALESCE(:endDate, null) IS NULL OR p.paymentDate <= :endDate) " +
             "AND (COALESCE(:startTimestamp, null) IS NULL OR p.paymentTimestamp >= :startTimestamp) " +
             "AND (COALESCE(:endTimestamp, null) IS NULL OR p.paymentTimestamp <= :endTimestamp) " +
-            "AND (COALESCE(:paymentDirection, null) IS NULL OR p.paymentDirection = :paymentDirection)"
+            "AND (COALESCE(:paymentDirection, null) IS NULL OR p.paymentDirection = :paymentDirection) " +
+            "ORDER BY p.id desc"
     )
     List<Payment> filterPayments(
             @Param("mainAccountId") Integer mainAccountId,

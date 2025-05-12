@@ -19,6 +19,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -159,10 +160,10 @@ public class InvoiceService {
                 DetailedAssetInvoice.DetailedAssetInvoiceBuilder detailedAssetInvoiceBuilder = DetailedAssetInvoice.builder();
                 Asset asset = assetRepository.findById(invoiceAsset.getAsset().getId()).orElse(null);
                 assert asset != null;
-                BigDecimal regularTotal = invoiceAsset.getStandardHours().multiply(invoiceAsset.getStandardRate());
-                BigDecimal otTotal = invoiceAsset.getOtHours().multiply(invoiceAsset.getOtRate());
-                BigDecimal grandTotal = regularTotal.add(otTotal);
-                BigDecimal vat = regularTotal.add(grandTotal.multiply((preferenceService.findVATAmount().multiply(BigDecimal.valueOf(0.01f)))));
+                BigDecimal regularTotal = invoiceAsset.getStandardHours().multiply(invoiceAsset.getStandardRate()).setScale(2, RoundingMode.HALF_UP);;
+                BigDecimal otTotal = invoiceAsset.getOtHours().multiply(invoiceAsset.getOtRate()).setScale(2, RoundingMode.HALF_UP);;
+                BigDecimal grandTotal = regularTotal.add(otTotal).setScale(2, RoundingMode.HALF_UP);
+                BigDecimal vat = grandTotal.multiply((preferenceService.findVATAmount().multiply(BigDecimal.valueOf(0.01f)))).setScale(2, RoundingMode.HALF_UP);
 
                 detailedAssetInvoiceBuilder.assetName(asset.getName());
                 detailedAssetInvoiceBuilder.assetType(Contants.AssetType.fromValue(asset.getAssetType()));
@@ -375,7 +376,7 @@ public class InvoiceService {
 
     private BigDecimal calculateSponsorshipAmount(ProjectAssetSponsorship projectAssetSponsor, BigDecimal amount) {
 
-        if(Contants.SponsorshipType.FIXED.equals(projectAssetSponsor.getSponsorshipType()))
+        if(Contants.SponsorshipType.FIXED.name().equals(projectAssetSponsor.getSponsorshipType()))
             return projectAssetSponsor.getSponsorshipValue();
         else //if sponsorship is in percentage
             return amount.multiply(BigDecimal.valueOf(0.01)).multiply(projectAssetSponsor.getSponsorshipValue());

@@ -8,6 +8,7 @@ import com.manpower.model.dto.AssetDTO;
 import com.manpower.repository.AssetRepository;
 import com.manpower.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -79,6 +80,7 @@ public class AssetService {
   }
 
   public List<Asset> getAssetByCompanyId(Integer companyId) {
-    return assetRepository.findByCompany_Id(companyId);
+      Sort sort = Sort.by(Sort.Direction.ASC, "name"); // or any field you want
+      return assetRepository.findByCompany_Id(companyId, sort);
   }
 }
