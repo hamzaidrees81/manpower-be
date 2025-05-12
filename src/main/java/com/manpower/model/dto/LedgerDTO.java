@@ -15,6 +15,7 @@ public class LedgerDTO {
     BigDecimal totalAssetExpenses; //total expense
     BigDecimal totalPaidToAssets; //total paid to assets
     BigDecimal totalPaidToSponsors;
+    BigDecimal projectedProfit;
     BigDecimal profit;
     List<PaymentDTO> payments;
 }

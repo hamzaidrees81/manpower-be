@@ -155,7 +155,8 @@ public class PaymentService {
                 .totalCompanyExpenses(companyExpense)
                 .totalPaidToAssets(paidToAssets)
                 .totalPaidToSponsors(paidToSponsors)
-                .profit(BigDecimal.TEN);
+                .profit(BigDecimal.TEN)
+                .projectedProfit(BigDecimal.TEN);
 
         return ledger.build();
     }
