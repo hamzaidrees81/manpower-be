@@ -4,6 +4,7 @@ import com.manpower.common.PaymentConstant;
 import com.manpower.common.Contants;
 import com.manpower.mapper.PaymentMapper;
 import com.manpower.model.*;
+import com.manpower.model.dto.LedgerDTO;
 import com.manpower.model.dto.PaymentDTO;
 import com.manpower.model.dto.PaymentFilterDTO;
 import com.manpower.repository.AccountRepository;
@@ -102,7 +103,64 @@ public class PaymentService {
         return paymentRepository.findAllByInvoiceId(invoiceId).stream().map(PaymentMapper::toDTO).collect(Collectors.toList());
     }
 
-    public List<PaymentDTO> filterPayments(PaymentFilterDTO filterDTO) {
+    public LedgerDTO filterPaymentsLedger(PaymentFilterDTO filterDTO) {
+        List<PaymentDTO> payments = filterPayments(filterDTO);
+
+        //total income
+        BigDecimal totalIncome = payments.stream()
+                .filter(paymentDTO ->
+                        paymentDTO.getPaymentDirection().equals(PaymentConstant.PaymentDirection.INCOMING))
+                .map(PaymentDTO::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
+
+
+        //total asset expenses
+        BigDecimal assetExpenses = payments.stream().filter(paymentDTO -> paymentDTO.getPaidToType().equals(PaymentConstant.PaidToType.EXPENSE))
+                .map(PaymentDTO::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
+
+
+        //total OTHER company expenses
+        BigDecimal companyExpense = payments.stream().filter(paymentDTO -> paymentDTO.getPaidToType().equals(PaymentConstant.PaidToType.OTHER))
+                .map(PaymentDTO::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        //total expenses
+        BigDecimal totalExpense = assetExpenses.add(companyExpense);
+
+        //total paid to assets
+        BigDecimal paidToAssets = payments.stream().filter(paymentDTO -> paymentDTO.getPaidToType().equals(PaymentConstant.PaidToType.ASSET))
+                .map(PaymentDTO::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
+
+
+        //total paid to sponsors
+        BigDecimal paidToSponsors = payments.stream().filter(paymentDTO -> paymentDTO.getPaidToType().equals(PaymentConstant.PaidToType.SPONSOR))
+                .map(PaymentDTO::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
+
+
+        //total asset payable
+
+        //total sponsor payable
+
+
+        //current profit
+        BigDecimal currentProfit = totalIncome.subtract(totalExpense)
+                .subtract(paidToAssets).subtract(paidToSponsors).subtract(assetExpenses).subtract(companyExpense);
+
+        //projected profit
+
+
+        LedgerDTO.LedgerDTOBuilder ledger = LedgerDTO.builder();
+        ledger.payments(payments)
+                .totalIncome(totalIncome)
+                .totalExpense(totalExpense)
+                .totalAssetExpenses(assetExpenses)
+                .totalCompanyExpenses(companyExpense)
+                .totalPaidToAssets(paidToAssets)
+                .totalPaidToSponsors(paidToSponsors)
+                .profit(BigDecimal.TEN);
+
+        return ledger.build();
+    }
+
+        public List<PaymentDTO> filterPayments(PaymentFilterDTO filterDTO) {
         List<Payment>   payments = paymentRepository.filterPayments( //TODO: BRING BOTH INVOICE AND INVOICES...
                 filterDTO.getMainAccountId(),
                 filterDTO.getMinAmount(),

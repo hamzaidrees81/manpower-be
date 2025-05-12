@@ -36,19 +36,8 @@ public class PaymentController {
 
     @GetMapping("/ledger/filter")
     public ResponseEntity<LedgerDTO> filterLedgerPayments(PaymentFilterDTO filterDTO) {
-        List<PaymentDTO> payments = paymentService.filterPayments(filterDTO);
-
-        LedgerDTO.LedgerDTOBuilder ledger = LedgerDTO.builder();
-        ledger.payments(payments)
-                .totalIncome(BigDecimal.ONE)
-                .totalExpense(BigDecimal.TEN)
-                .totalAssetExpenses(BigDecimal.ONE)
-                .totalCompanyExpenses(BigDecimal.TEN)
-                .totalPaidToAssets(BigDecimal.TEN)
-                .totalPaidToSponsors(BigDecimal.TEN)
-                .profit(BigDecimal.TEN);
-
-        return ResponseEntity.ok(ledger.build());
+        LedgerDTO ledger =  paymentService.filterPaymentsLedger(filterDTO);
+        return ResponseEntity.ok(ledger);
     }
 
     @DeleteMapping("/{id}")
