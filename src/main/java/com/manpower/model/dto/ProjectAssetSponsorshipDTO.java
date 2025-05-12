@@ -28,4 +28,5 @@ public class ProjectAssetSponsorshipDTO {
     private BigDecimal sponsorshipValue;
     private Contants.SponsorshipDeterminant sponsorshipDeterminant;
     private Contants.SponsorshipBasis sponsorshipBasis;
+    private ProjectDTO project;
 }
