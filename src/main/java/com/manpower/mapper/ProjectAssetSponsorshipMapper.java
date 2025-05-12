@@ -16,14 +16,14 @@ public class ProjectAssetSponsorshipMapper {
                 .sponsorId(entity.getSponsor() != null ? entity.getSponsor().getId() : null)
                 .sponsorName(entity.getSponsor() != null ? entity.getSponsor().getName() : null)
                 .assetProjectId(entity.getAssetProject() != null ? entity.getAssetProject().getId() : null)
-                .assetProjectName(entity.getAssetProject() != null ? entity.getAssetProject().getAssetProjectName() : null)
+                .assetProjectName(entity.getAssetProject() != null ? entity.getAssetProject().getProject().getName() : null)
                 .sponsorshipType(entity.getSponsorshipType() != null ? Contants.SponsorshipType.valueOf(entity.getSponsorshipType()) : null)
                 .sponsorshipValue(entity.getSponsorshipValue())
                 .assetId(entity.getAsset() != null ? entity.getAsset().getId() : null)
                 .assetName(entity.getAsset() != null ? entity.getAsset().getName() : null)
                 .sponsorshipDeterminant(entity.getSponsorshipDeterminant() != null ? Contants.SponsorshipDeterminant.valueOf(entity.getSponsorshipDeterminant()) : null)
                 .sponsorshipBasis(entity.getSponsorshipBasis() != null ? Contants.SponsorshipBasis.valueOf(entity.getSponsorshipBasis()) : null)
-
+                .project(ProjectMapper.toDTO(entity.getAssetProject().getProject()))
                 .build();
     }
 
