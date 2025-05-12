@@ -23,7 +23,7 @@ public class ProjectAssetSponsorshipMapper {
                 .assetName(entity.getAsset() != null ? entity.getAsset().getName() : null)
                 .sponsorshipDeterminant(entity.getSponsorshipDeterminant() != null ? Contants.SponsorshipDeterminant.valueOf(entity.getSponsorshipDeterminant()) : null)
                 .sponsorshipBasis(entity.getSponsorshipBasis() != null ? Contants.SponsorshipBasis.valueOf(entity.getSponsorshipBasis()) : null)
-                .project(ProjectMapper.toDTO(entity.getAssetProject().getProject()))
+                .project(entity.getAssetProject().getProject() != null ? ProjectMapper.toDTO(entity.getAssetProject().getProject()):  null)
                 .build();
     }
 
