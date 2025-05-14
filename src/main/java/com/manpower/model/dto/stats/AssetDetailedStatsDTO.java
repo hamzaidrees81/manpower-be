@@ -28,14 +28,12 @@ public class AssetDetailedStatsDTO {
     private Float totalRevenue;
     private Float amountEarned;       // Paid
     private Float upcomingEarning;    // Not due yet
-    private Float overdueAmount;      // Due but unpaid
-    private Float amountPayable;      // To be paid to vendor
     private Float amountPaid;         // Paid to vendor
-    private Float fixedExpenses;
-    private Float variableExpenses;
+    private Float sponsorPayable;
     private Float totalExpenses;
     private Float profitFromAsset;
     private Float profitabilityRatio;
+
 
     private LocalDate lastUsedDate;
 

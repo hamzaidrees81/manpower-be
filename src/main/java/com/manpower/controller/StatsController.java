@@ -23,4 +23,10 @@ public class StatsController {
         return ResponseEntity.ok(statsService.getAssetsGeneralSummmary());
     }
 
+    @GetMapping("/assets/{assetId}")
+    public ResponseEntity<List<AssetGeneralSummaryDTO>> getAssetStats(Long assetId) {
+        return ResponseEntity.ok(statsService.getAssetsGeneralSummmary());
+    }
+
+
 }

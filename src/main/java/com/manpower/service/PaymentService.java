@@ -109,6 +109,17 @@ public class PaymentService {
                 .map(PaymentDTO::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
+    public List<PaymentDTO> getPaymentsToAsset(Integer assetId) {
+        return filterPayments(PaymentFilterDTO.builder().paidToId(assetId).build());
+      }
+
+    public BigDecimal getAmountPaidToAsset(Integer assetId) {
+        List<PaymentDTO> payments = filterPayments(PaymentFilterDTO.builder().paidToId(assetId).build());
+        return payments.stream().filter(
+                paymentDTO -> paymentDTO.getPaidToType().equals(PaymentConstant.PaidToType.ASSET))
+                .map(PaymentDTO::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
     public LedgerDTO filterPaymentsLedger(PaymentFilterDTO filterDTO) {
         List<PaymentDTO> payments = filterPayments(filterDTO);
 
