@@ -7,7 +7,6 @@ import java.math.BigDecimal;
 @Data
 @Builder
 @NoArgsConstructor
-@RequiredArgsConstructor
 @AllArgsConstructor
 public class ClientSummaryDTO {
     private Integer clientId;
