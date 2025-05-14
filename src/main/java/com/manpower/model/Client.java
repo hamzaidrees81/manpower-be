@@ -2,6 +2,8 @@ package com.manpower.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Data
 @Entity
@@ -26,5 +28,10 @@ public class Client {
 
   @Column(name = "status")
   private Integer status;
+
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @OnDelete(action = OnDeleteAction.CASCADE)
+  @JoinColumn(name = "company_id", nullable = false)
+  private Company company;
 
 }

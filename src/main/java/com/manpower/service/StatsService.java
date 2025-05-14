@@ -1,22 +1,21 @@
 package com.manpower.service;
 
 import com.manpower.common.Contants;
+import com.manpower.mapper.AssetMapper;
 import com.manpower.model.*;
+import com.manpower.model.dto.AssetDTO;
 import com.manpower.model.dto.AssetPayableDTO;
+import com.manpower.model.dto.ClientDTO;
 import com.manpower.model.dto.PaymentDTO;
 import com.manpower.model.dto.stats.*;
-import com.manpower.repository.AssetProjectRepository;
-import com.manpower.repository.InvoiceRepository;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -28,13 +27,71 @@ public class StatsService {
     private final PaymentService paymentService;
     private final AssetPayableService assetPayableService;
     private final InvoiceSponsorPayableService invoiceSponsorPayableService;
+    private final ClientService clientService;
+    private final ProjectService projectService;
+    private final InvoiceService invoiceService;
+
+    /**
+     * Get summary for clients
+     */
+    public List<ClientSummaryDTO> getClientsGeneralSummary() {
+
+        //get all clients
+        List<Client> clients = clientService.getAllClientsRaw();
+
+        //for every client, find a list of projects
+        for (Client client : clients) {
+            List<Project> projects = projectService.findProjectByClient(client);
+            int totalActiveProjects = projects.size();
+            int totalProjects = projects.size();
+
+            //total revenue - get list of all invoices for this client
+            List<Invoice> invoices = invoiceService.getInvoicesForClient(client.getId());
+            BigDecimal totalInvoicesPrice = invoices.stream()
+                    .map(Invoice::getTotalAmountWithTax)
+                    .filter(Objects::nonNull)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+            ClientSummaryDTO summaryDTO = ClientSummaryDTO
+                    .builder()
+                    .clientId(client.getId())
+                    .clientName(client.getName())
+                    .totalProjects(totalProjects)
+                    .activeProjects(totalActiveProjects)
+                    .totalRevenue(totalInvoicesPrice)
+                    .build();
+
+//
+//            private BigDecimal totalRevenue = BigDecimal.ZERO;
+//            private BigDecimal totalPaid = BigDecimal.ZERO;
+//            private BigDecimal outstandingAmount = BigDecimal.ZERO;
+//
+//            private BigDecimal profit = BigDecimal.ZERO;
+//            private BigDecimal profitabilityRatio = BigDecimal.ZERO;
+        }
+return null;
+    }
+
+    /**
+     * return all asset stats summary on a specific project
+     * @param projectId
+     * @return
+     */
+    public List<AssetGeneralSummaryDTO> getAssetsOnProjectGeneralSummmary(Integer projectId){
+        List<AssetDTO> assets = assetProjectService.getAssetsDTOByProjectId(projectId);
+        return getAssetGeneralSummaryDTOS(assets);
+    }
+
 
     public List<AssetGeneralSummaryDTO> getAssetsGeneralSummmary(){
         List<Asset> assets = assetService.getAllAssets();
+        return getAssetGeneralSummaryDTOS(assets.stream().map(AssetMapper::toDTO).toList());
+    }
 
+    private List<AssetGeneralSummaryDTO> getAssetGeneralSummaryDTOS(List<AssetDTO> assets) {
         List<AssetGeneralSummaryDTO> assetGeneralSummaries = new ArrayList<>();
 
-        for(Asset asset : assets) {
+        for(AssetDTO asset : assets) {
             List<AssetProject> assetProjects
                     = assetProjectService.getActiveAssetProjectByAssetId(asset.getId());
 
@@ -85,7 +142,7 @@ public class StatsService {
                             .build();
             assetGeneralSummaries.add(summary);
         }
-            return assetGeneralSummaries;
+        return assetGeneralSummaries;
     }
 
     public AssetDetailedStatsDTO getAssetStats(Integer assetId) throws Exception {

@@ -76,5 +76,4 @@ public interface AssetProjectRepository extends JpaRepository<AssetProject, Inte
     AND   ap.status = 1
 """) //TODO: ADD COMPANY ID
   long countAssetsByProjectId(@Param("projectId") Integer projectId);
-
 }

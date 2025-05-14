@@ -1,6 +1,8 @@
 package com.manpower.controller;
 
+import com.manpower.mapper.ClientMapper;
 import com.manpower.model.Client;
+import com.manpower.model.dto.ClientDTO;
 import com.manpower.service.ClientService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,24 +19,25 @@ public class ClientController {
     }
 
     @GetMapping
-    public List<Client> getAllClients() {
+    public List<ClientDTO> getAllClients() {
         return clientService.getAllClients();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Client> getClientById(@PathVariable Integer id) {
+    public ResponseEntity<ClientDTO> getClientById(@PathVariable Integer id) {
         return clientService.getClientById(id)
+                .map(ClientMapper::toDTO)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public Client createClient(@RequestBody Client client) {
+    public ClientDTO createClient(@RequestBody ClientDTO client) {
         return clientService.createClient(client);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Client> updateClient(@PathVariable Integer id, @RequestBody Client client) {
+    public ResponseEntity<ClientDTO> updateClient(@PathVariable Integer id, @RequestBody ClientDTO client) {
         return ResponseEntity.ok(clientService.updateClient(id, client));
     }
 

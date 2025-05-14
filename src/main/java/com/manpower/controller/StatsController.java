@@ -1,5 +1,6 @@
 package com.manpower.controller;
 
+import com.manpower.model.dto.stats.AssetDetailedStatsDTO;
 import com.manpower.model.dto.stats.AssetGeneralSummaryDTO;
 import com.manpower.service.StatsService;
 import lombok.RequiredArgsConstructor;
@@ -24,9 +25,16 @@ public class StatsController {
     }
 
     @GetMapping("/assets/{assetId}")
-    public ResponseEntity<List<AssetGeneralSummaryDTO>> getAssetStats(Long assetId) {
-        return ResponseEntity.ok(statsService.getAssetsGeneralSummmary());
+    public ResponseEntity<AssetDetailedStatsDTO> getAssetStats(Integer assetId) throws Exception {
+        return ResponseEntity.ok(statsService.getAssetStats(assetId));
     }
+
+//    @GetMapping("/projects/{projectId}")
+//    public ResponseEntity<AssetDetailedStatsDTO> getProjectAssetStats(Integer projectId) throws Exception {
+//        return ResponseEntity.ok(statsService.get(projectId));
+//    }
+
+
 
 
 }

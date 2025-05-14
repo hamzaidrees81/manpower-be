@@ -517,6 +517,11 @@ public class InvoiceService {
         return detailedAssetInvoice;
     }
 
+    public List<Invoice> getInvoicesForClient(Integer clientId)
+    {
+        Optional<List<Invoice>> invoicesListOptional = invoiceRepository.findInvoicesByClient_Id(clientId);
+        return invoicesListOptional.orElse(new ArrayList<>());
+    }
 
     public InvoiceStatusCompanyDTO getInvoicesForClientByStatus(Integer clientId, Contants.PaymentStatus status) {
 

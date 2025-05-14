@@ -11,7 +11,6 @@ import com.manpower.util.SecurityUtil;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -155,7 +154,8 @@ public class AssetProjectService {
     return assetProjectRepository.countAssetsByProjectId(projectId);
   }
 
-  public List<AssetDTO> getAssetsByProjectId(Integer projectId) {
+
+  public List<AssetDTO> getAssetsDTOByProjectId(Integer projectId) {
 
       List<Asset> assetList = assetProjectRepository.findAssetsByProjectId(projectId);
       return assetList.stream().map(AssetMapper::toDTO).collect(Collectors.toList());

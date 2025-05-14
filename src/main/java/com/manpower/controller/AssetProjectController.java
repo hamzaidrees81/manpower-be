@@ -1,7 +1,6 @@
 package com.manpower.controller;
 
 import com.manpower.common.Contants;
-import com.manpower.model.AssetProject;
 import com.manpower.model.dto.AssetDTO;
 import com.manpower.model.dto.AssetProjectDTO;
 import com.manpower.service.AssetProjectService;
@@ -39,7 +38,7 @@ public class AssetProjectController {
 
     @GetMapping(value = "/assets/{projectId}" , name = "Get resources on this project")
     public ResponseEntity<List<AssetDTO>> getProjectAssets(@PathVariable Integer projectId) {
-        List<AssetDTO> assetDTOS =  assetProjectService.getAssetsByProjectId(projectId);
+        List<AssetDTO> assetDTOS =  assetProjectService.getAssetsDTOByProjectId(projectId);
         return ResponseEntity.ok(assetDTOS);
     }
 

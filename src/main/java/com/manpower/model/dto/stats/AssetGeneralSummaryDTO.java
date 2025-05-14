@@ -22,4 +22,5 @@ public class AssetGeneralSummaryDTO {
     private BigDecimal expenses;
     private BigDecimal profitFromAsset;
     private LocalDate lastUsedDate;
+
 }
