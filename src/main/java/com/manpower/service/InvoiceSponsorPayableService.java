@@ -1,10 +1,8 @@
 package com.manpower.service;
 
 import com.manpower.common.Contants;
-import com.manpower.mapper.AssetPayableMapper;
 import com.manpower.mapper.InvoiceSponsorPayableMapper;
 import com.manpower.model.InvoiceSponsorPayable;
-import com.manpower.model.dto.AssetPayableDTO;
 import com.manpower.model.dto.InvoiceSponsorPayableDTO;
 import com.manpower.model.dto.InvoiceSponsorPayableDTOWithStats;
 import com.manpower.repository.InvoiceSponsorPayableRepository;
@@ -63,11 +61,11 @@ public class InvoiceSponsorPayableService {
                 .build();
     }
 
-    public List<InvoiceSponsorPayableDTO> findPayables(Integer id, Contants.PaymentStatusString paymentStatus) {
-        if (id != null && paymentStatus != Contants.PaymentStatusString.ALL) {
-            return findPayablesByAssetIdAndStatus(id, paymentStatus); // method for both
-        } else if (id != null) {
-            return findPayablesByAssetId(id); // method for asset ID only
+    public List<InvoiceSponsorPayableDTO> findPayables(Integer sponsorId, Contants.PaymentStatusString paymentStatus) {
+        if (sponsorId != null && paymentStatus != Contants.PaymentStatusString.ALL) {
+            return findPayablesBySponsorIdAndStatus(sponsorId, paymentStatus); // method for both
+        } else if (sponsorId != null) {
+            return findPayablesBySponsorId(sponsorId); // method for asset ID only
         } else if (paymentStatus != Contants.PaymentStatusString.ALL) {
             return findPayablesByStatus(paymentStatus); // method for status only
         } else {
@@ -76,11 +74,16 @@ public class InvoiceSponsorPayableService {
     }
 
 
-    public List<InvoiceSponsorPayableDTO> findPayablesByAssetId(Integer sponsorId) {
+    public List<InvoiceSponsorPayable> findPayablesByAssetId(Integer assetId) {
+        return invoiceSponsorPayableRepository.findBySponsorshipAsset_Id(assetId);
+    }
+
+
+    public List<InvoiceSponsorPayableDTO> findPayablesBySponsorId(Integer sponsorId) {
         return invoiceSponsorPayableRepository.findBySponsorIdAndCompanyId(sponsorId, SecurityUtil.getCompanyClaim()).stream().map(InvoiceSponsorPayableMapper::toDTO).toList();
     }
 
-    public List<InvoiceSponsorPayableDTO> findPayablesByAssetIdAndStatus(Integer sponsorId, Contants.PaymentStatusString paymentStatusString) {
+    public List<InvoiceSponsorPayableDTO> findPayablesBySponsorIdAndStatus(Integer sponsorId, Contants.PaymentStatusString paymentStatusString) {
         return invoiceSponsorPayableRepository.findBySponsorIdAndCompanyIdAndPaymentStatus(sponsorId, SecurityUtil.getCompanyClaim(), paymentStatusString.name()).stream().map(InvoiceSponsorPayableMapper::toDTO).toList();
     }
 

@@ -103,6 +103,12 @@ public class PaymentService {
         return paymentRepository.findAllByInvoiceId(invoiceId).stream().map(PaymentMapper::toDTO).collect(Collectors.toList());
     }
 
+    public BigDecimal getExpensesByAsset(Integer assetId) {
+        List<PaymentDTO> payments = filterPayments(PaymentFilterDTO.builder().paidToId(assetId).build());
+        return payments.stream().filter(paymentDTO -> paymentDTO.getPaidToType().equals(PaymentConstant.PaidToType.EXPENSE))
+                .map(PaymentDTO::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
     public LedgerDTO filterPaymentsLedger(PaymentFilterDTO filterDTO) {
         List<PaymentDTO> payments = filterPayments(filterDTO);
 

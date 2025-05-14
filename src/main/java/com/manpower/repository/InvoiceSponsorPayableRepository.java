@@ -11,5 +11,7 @@ public interface InvoiceSponsorPayableRepository extends JpaRepository<InvoiceSp
     List<InvoiceSponsorPayable> findBySponsorIdAndCompanyId(Integer assetId, Integer companyId);
     List<InvoiceSponsorPayable> findBySponsorIdAndCompanyIdAndPaymentStatus(Integer assetId, Integer companyId, String paymentStatus);
     List<InvoiceSponsorPayable> findByCompanyIdAndPaymentStatus(Integer companyId, String paymentStatus);
+    List<InvoiceSponsorPayable> findBySponsorshipAsset_Id(Integer assetId);
+
 
 }

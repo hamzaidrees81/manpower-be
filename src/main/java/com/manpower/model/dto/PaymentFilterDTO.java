@@ -1,8 +1,7 @@
 package com.manpower.model.dto;
 
 import com.manpower.common.PaymentConstant;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -10,6 +9,9 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class PaymentFilterDTO {
     private Integer mainAccountId;
     private BigDecimal minAmount;

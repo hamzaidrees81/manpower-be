@@ -50,7 +50,7 @@ public class AssetProjectMapper {
         assetProject.setOvertimeRatePaid(assetProjectDTO.getOvertimeRatePaid());
         assetProject.setStartDate(assetProjectDTO.getStartDate());
         assetProject.setEndDate(assetProjectDTO.getEndDate());
-        assetProject.setIsActive(assetProjectDTO.getIsActive().getValue());
+        assetProject.setIsActive(assetProjectDTO.getIsActive()!= null ? assetProjectDTO.getIsActive().getValue() : null);
         assetProject.setStatus(assetProjectDTO.getStatus()!=null ? assetProjectDTO.getStatus().getValue() : Contants.Status.ACTIVE.getValue()); //TODO: WHAT SHOULD BE DEFAULT
         return assetProject;
     }

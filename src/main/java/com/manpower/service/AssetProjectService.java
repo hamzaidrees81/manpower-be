@@ -144,6 +144,10 @@ public class AssetProjectService {
         return assetProjectRepository.findAssetsByClientAndProjectEndDate(client, endDate);
     }
 
+    public List<AssetProject> getActiveAssetProjectByAssetId(Integer assetId) {
+        return assetProjectRepository.findProjectsByAsset_IdAndIsActive(assetId, Contants.AssetProjectStatus.ACTIVE.getValue());
+    }
+
   public List<AssetProjectDTO> getAssetProjectByAssetId(Integer assetId, Contants.AssetProjectStatus assetProjectStatus) {
     return assetProjectRepository.findProjectsByAsset_IdAndIsActive(assetId, assetProjectStatus.getValue()).stream().map(AssetProjectMapper::toDTO).collect(Collectors.toList());
   }

@@ -198,6 +198,12 @@ public class Contants {
   }
 
   @Getter
+  public enum EngagementStatus{
+    ENGAGED,
+    FREE
+  }
+
+  @Getter
   public enum Status {
     DELETED((byte) 0),
     ACTIVE((byte) 1);

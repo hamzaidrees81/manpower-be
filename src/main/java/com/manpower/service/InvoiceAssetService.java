@@ -3,6 +3,8 @@ package com.manpower.service;
 import com.manpower.model.InvoiceAsset;
 import com.manpower.repository.InvoiceAssetRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,6 +14,11 @@ public class InvoiceAssetService {
 
     public InvoiceAssetService(InvoiceAssetRepository invoiceAssetRepository) {
         this.invoiceAssetRepository = invoiceAssetRepository;
+    }
+
+    public List<InvoiceAsset> findAssetInvoiceAssetId(Integer assetId) {
+        return invoiceAssetRepository.findInvoiceAssetByAsset_Id(assetId)
+                .orElse(Collections.emptyList());
     }
 
     public List<InvoiceAsset> getAllInvoiceAssets() {
