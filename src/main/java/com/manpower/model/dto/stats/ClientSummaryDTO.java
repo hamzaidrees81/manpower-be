@@ -1,14 +1,14 @@
 package com.manpower.model.dto.stats;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 
 @Data
 @Builder
+@NoArgsConstructor
 @RequiredArgsConstructor
+@AllArgsConstructor
 public class ClientSummaryDTO {
     private Integer clientId;
     private String clientName;
