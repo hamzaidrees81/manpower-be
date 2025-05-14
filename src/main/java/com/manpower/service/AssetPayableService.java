@@ -26,6 +26,10 @@ public class AssetPayableService {
         return assetPayableRepository.findByCompanyId(SecurityUtil.getCompanyClaim()).stream().map(AssetPayableMapper::toDTO).toList();
     }
 
+    public List<AssetPayable> findByInvoiceId(Integer invoiceId) {
+        return assetPayableRepository.findByInvoice_Id(invoiceId);
+    }
+
     public List<AssetPayableDTO> findPayablesByAssetId(Integer assetId) {
         return assetPayableRepository.findByAssetIdAndCompanyId(assetId, SecurityUtil.getCompanyClaim()).stream().map(AssetPayableMapper::toDTO).toList();
     }
@@ -87,5 +91,9 @@ public class AssetPayableService {
         } else {
             return findAll(); // method for no parameters
         }
+    }
+
+    public List<AssetPayable> findByClientId(Integer id) {
+        return assetPayableRepository.findByInvoice_Client_Id(id);
     }
 }

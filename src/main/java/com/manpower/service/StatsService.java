@@ -1,12 +1,13 @@
 package com.manpower.service;
 
 import com.manpower.common.Contants;
+import com.manpower.common.PaymentConstant;
 import com.manpower.mapper.AssetMapper;
 import com.manpower.model.*;
 import com.manpower.model.dto.AssetDTO;
 import com.manpower.model.dto.AssetPayableDTO;
-import com.manpower.model.dto.ClientDTO;
 import com.manpower.model.dto.PaymentDTO;
+import com.manpower.model.dto.PaymentFilterDTO;
 import com.manpower.model.dto.stats.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -34,7 +35,121 @@ public class StatsService {
     /**
      * Get summary for clients
      */
+    public ClientDetailedStatsDTO getClientsDetailedStats(Integer clientId) {
+
+        Optional<Client> clientOtp = clientService.getClientById(clientId);
+        if(clientOtp.isEmpty()) {
+            return null;
+        }
+
+        Client client = clientOtp.get();
+
+        List<Project> projects = projectService.findProjectByClient(client);
+        int totalActiveProjects = projects.size();
+        int totalProjects = projects.size();
+
+        //total revenue - get list of all invoices for this client
+        List<Invoice> invoices = invoiceService.getInvoicesForClient(client.getId());
+        BigDecimal revenue = invoices.stream()
+                .map(Invoice::getTotalAmountWithTax)
+                .filter(Objects::nonNull)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        int invoicesCount = invoices.size();
+        long paidInvoices = invoices.stream().filter(Objects::nonNull).filter(invoice -> invoice.getStatus().equals(Contants.PaymentStatus.PAID.getValue())).count();
+        long unpaidInvoices = invoices.stream().filter(Objects::nonNull).filter(invoice -> invoice.getStatus().equals(Contants.PaymentStatus.UNPAID.getValue())).count();
+        long pendingInvoices = invoices.stream().filter(Objects::nonNull).filter(invoice -> invoice.getStatus().equals(Contants.PaymentStatus.INVOICE_PENDING.getValue())).count();
+
+        //total received against this invoice
+        PaymentFilterDTO filterDTO = PaymentFilterDTO
+                .builder()
+                .paidToId(client.getId())
+                .paidToType(PaymentConstant.PaidToType.INVOICE)
+                .build();
+
+        List<PaymentDTO> receivedInvoicePayments = paymentService.filterPayments(filterDTO);
+        BigDecimal totalReceived = receivedInvoicePayments.stream()
+                .map(PaymentDTO::getAmount)            // extract the BigDecimal field
+                .filter(Objects::nonNull)              // optional: avoid nulls
+                .reduce(BigDecimal.ZERO, BigDecimal::add); // sum them up
+
+        BigDecimal outstandingAmount = revenue.subtract(totalReceived);
+
+        //get payable to asset for this client
+        List<AssetPayable> assetPayables =
+                assetPayableService.findByClientId(client.getId());
+        BigDecimal totalAssetPayable = assetPayables.stream()
+                .map(dto -> Optional.ofNullable(dto.getPaidAmount()).orElse(BigDecimal.ZERO))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        List<InvoiceSponsorPayable> sponsorPayables =
+                invoiceSponsorPayableService.findPayablesByClientId(client.getId());
+        BigDecimal totalSponsorPayables = sponsorPayables.stream()
+                .map(dto -> Optional.ofNullable(dto.getPaidAmount()).orElse(BigDecimal.ZERO))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        BigDecimal profit = revenue.subtract(totalAssetPayable).subtract(totalSponsorPayables);
+
+        //total assets
+        Long assetCount = assetProjectService.countAssetsOnProjectsByClientId(client.getId());
+
+        BigDecimal profitabilityRatio = BigDecimal.ZERO;
+
+        if (revenue.compareTo(BigDecimal.ZERO) > 0) {
+            profitabilityRatio = profit
+                    .divide(revenue, 4, RoundingMode.HALF_UP) // 4 decimal places for precision
+                    .multiply(BigDecimal.valueOf(100));       // Convert to percentage
+        }
+
+
+        List<ProjectSummaryDTO> projectSummaryDTOS = new ArrayList<>();
+        for(Project project : projects) {
+
+            //find total assets on this project
+            Long projectAssetCount = assetProjectService.countAssetsByProjectId(project.getId());
+
+            ProjectSummaryDTO.builder()
+                    .projectId(project.getId())
+                    .projectName(project.getName())
+                    .startDate(project.getStartDate())
+                    .endDate(project.getEndDate())
+                    .totalAssets(projectAssetCount.intValue())
+                    .build();
+        }
+
+        ClientDetailedStatsDTO clientDetailedStatsDTO = ClientDetailedStatsDTO
+                .builder()
+                .clientId(client.getId())
+                .clientName(client.getName())
+                .totalProjects(totalProjects)
+                .activeProjects(totalActiveProjects)
+                .totalAssets(assetCount.intValue())
+
+                .totalRevenue(revenue)
+                .totalReceived(totalReceived)
+                .profit(profit)
+                .profitabilityRatio(profitabilityRatio)
+
+                .invoiceCount(invoicesCount)
+                .paidInvoices((int) paidInvoices)
+                .unpaidInvoices((int) unpaidInvoices)
+                .undueInvoices((int) pendingInvoices)
+
+                .outstandingAmount(outstandingAmount)
+
+                .projectSummaries(projectSummaryDTOS)
+                .build();
+
+
+        return clientDetailedStatsDTO;
+    }
+
+    /**
+     * Get summary for clients
+     */
     public List<ClientSummaryDTO> getClientsGeneralSummary() {
+
+        List<ClientSummaryDTO> clientsGeneralSummary = new ArrayList<>();
 
         //get all clients
         List<Client> clients = clientService.getAllClientsRaw();
@@ -47,10 +162,40 @@ public class StatsService {
 
             //total revenue - get list of all invoices for this client
             List<Invoice> invoices = invoiceService.getInvoicesForClient(client.getId());
-            BigDecimal totalInvoicesPrice = invoices.stream()
+            BigDecimal revenue = invoices.stream()
                     .map(Invoice::getTotalAmountWithTax)
                     .filter(Objects::nonNull)
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+            //total received against this invoice
+            PaymentFilterDTO filterDTO = PaymentFilterDTO
+                    .builder()
+                    .paidToId(client.getId())
+                    .paidToType(PaymentConstant.PaidToType.INVOICE)
+                    .build();
+
+            List<PaymentDTO> receivedInvoicePayments = paymentService.filterPayments(filterDTO);
+            BigDecimal totalReceived = receivedInvoicePayments.stream()
+                    .map(PaymentDTO::getAmount)            // extract the BigDecimal field
+                    .filter(Objects::nonNull)              // optional: avoid nulls
+                    .reduce(BigDecimal.ZERO, BigDecimal::add); // sum them up
+
+            BigDecimal outstandingAmount = revenue.subtract(totalReceived);
+
+            //get payable to asset for this client
+            List<AssetPayable> assetPayables =
+                    assetPayableService.findByClientId(client.getId());
+            BigDecimal totalAssetPayable = assetPayables.stream()
+                    .map(dto -> Optional.ofNullable(dto.getPaidAmount()).orElse(BigDecimal.ZERO))
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+            List<InvoiceSponsorPayable> sponsorPayables =
+                    invoiceSponsorPayableService.findPayablesByClientId(client.getId());
+            BigDecimal totalSponsorPayables = sponsorPayables.stream()
+                    .map(dto -> Optional.ofNullable(dto.getPaidAmount()).orElse(BigDecimal.ZERO))
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+            BigDecimal profit = revenue.subtract(totalAssetPayable).subtract(totalSponsorPayables);
 
             ClientSummaryDTO summaryDTO = ClientSummaryDTO
                     .builder()
@@ -58,18 +203,15 @@ public class StatsService {
                     .clientName(client.getName())
                     .totalProjects(totalProjects)
                     .activeProjects(totalActiveProjects)
-                    .totalRevenue(totalInvoicesPrice)
+                    .totalRevenue(revenue)
+                    .totalReceived(totalReceived)
+                    .outstandingAmount(outstandingAmount)
+                    .profit(profit)
                     .build();
 
-//
-//            private BigDecimal totalRevenue = BigDecimal.ZERO;
-//            private BigDecimal totalPaid = BigDecimal.ZERO;
-//            private BigDecimal outstandingAmount = BigDecimal.ZERO;
-//
-//            private BigDecimal profit = BigDecimal.ZERO;
-//            private BigDecimal profitabilityRatio = BigDecimal.ZERO;
+            clientsGeneralSummary.add(summaryDTO);
         }
-return null;
+        return clientsGeneralSummary;
     }
 
     /**

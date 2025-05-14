@@ -26,6 +26,10 @@ public class DetailedInvoice {
   BigDecimal vatRate;
   CompanyDTO company; //this is only to get data back, not to create
   String QRCode;
+  private BigDecimal assetPayable;
+  private BigDecimal sponsorPayable;
+  private BigDecimal profit;
+
 
   List<DetailedProjectInvoice> detailedProjectInvoiceList;
 

@@ -17,4 +17,5 @@ public class ProjectSummaryDTO {
     private LocalDate startDate;
     private LocalDate endDate;
     private String status; // Ongoing, Completed, etc.
+    private Integer totalAssets;
 }

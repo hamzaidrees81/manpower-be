@@ -1,9 +1,18 @@
 package com.manpower.model.dto.stats;
 
+import lombok.Builder;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.math.BigDecimal;
 import java.util.List;
 
-public class ClientStatsDTO {
+@Data
+@Builder
+@Getter
+@Setter
+public class ClientDetailedStatsDTO {
     private Integer clientId;
     private String clientName;
 
@@ -12,18 +21,15 @@ public class ClientStatsDTO {
     private int totalAssets;
 
     private BigDecimal totalRevenue = BigDecimal.ZERO;
-    private BigDecimal totalPaid = BigDecimal.ZERO;
-    private BigDecimal totalExpenses = BigDecimal.ZERO;
+    private BigDecimal totalReceived = BigDecimal.ZERO;
     private BigDecimal profit = BigDecimal.ZERO;
     private BigDecimal profitabilityRatio = BigDecimal.ZERO;
 
     private int invoiceCount;
     private int paidInvoices;
     private int unpaidInvoices;
-    private int overdueInvoices;
+    private int undueInvoices;
     private BigDecimal outstandingAmount = BigDecimal.ZERO;
 
     private List<ProjectSummaryDTO> projectSummaries;
-
-    // Getters and Setters
 }

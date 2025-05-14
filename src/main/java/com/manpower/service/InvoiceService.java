@@ -42,6 +42,8 @@ public class InvoiceService {
     private final AccountService accountService;
     private final PaymentRepository paymentRepository;
     private final ZatkaService zatkaService;
+    private final AssetPayableService assetPayableService;
+    private final InvoiceSponsorPayableService invoiceSponsorPayableService;
 
     public List<Invoice> getAllInvoices() {
         return invoiceRepository.findAll();
@@ -91,7 +93,21 @@ public class InvoiceService {
 
         CompanyDTO companyDTO = prepareCompanyAndBank();
 
-        //prepare detailed object
+        /************************/
+        //to get profit from asset, take earning, then subtract sponsor payable, asset payable, then expenses
+        List<AssetPayable> assetPayables = assetPayableService.findByInvoiceId(invoice.getId());
+
+        BigDecimal totalAssetPayable = assetPayables.stream()
+                .map(dto -> Optional.ofNullable(dto.getPaidAmount()).orElse(BigDecimal.ZERO))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        List<InvoiceSponsorPayable> sponsorPayables = invoiceSponsorPayableService.findPayablesByInvoiceId(invoice.getId());
+        BigDecimal totalSponsorPayable = sponsorPayables.stream()
+                .map(sp -> Optional.ofNullable(sp.getPaidAmount()).orElse(BigDecimal.ZERO))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+
+            //prepare detailed object
         DetailedInvoice.DetailedInvoiceBuilder detailedInvoiceBuilder = DetailedInvoice.builder();
         detailedInvoiceBuilder.clientId(invoice.getClient().getClientId());
         detailedInvoiceBuilder.clientName(invoice.getClient().getName());
@@ -106,6 +122,9 @@ public class InvoiceService {
         detailedInvoiceBuilder.vatAmount(invoice.getTaxAmount());
         detailedInvoiceBuilder.totalWithVAT(invoice.getTotalAmountWithTax());
         detailedInvoiceBuilder.clientAddress(invoice.getClient().getAddress());
+        detailedInvoiceBuilder.assetPayable(totalAssetPayable);
+        detailedInvoiceBuilder.sponsorPayable(totalSponsorPayable);
+        detailedInvoiceBuilder.profit(invoice.getTotalBeforeTax().subtract(totalAssetPayable).subtract(totalSponsorPayable));
         detailedInvoiceBuilder.QRCode(zatkaService.generateQR(
                 companyDTO.getName(),
                 companyDTO.getVAT(),

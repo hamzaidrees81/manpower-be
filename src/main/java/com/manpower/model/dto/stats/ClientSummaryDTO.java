@@ -16,7 +16,7 @@ public class ClientSummaryDTO {
     private int activeProjects;
 
     private BigDecimal totalRevenue = BigDecimal.ZERO;
-    private BigDecimal totalPaid = BigDecimal.ZERO;
+    private BigDecimal totalReceived = BigDecimal.ZERO;
     private BigDecimal outstandingAmount = BigDecimal.ZERO;
 
     private BigDecimal profit = BigDecimal.ZERO;

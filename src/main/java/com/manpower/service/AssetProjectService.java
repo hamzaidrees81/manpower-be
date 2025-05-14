@@ -35,6 +35,7 @@ public class AssetProjectService {
         return assetProjectRepository.findAll();
     }
 
+
     public Optional<AssetProject> getAssetProjectById(Integer id) {
         return assetProjectRepository.findById(id);
     }
@@ -167,7 +168,12 @@ public class AssetProjectService {
     return assetProjectRepository.countAssetsWithActiveProjects(companyId);
   }
 
-  public Long countAssetsWithNoActiveProjects()
+  public Long countAssetsOnProjectsByClientId(Integer clientId)
+    {
+        return assetProjectRepository.countAssetProjectsByProject_Client_Id(clientId);
+    }
+
+    public Long countAssetsWithNoActiveProjects()
   {
     Integer companyId = SecurityUtil.getCompanyClaim();
     return assetProjectRepository.countAssetsWithNoActiveProjects(companyId);

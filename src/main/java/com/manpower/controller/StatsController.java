@@ -2,6 +2,8 @@ package com.manpower.controller;
 
 import com.manpower.model.dto.stats.AssetDetailedStatsDTO;
 import com.manpower.model.dto.stats.AssetGeneralSummaryDTO;
+import com.manpower.model.dto.stats.ClientDetailedStatsDTO;
+import com.manpower.model.dto.stats.ClientSummaryDTO;
 import com.manpower.service.StatsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -25,16 +27,21 @@ public class StatsController {
     }
 
     @GetMapping("/assets/{assetId}")
-    public ResponseEntity<AssetDetailedStatsDTO> getAssetStats(Integer assetId) throws Exception {
+    public ResponseEntity<AssetDetailedStatsDTO> getAssetStats(@PathVariable Integer assetId) throws Exception {
         return ResponseEntity.ok(statsService.getAssetStats(assetId));
     }
 
-//    @GetMapping("/projects/{projectId}")
-//    public ResponseEntity<AssetDetailedStatsDTO> getProjectAssetStats(Integer projectId) throws Exception {
-//        return ResponseEntity.ok(statsService.get(projectId));
-//    }
+    @GetMapping("/clients")
+    public ResponseEntity<List<ClientSummaryDTO>> getClientsGeneralSummary()
+    {
+        return ResponseEntity.ok(statsService.getClientsGeneralSummary());
+    }
 
-
+    @GetMapping("/clients/{clientId}")
+    public ResponseEntity<ClientDetailedStatsDTO> getClientsDetailedStats(@PathVariable Integer clientId)
+    {
+        return ResponseEntity.ok(statsService.getClientsDetailedStats(clientId));
+    }
 
 
 }

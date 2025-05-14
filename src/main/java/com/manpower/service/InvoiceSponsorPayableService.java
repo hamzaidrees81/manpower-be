@@ -73,6 +73,14 @@ public class InvoiceSponsorPayableService {
         }
     }
 
+    public List<InvoiceSponsorPayable> findPayablesByInvoiceId(Integer invoiceId) {
+        return invoiceSponsorPayableRepository.findByInvoice_Id(invoiceId);
+    }
+
+    public List<InvoiceSponsorPayable> findPayablesByClientId(Integer clientId) {
+        return invoiceSponsorPayableRepository.findByInvoice_Client_Id(clientId);
+    }
+
 
     public List<InvoiceSponsorPayable> findPayablesByAssetId(Integer assetId) {
         return invoiceSponsorPayableRepository.findBySponsorshipAsset_Id(assetId);
