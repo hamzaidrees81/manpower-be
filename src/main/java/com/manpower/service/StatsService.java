@@ -431,7 +431,7 @@ public class StatsService {
         Project project = projectOpt.get();
 
         Long totalAssets = assetProjectService.countAssetsByProjectId(projectId);
-        List<InvoiceAsset> assetInvoices = invoiceAssetService.findInvoicesByProjectId(projectId);
+        List<InvoiceAsset> assetInvoices = invoiceAssetService.findInvoicesByProjectId(project);
 
         int distinctInvoiceCount = (int) assetInvoices.stream()
                 .map(InvoiceAsset::getInvoice)

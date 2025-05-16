@@ -1,6 +1,7 @@
 package com.manpower.service;
 
 import com.manpower.model.InvoiceAsset;
+import com.manpower.model.Project;
 import com.manpower.repository.InvoiceAssetRepository;
 import org.springframework.stereotype.Service;
 
@@ -42,8 +43,8 @@ public class InvoiceAssetService {
 
     }
 
-    public List<InvoiceAsset> findInvoicesByProjectId(Integer projectId) {
-        return invoiceAssetRepository.findInvoiceAssetByAssetProject_Project(projectId);
+    public List<InvoiceAsset> findInvoicesByProjectId(Project project) {
+        return invoiceAssetRepository.findInvoiceAssetByAssetProject_Project(project);
     }
 
 }
