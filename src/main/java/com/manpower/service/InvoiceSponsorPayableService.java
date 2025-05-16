@@ -3,6 +3,7 @@ package com.manpower.service;
 import com.manpower.common.Contants;
 import com.manpower.mapper.InvoiceSponsorPayableMapper;
 import com.manpower.model.InvoiceSponsorPayable;
+import com.manpower.model.Project;
 import com.manpower.model.dto.InvoiceSponsorPayableDTO;
 import com.manpower.model.dto.InvoiceSponsorPayableDTOWithStats;
 import com.manpower.repository.InvoiceSponsorPayableRepository;
@@ -97,6 +98,9 @@ public class InvoiceSponsorPayableService {
 
     public List<InvoiceSponsorPayableDTO> findPayablesByStatus(Contants.PaymentStatusString paymentStatusString) {
         return invoiceSponsorPayableRepository.findByCompanyIdAndPaymentStatus(SecurityUtil.getCompanyClaim(), paymentStatusString.name()).stream().map(InvoiceSponsorPayableMapper::toDTO).toList();
+    }
 
+    public List<InvoiceSponsorPayable> findPayableByProject(Project project) {
+        return invoiceSponsorPayableRepository.findByProjectSponsorshipId_AssetProject_Project(project);
     }
 }

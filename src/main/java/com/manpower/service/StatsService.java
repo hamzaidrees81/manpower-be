@@ -4,20 +4,14 @@ import com.manpower.common.Contants;
 import com.manpower.common.PaymentConstant;
 import com.manpower.mapper.AssetMapper;
 import com.manpower.model.*;
-import com.manpower.model.dto.AssetDTO;
-import com.manpower.model.dto.AssetPayableDTO;
-import com.manpower.model.dto.PaymentDTO;
-import com.manpower.model.dto.PaymentFilterDTO;
+import com.manpower.model.dto.*;
 import com.manpower.model.dto.stats.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -38,7 +32,7 @@ public class StatsService {
     public ClientDetailedStatsDTO getClientsDetailedStats(Integer clientId) {
 
         Optional<Client> clientOtp = clientService.getClientById(clientId);
-        if(clientOtp.isEmpty()) {
+        if (clientOtp.isEmpty()) {
             return null;
         }
 
@@ -103,7 +97,7 @@ public class StatsService {
 
 
         List<ProjectSummaryDTO> projectSummaryDTOS = new ArrayList<>();
-        for(Project project : projects) {
+        for (Project project : projects) {
 
             //find total assets on this project
             Long projectAssetCount = assetProjectService.countAssetsByProjectId(project.getId());
@@ -216,16 +210,17 @@ public class StatsService {
 
     /**
      * return all asset stats summary on a specific project
+     *
      * @param projectId
      * @return
      */
-    public List<AssetGeneralSummaryDTO> getAssetsOnProjectGeneralSummmary(Integer projectId){
+    public List<AssetGeneralSummaryDTO> getAssetsOnProjectGeneralSummmary(Integer projectId) {
         List<AssetDTO> assets = assetProjectService.getAssetsDTOByProjectId(projectId);
         return getAssetGeneralSummaryDTOS(assets);
     }
 
 
-    public List<AssetGeneralSummaryDTO> getAssetsGeneralSummmary(){
+    public List<AssetGeneralSummaryDTO> getAssetsGeneralSummmary() {
         List<Asset> assets = assetService.getAllAssets();
         return getAssetGeneralSummaryDTOS(assets.stream().map(AssetMapper::toDTO).toList());
     }
@@ -233,7 +228,7 @@ public class StatsService {
     private List<AssetGeneralSummaryDTO> getAssetGeneralSummaryDTOS(List<AssetDTO> assets) {
         List<AssetGeneralSummaryDTO> assetGeneralSummaries = new ArrayList<>();
 
-        for(AssetDTO asset : assets) {
+        for (AssetDTO asset : assets) {
             List<AssetProject> assetProjects
                     = assetProjectService.getActiveAssetProjectByAssetId(asset.getId());
 
@@ -290,7 +285,7 @@ public class StatsService {
     public AssetDetailedStatsDTO getAssetStats(Integer assetId) throws Exception {
 
         Optional<Asset> assetOpt = assetService.getAssetById(assetId);
-        if(assetOpt.isEmpty()) {
+        if (assetOpt.isEmpty()) {
             throw new Exception("Asset not found");
         }
         Asset asset = assetOpt.get();
@@ -317,7 +312,7 @@ public class StatsService {
 
         //total paid invoice count
         int paidInvoicesCount = (int) assetInvoices.stream().filter(invoiceAsset ->
-                invoiceAsset.getInvoice().getStatus().equals(Contants.PaymentStatus.PAID.getValue()))
+                        invoiceAsset.getInvoice().getStatus().equals(Contants.PaymentStatus.PAID.getValue()))
                 .count();
 
         int unpaidInvoicesCount = (int) assetInvoices.stream().filter(invoiceAsset ->
@@ -329,7 +324,7 @@ public class StatsService {
                 .count();
 
         BigDecimal assetExpense = paymentService.getExpensesByAsset(assetId);
-        List<PaymentDTO> assetPayments  = paymentService.getPaymentsToAsset(assetId);
+        List<PaymentDTO> assetPayments = paymentService.getPaymentsToAsset(assetId);
 
         /************************/
         //to get profit from asset, take earning, then subtract sponsor payable, asset payable, then expenses
@@ -359,7 +354,7 @@ public class StatsService {
 
         //projects
         List<ProjectSummaryDTO> projectSummaryDTOS = new ArrayList<>();
-        for(AssetProject project : assetProjects) {
+        for (AssetProject project : assetProjects) {
             ProjectSummaryDTO projectSummaryDTO = ProjectSummaryDTO.builder()
                     .projectId(project.getProject().getId())
                     .projectName(project.getProject().getName())
@@ -373,7 +368,7 @@ public class StatsService {
         //invoices
 
         List<InvoiceSummaryDTO> invoiceSummaryDTOS = new ArrayList<>();
-        for(InvoiceAsset invoiceAsset : assetInvoices) {
+        for (InvoiceAsset invoiceAsset : assetInvoices) {
             Invoice invoice = invoiceAsset.getInvoice();
             InvoiceSummaryDTO invoiceSummaryDTO = InvoiceSummaryDTO
                     .builder()
@@ -387,8 +382,7 @@ public class StatsService {
         }
 
         List<PaymentSummaryDTO> paymentSummaryDTOS = new ArrayList<>();
-        for(PaymentDTO payment : assetPayments)
-        {
+        for (PaymentDTO payment : assetPayments) {
             PaymentSummaryDTO paymentDTO = PaymentSummaryDTO
                     .builder()
                     .paymentId(payment.getId())
@@ -425,5 +419,188 @@ public class StatsService {
         stats.payments(paymentSummaryDTOS);
         return stats.build();
 
+    }
+
+    public ProjectStatsDTO getProjectStats(Integer projectId) {
+
+        Optional<Project> projectOpt = projectService.getProjectById(projectId);
+        if (projectOpt.isEmpty()) {
+            throw new RuntimeException("Invalid project Id");
+        }
+
+        Project project = projectOpt.get();
+
+        Long totalAssets = assetProjectService.countAssetsByProjectId(projectId);
+        List<InvoiceAsset> assetInvoices = invoiceAssetService.findInvoicesByProjectId(projectId);
+
+        int distinctInvoiceCount = (int) assetInvoices.stream()
+                .map(InvoiceAsset::getInvoice)
+                .filter(Objects::nonNull)
+                .map(Invoice::getId)
+                .distinct()
+                .count();
+
+
+        int paidInvoicesCount = (int) assetInvoices.stream()
+                .map(InvoiceAsset::getInvoice)
+                .filter(Objects::nonNull)
+                .filter(invoice -> invoice.getStatus() == 2)  // assuming 2 = PAID
+                .map(Invoice::getId)
+                .distinct()
+                .count();
+
+        int unpaidInvoicesCount = (int) assetInvoices.stream()
+                .map(InvoiceAsset::getInvoice)
+                .filter(Objects::nonNull)
+                .filter(invoice -> invoice.getStatus() == 1)  // assuming 1 = UNPAID
+                .map(Invoice::getId)
+                .distinct()
+                .count();
+        int dueInvoicesCount = unpaidInvoicesCount;
+
+
+        double totalInvoiceAmountBeforeTax = assetInvoices.stream()
+                .map(InvoiceAsset::getInvoice)
+                .filter(Objects::nonNull)
+                .map(Invoice::getTotalBeforeTax)
+                .distinct()
+                .count();
+
+        double totalInvoiceTax = assetInvoices.stream()
+                .map(InvoiceAsset::getInvoice)
+                .filter(Objects::nonNull)
+                .map(Invoice::getTaxAmount)
+                .distinct()
+                .count();
+
+        double totalInvoiceWithTax = assetInvoices.stream()
+                .map(InvoiceAsset::getInvoice)
+                .filter(Objects::nonNull)
+                .map(Invoice::getTotalAmountWithTax)
+                .distinct()
+                .count();
+
+        double totalPaidInvoiceAmount = assetInvoices.stream()
+                .map(InvoiceAsset::getInvoice)
+                .filter(Objects::nonNull)
+                .filter(invoice -> invoice.getStatus() == 2)
+                .map(Invoice::getTotalAmountWithTax)
+                .distinct()
+                .count();
+
+        List<AssetPayable> assetPayables = assetPayableService.findPayablesByProject(project);
+        BigDecimal totalAssetPayable = assetPayables.stream()
+                .map(AssetPayable::getAssetPayable)
+                .filter(Objects::nonNull)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+
+        List<InvoiceSponsorPayable> sponsorPayables = invoiceSponsorPayableService.findPayableByProject(project);
+        BigDecimal totalSponsorPayables = sponsorPayables.stream()
+                .map(InvoiceSponsorPayable::getPaidAmount)
+                .filter(Objects::nonNull)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+
+        double totalProfit = totalInvoiceAmountBeforeTax - totalAssetPayable.doubleValue() - totalSponsorPayables.doubleValue();
+
+
+        List<AssetStatsDTO> assetStatsDTOS = calculateAssetEarningsStats(assetInvoices, assetPayables, sponsorPayables);
+
+        return ProjectStatsDTO
+                .builder()
+                .projectId(project.getId())
+                .projectName(project.getName())
+                .clientName(project.getClient().getName())
+                .totalAssets(totalAssets.intValue())
+                .totalInvoices(distinctInvoiceCount)
+                .paidInvoices(paidInvoicesCount)
+                .unpaidInvoices(unpaidInvoicesCount)
+                .dueInvoices(dueInvoicesCount)
+                .totalInvoicedTax(totalInvoiceTax)
+                .totalInvoicedBeforeTax(totalInvoiceAmountBeforeTax)
+                .totalInvoicedWithTax(totalInvoiceWithTax)
+                .totalPaidAmount(totalPaidInvoiceAmount)
+                .totalAssetPayable(totalAssetPayable.doubleValue())
+                .totalSponsorPayable(totalSponsorPayables.doubleValue())
+                .totalProfit(totalProfit)
+                .assetStats(assetStatsDTOS)
+                .build();
+    }
+
+    public List<AssetStatsDTO> calculateAssetEarningsStats(
+            List<InvoiceAsset> assetInvoices,
+            List<AssetPayable> assetPayables,
+            List<InvoiceSponsorPayable> sponsorPayables
+    ) {
+        Map<Integer, AssetStatsDTO> assetStatsMap = new HashMap<>();
+
+        // 1. Process InvoiceAssets to calculate total earnings
+        for (InvoiceAsset invoiceAsset : assetInvoices) {
+            Asset asset = invoiceAsset.getAsset();
+            if (asset == null) continue;
+
+            Integer assetId = asset.getId();
+            BigDecimal earning = BigDecimal.ZERO;
+
+            if (invoiceAsset.getStandardHours() != null && invoiceAsset.getStandardRate() != null) {
+                earning = earning.add(invoiceAsset.getStandardHours().multiply(invoiceAsset.getStandardRate()));
+            }
+
+            if (invoiceAsset.getOtHours() != null && invoiceAsset.getOtRate() != null) {
+                earning = earning.add(invoiceAsset.getOtHours().multiply(invoiceAsset.getOtRate()));
+            }
+
+            AssetStatsDTO dto = assetStatsMap.getOrDefault(assetId, AssetStatsDTO.builder()
+                    .assetId(assetId)
+                    .assetName(asset.getName())
+                    .totalEarning(BigDecimal.ZERO)
+                    .assetPayable(BigDecimal.ZERO)
+                    .sponsorPayable(BigDecimal.ZERO)
+                    .profit(BigDecimal.ZERO)
+                    .build());
+
+            dto.setTotalEarning(dto.getTotalEarning().add(earning));
+            assetStatsMap.put(assetId, dto);
+        }
+
+        // 2. Process AssetPayables
+        for (AssetPayable payable : assetPayables) {
+            Asset asset = payable.getAsset();
+            if (asset == null) continue;
+
+            Integer assetId = asset.getId();
+            BigDecimal value = payable.getAssetPayable() != null ? payable.getAssetPayable() : BigDecimal.ZERO;
+
+            AssetStatsDTO dto = assetStatsMap.get(assetId);
+            if (dto != null) {
+                dto.setAssetPayable(dto.getAssetPayable().add(value));
+            }
+        }
+
+        // 3. Process SponsorPayables
+        for (InvoiceSponsorPayable sponsorPayable : sponsorPayables) {
+            Asset asset = sponsorPayable.getSponsorshipAsset();
+            if (asset == null) continue;
+
+            Integer assetId = asset.getId();
+            BigDecimal value = sponsorPayable.getPaidAmount() != null ? sponsorPayable.getPaidAmount() : BigDecimal.ZERO;
+
+            AssetStatsDTO dto = assetStatsMap.get(assetId);
+            if (dto != null) {
+                dto.setSponsorPayable(dto.getSponsorPayable().add(value));
+            }
+        }
+
+        // 4. Final Profit Calculation
+        for (AssetStatsDTO dto : assetStatsMap.values()) {
+            BigDecimal profit = dto.getTotalEarning()
+                    .subtract(dto.getAssetPayable())
+                    .subtract(dto.getSponsorPayable());
+
+            dto.setProfit(profit);
+        }
+
+        return new ArrayList<>(assetStatsMap.values());
     }
 }

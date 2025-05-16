@@ -41,4 +41,9 @@ public class InvoiceAssetService {
         throw new RuntimeException("Not implemented yet");
 
     }
+
+    public List<InvoiceAsset> findInvoicesByProjectId(Integer projectId) {
+        return invoiceAssetRepository.findInvoiceAssetByAssetProject_Project(projectId);
+    }
+
 }

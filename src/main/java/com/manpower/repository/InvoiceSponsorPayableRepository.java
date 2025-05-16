@@ -2,6 +2,7 @@ package com.manpower.repository;
 
 import com.manpower.model.AssetPayable;
 import com.manpower.model.InvoiceSponsorPayable;
+import com.manpower.model.Project;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -14,6 +15,8 @@ public interface InvoiceSponsorPayableRepository extends JpaRepository<InvoiceSp
     List<InvoiceSponsorPayable> findBySponsorshipAsset_Id(Integer assetId);
     List<InvoiceSponsorPayable> findByInvoice_Id(Integer invoiceId);
     List<InvoiceSponsorPayable> findByInvoice_Client_Id(Integer clientId);
+    public List<InvoiceSponsorPayable> findByProjectSponsorshipId_AssetProject_Project(Project project);
+
 
 
 }

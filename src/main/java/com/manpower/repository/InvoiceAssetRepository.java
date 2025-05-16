@@ -13,4 +13,5 @@ public interface InvoiceAssetRepository extends JpaRepository<InvoiceAsset, Inte
   Optional<List<InvoiceAsset>> findInvoiceAssetByAsset_Id(Integer assetId);
 //  Optional<List<Invoice>> invoiceAssetRepository.findDistinctIByAsset_Id(assetId);
   Optional<List<InvoiceAsset>> findDistinctByAsset_Id(Integer assetId);
+  List<InvoiceAsset> findInvoiceAssetByAssetProject_Project(Integer projectId);
 }

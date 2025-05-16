@@ -1,9 +1,6 @@
 package com.manpower.controller;
 
-import com.manpower.model.dto.stats.AssetDetailedStatsDTO;
-import com.manpower.model.dto.stats.AssetGeneralSummaryDTO;
-import com.manpower.model.dto.stats.ClientDetailedStatsDTO;
-import com.manpower.model.dto.stats.ClientSummaryDTO;
+import com.manpower.model.dto.stats.*;
 import com.manpower.service.StatsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -43,5 +40,9 @@ public class StatsController {
         return ResponseEntity.ok(statsService.getClientsDetailedStats(clientId));
     }
 
-
+    @GetMapping("/projects/{projectId}")
+    public ResponseEntity<ProjectStatsDTO> getProjectStats(@PathVariable Integer projectId)
+    {
+        return ResponseEntity.ok(statsService.getProjectStats(projectId));
+    }
 }

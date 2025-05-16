@@ -3,14 +3,12 @@ package com.manpower.service;
 import com.manpower.common.Contants;
 import com.manpower.mapper.AssetPayableMapper;
 import com.manpower.model.AssetPayable;
+import com.manpower.model.Project;
 import com.manpower.model.dto.AssetPayableDTO;
 import com.manpower.model.dto.AssetPayableDTOWithStats;
-import com.manpower.model.dto.InvoiceSponsorPayableDTO;
-import com.manpower.model.dto.InvoiceSponsorPayableDTOWithStats;
 import com.manpower.repository.AssetPayableRepository;
 import com.manpower.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -95,5 +93,10 @@ public class AssetPayableService {
 
     public List<AssetPayable> findByClientId(Integer id) {
         return assetPayableRepository.findByInvoice_Client_Id(id);
+    }
+
+    public List<AssetPayable> findPayablesByProject(Project project)
+    {
+        return assetPayableRepository.findByAssetProject_Project(project);
     }
 }
