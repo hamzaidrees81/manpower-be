@@ -48,6 +48,9 @@
     @Column(name = "cleared_date")
     private LocalDate clearedDate;
 
+    @Column(name = "due_date")
+    private LocalDate dueDate;
+
     @NotNull
     @Column(name = "start_date", nullable = false)
     private LocalDate startDate;

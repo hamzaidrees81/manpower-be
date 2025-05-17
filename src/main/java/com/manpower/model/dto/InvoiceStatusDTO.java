@@ -11,7 +11,9 @@ import java.time.LocalDate;
 @Builder
 public class InvoiceStatusDTO {
   private Integer id;
+  private String clientName;
   private LocalDate creationDate;
+  private LocalDate dueDate;
   private LocalDate clearedDate;
   private String invoiceNumber;
   private Contants.PaymentStatus paymentStatus;

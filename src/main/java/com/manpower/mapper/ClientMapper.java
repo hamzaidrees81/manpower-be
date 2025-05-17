@@ -1,6 +1,7 @@
 package com.manpower.mapper;
 
 import com.manpower.model.Client;
+import com.manpower.model.Company;
 import com.manpower.model.dto.ClientDTO;
 
 public class ClientMapper {
@@ -27,6 +28,7 @@ public class ClientMapper {
         client.setName(dto.getName());
         client.setAddress(dto.getAddress());
         client.setStatus(dto.getStatus());
+        client.setCompany(Company.builder().id(dto.getCompanyId()).build());
 
         // You must set Company separately in the service layer since only ID is available in DTO
         return client;

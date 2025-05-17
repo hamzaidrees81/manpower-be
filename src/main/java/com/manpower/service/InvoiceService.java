@@ -255,6 +255,7 @@ public class InvoiceService {
         invoiceBuilder.status(Contants.PaymentStatus.INVOICE_PENDING.getValue());
         invoiceBuilder.startDate(detailedInvoice.getStartDate());
         invoiceBuilder.endDate(detailedInvoice.getEndDate());
+        invoiceBuilder.dueDate(detailedInvoice.getDueDate());
         invoiceBuilder.createDate(detailedInvoice.getInvoiceDate());
         invoiceBuilder.totalBeforeTax(detailedInvoice.getTotalAmount());
         invoiceBuilder.taxAmount(tax);

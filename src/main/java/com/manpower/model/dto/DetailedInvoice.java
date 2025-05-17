@@ -20,6 +20,7 @@ public class DetailedInvoice {
   LocalDate clearedDate;
   LocalDate startDate;
   LocalDate endDate;
+  LocalDate dueDate;
   BigDecimal totalAmount; //this is without VAT
   BigDecimal vatAmount;
   BigDecimal totalWithVAT;

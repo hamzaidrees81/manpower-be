@@ -91,8 +91,9 @@ public class InvoiceController {
     }
 
     @PostMapping
-    public Invoice createInvoice(@RequestBody DetailedInvoice detailedInvoice) {
-        return invoiceService.createInvoice(detailedInvoice);
+    public ResponseEntity<Integer> createInvoice(@RequestBody DetailedInvoice detailedInvoice) {
+         Invoice invoice = invoiceService.createInvoice(detailedInvoice);
+         return ResponseEntity.ok(invoice.getId());
     }
 
     @PutMapping("/{id}")
