@@ -50,6 +50,11 @@ public class InvoiceService {
     }
 
     public ListInvoicesResponse getFilteredInvoices(Integer clientId, Contants.PaymentStatus status, LocalDate invoiceStartDate, LocalDate invoiceEndDate, LocalDate createdStartDate, LocalDate createdEndDate, LocalDate clearedStartDate, LocalDate clearedEndDate, Pageable pageable) {
+
+        //now we only store status as INVOICE_PENDING so if unpaid status comes, translate it to invoice pending
+        if(status == Contants.PaymentStatus.UNPAID)
+            status = Contants.PaymentStatus.INVOICE_PENDING;
+
         Integer companyId = SecurityUtil.getCompanyClaim();
         Specification<Invoice> spec = InvoiceSpecifications.filterInvoices(companyId, clientId, status, invoiceStartDate, invoiceEndDate, createdStartDate, clearedEndDate, clearedStartDate, clearedEndDate);
         Page<Invoice> invoicePage = invoiceRepository.findAll(spec, pageable);
@@ -255,7 +260,7 @@ public class InvoiceService {
         invoiceBuilder.status(Contants.PaymentStatus.INVOICE_PENDING.getValue());
         invoiceBuilder.startDate(detailedInvoice.getStartDate());
         invoiceBuilder.endDate(detailedInvoice.getEndDate());
-        invoiceBuilder.dueDate(detailedInvoice.getDueDate());
+        invoiceBuilder.dueDate(detailedInvoice.getDueDate() == null ? LocalDate.now() : detailedInvoice.getDueDate());
         invoiceBuilder.createDate(detailedInvoice.getInvoiceDate());
         invoiceBuilder.totalBeforeTax(detailedInvoice.getTotalAmount());
         invoiceBuilder.taxAmount(tax);

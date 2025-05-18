@@ -35,7 +35,7 @@ public class AssetPayableController {
 
     }
 
-    @GetMapping("status/{paymentStatus}/asset")
+    @GetMapping("/status/{paymentStatus}/asset")
     public ResponseEntity<AssetPayableDTOWithStats> findPayables(
             @PathVariable Contants.PaymentStatusString paymentStatus,
             @RequestParam(required = false) Integer assetId) {

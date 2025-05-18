@@ -20,7 +20,7 @@ public class InvoiceStatusMapper {
               //if due date is not here, return whatever the status is
               invoice.getDueDate()==null ? Contants.PaymentStatus.fromValue(invoice.getStatus()) :
                       //if due date has passed, check if invoice status is pending, then show unpaid, otherwise show whatever the status is (hopefully paid)
-                      (invoice.getDueDate().isBefore(LocalDate.now()) && Contants.PaymentStatus.fromValue(invoice.getStatus())
+                      ((invoice.getDueDate().isBefore(LocalDate.now()) || invoice.getDueDate().isEqual(LocalDate.now())) && Contants.PaymentStatus.fromValue(invoice.getStatus())
                       == Contants.PaymentStatus.INVOICE_PENDING) ?
                       Contants.PaymentStatus.UNPAID : Contants.PaymentStatus.fromValue(invoice.getStatus())
       )
