@@ -2,14 +2,14 @@ package com.manpower.pos.service;
 
 import com.manpower.model.Company;
 import com.manpower.pos.dto.PurchaseDTO;
+import com.manpower.pos.dto.PurchaseFilterDTO;
 import com.manpower.pos.dto.PurchaseItemDTO;
 import com.manpower.pos.enums.AliveStatus;
 import com.manpower.pos.enums.RelatedEntityType;
 import com.manpower.pos.enums.StockMovementReason;
 import com.manpower.pos.enums.StockMovementType;
-import com.manpower.pos.mapper.ShopMapper;
-import com.manpower.pos.mapper.StockMovementMapper;
-import com.manpower.pos.mapper.SupplierMapper;
+import com.manpower.pos.filter.PurchaseSpecification;
+import com.manpower.pos.mapper.PurchaseMapper;
 import com.manpower.pos.model.*;
 import com.manpower.pos.repository.PurchaseRepository;
 import com.manpower.util.SecurityUtil;
@@ -28,8 +28,12 @@ public class PurchaseService {
 
     private final StockService stockService;
     private final PurchaseRepository purchaseRepository;
-    private final SupplierMapper supplierMapper;
-    private final ShopMapper shopMapper;
+    private final PurchaseMapper purchaseMapper;
+
+    public List<PurchaseDTO> filterPurchases(PurchaseFilterDTO dto) {
+        List<Purchase> purchases = purchaseRepository.findAll(PurchaseSpecification.filter(dto));
+        return purchases.stream().map(purchaseMapper::toDTO).toList();
+    }
 
     @Transactional
     public Integer addPurchase(PurchaseDTO purchaseDTO) {
@@ -155,14 +159,6 @@ public class PurchaseService {
         //get all purchase items
         List<StockMovement> purchaseItems = stockService.findPurchaseItems(RelatedEntityType.PURCHASE, purchaseId);
 
-        PurchaseDTO purchaseDTO = PurchaseDTO
-                .builder()
-                .shop(shopMapper.toDTO(purchase.getShop()))
-                .supplier(supplierMapper.toDTO(purchase.getSupplier()))
-                .supplierInvoiceNo(purchase.getSupplierInvoiceNumber())
-                .purchaseDate(purchase.getDate())
-                .items(purchaseItems.stream().map(StockMovementMapper::toDto).toList())
-                .build();
-        return purchaseDTO;
+        return purchaseMapper.toDTO(purchase, purchaseItems);
     }
 }

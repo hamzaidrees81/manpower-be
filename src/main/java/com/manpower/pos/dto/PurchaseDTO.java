@@ -2,6 +2,7 @@ package com.manpower.pos.dto;
 
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
 
@@ -15,6 +16,8 @@ public class PurchaseDTO {
     private Integer shopId;
     private String supplierInvoiceNo;
     private List<PurchaseItemDTO> items;
+
+    BigDecimal totalAmount;
 
     //additional params
     private SupplierDTO supplier;
