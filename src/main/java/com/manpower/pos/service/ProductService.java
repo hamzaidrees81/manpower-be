@@ -1,6 +1,7 @@
 package com.manpower.pos.service;
 
 import com.manpower.pos.dto.ProductDto;
+import com.manpower.pos.enums.AliveStatus;
 import com.manpower.pos.mapper.ProductMapper;
 import com.manpower.pos.model.Product;
 import com.manpower.pos.repository.ProductRepository;
@@ -34,6 +35,7 @@ public class ProductService {
     @Transactional
     public ProductDto createProduct(ProductDto productDto) {
         Product product = productMapper.toEntity(productDto);
+        product.setStatus(AliveStatus.ACTIVE);
         Product saved = productRepository.save(product);
         return productMapper.toDto(saved);
     }

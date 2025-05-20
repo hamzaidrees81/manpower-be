@@ -1,5 +1,6 @@
 package com.manpower.pos.dto;
 
+import com.manpower.pos.enums.AliveStatus;
 import com.manpower.pos.enums.STATUS;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,7 +22,7 @@ public class ProductDto {
     private String productCode;
     private String productType;
     private String comments;
-    private STATUS active;
+    private AliveStatus status;
     private Integer categoryId;
     private ProductCategoryDto category;
     private BrandDto brand;

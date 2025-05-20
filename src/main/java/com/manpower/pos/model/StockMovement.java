@@ -1,11 +1,10 @@
 package com.manpower.pos.model;
 
 import com.manpower.model.Company;
+import com.manpower.pos.enums.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.math.BigDecimal;
@@ -14,9 +13,13 @@ import java.time.Instant;
 @Getter
 @Setter
 @Entity
+@Builder
+@AllArgsConstructor
+@RequiredArgsConstructor
 @Table(name = "stock_movement")
 public class StockMovement {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
 
@@ -28,18 +31,35 @@ public class StockMovement {
     @Column(name = "quantity", precision = 15, scale = 2)
     private BigDecimal quantity;
 
-    @Column(name = "price", precision = 15, scale = 2)
-    private BigDecimal price;
+    @Column(name = "buy_price", precision = 15, scale = 2)
+    private BigDecimal buyPrice;
 
-    @NotNull
-    @Lob
+    @Column(name = "retail_price", precision = 15, scale = 2)
+    private BigDecimal retailPrice;
+
+    @Column(name = "min_price", precision = 15, scale = 2)
+    private BigDecimal minPrice;
+
+    @Column(name = "batch")
+    private String batch;
+
+    @Column(name = "comments")
+    private String comments;
+
+    @Column(name = "storage_rack")
+    private String storageRack;
+
+    @Enumerated(EnumType.STRING)
     @Column(name = "movement_type", nullable = false)
-    private String movementType;
+    private StockMovementType movementType;
 
-    @NotNull
-    @Lob
+    @Enumerated(EnumType.STRING)
     @Column(name = "reason", nullable = false)
-    private String reason;
+    private StockMovementReason movementReason;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "pricing_strategy")
+    private PricingStrategy pricingStrategy;
 
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "movement_date")
@@ -48,12 +68,19 @@ public class StockMovement {
     @Column(name = "related_entity_id")
     private Integer relatedEntityId;
 
-    @Size(max = 50)
-    @Column(name = "related_entity_type", length = 50)
-    private String relatedEntityType;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "related_entity_type", nullable = false)
+    private RelatedEntityType relatedEntityType;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
     private Company company;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private AliveStatus status;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "shop_id")
+    private Shop shop;
 }

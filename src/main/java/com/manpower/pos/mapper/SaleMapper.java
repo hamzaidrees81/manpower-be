@@ -30,7 +30,7 @@ public class SaleMapper {
         sale.setTotalAmount(dto.getTotalAmount());
         sale.setCompany(Company.builder().id(SecurityUtil.getCompanyClaim()).build());
         sale.setCustomerId(dto.getCustomerId());
-        sale.setShop(shopRepository.findById(Long.valueOf(dto.getShopId())).get());
+        sale.setShop(shopRepository.findById(dto.getShopId()).get());
         sale.setPoNumber(dto.getPoNumber());
 
         List<SaleItem> items = dto.getSaleItems().stream().map(itemDTO -> {

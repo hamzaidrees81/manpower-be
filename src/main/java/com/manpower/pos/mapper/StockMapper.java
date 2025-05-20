@@ -25,9 +25,7 @@ public class StockMapper {
         dto.setProductId(stock.getProduct().getId());
         dto.setProduct(productMapper.toDto(stock.getProduct()));
         dto.setQuantity(stock.getQuantity());
-        dto.setPrice(stock.getPrice());
-        dto.setSupplierId(stock.getSupplier() != null ? stock.getSupplier().getId() : null);
-        dto.setSupplier(stock.getSupplier() != null ? supplierMapper.toDTO(stock.getSupplier()) : null);
+        dto.setPrice(stock.getRetailPrice());
         return dto;
     }
 
@@ -39,7 +37,7 @@ public class StockMapper {
         Stock stock = new Stock();
         stock.setId(dto.getId());
         stock.setQuantity(dto.getQuantity());
-        stock.setPrice(dto.getPrice());
+        stock.setRetailPrice(dto.getPrice());
         // Assuming the product, supplier, and company are fetched or set later
         return stock;
     }

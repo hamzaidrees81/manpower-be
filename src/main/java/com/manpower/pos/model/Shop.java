@@ -1,11 +1,11 @@
 package com.manpower.pos.model;
 
 import com.manpower.model.Company;
+import com.manpower.pos.enums.AliveStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.Instant;
@@ -13,10 +13,14 @@ import java.time.Instant;
 @Getter
 @Setter
 @Entity
+@Builder
+@AllArgsConstructor
+@RequiredArgsConstructor
 @Table(name = "shop")
 public class Shop {
     @Id
     @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Size(max = 255)
@@ -41,9 +45,9 @@ public class Shop {
     private String comments;
 
     @NotNull
-    @Lob
+    @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    private String status;
+    private AliveStatus status;
 
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "date_created")

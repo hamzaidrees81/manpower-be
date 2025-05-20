@@ -1,13 +1,15 @@
 package com.manpower.pos.dto;
 
 import com.manpower.pos.model.Product;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class StockDto {
     private Integer id;
     private Integer productId;

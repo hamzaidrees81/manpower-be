@@ -2,6 +2,7 @@ package com.manpower.pos.service;
 
 import com.manpower.pos.dto.StockDto;
 import com.manpower.pos.dto.StockMovementDto;
+import com.manpower.pos.enums.RelatedEntityType;
 import com.manpower.pos.mapper.StockMapper;
 import com.manpower.pos.mapper.StockMovementMapper;
 import com.manpower.pos.model.Stock;
@@ -30,8 +31,12 @@ public class StockService {
                 .toList();
     }
 
+    public Optional<Stock> getStockByProductIdAndShopId(Integer productId, Integer shopId) {
+        return stockRepository.findByProduct_IdAndShop_Id(productId, shopId);
+    }
+
     public Optional<StockDto> getStockById(Integer id) {
-        return stockRepository.findById(Long.valueOf(id))
+        return stockRepository.findById(id)
                 .map(stockMapper::toDto);
     }
 
@@ -41,8 +46,12 @@ public class StockService {
         return stockMapper.toDto(saved);
     }
 
+    public void createStock(Stock stock) {
+        stockRepository.save(stock);
+    }
+
     public Optional<StockDto> updateStock(Integer id, StockDto stockDto) {
-        return stockRepository.findById(Long.valueOf(id))
+        return stockRepository.findById(id)
                 .map(existingStock -> {
                     Stock updatedStock = stockMapper.toEntity(stockDto);
                     updatedStock.setId(id);
@@ -52,8 +61,8 @@ public class StockService {
     }
 
     public boolean deleteStock(Integer id) {
-        if (stockRepository.existsById(Long.valueOf(id))) {
-            stockRepository.deleteById(Long.valueOf(id));
+        if (stockRepository.existsById(id)) {
+            stockRepository.deleteById(id);
             return true;
         }
         return false;
@@ -61,21 +70,32 @@ public class StockService {
 
     // Stock Movement Methods
 
-    public List<StockMovementDto> getAllStockMovements() {
-        List<StockMovement> stockMovements = stockMovementRepository.findAll();
-        return stockMovements.stream()
-                .map(stockMovementMapper::toDto)
-                .toList();
-    }
+//    public List<StockMovementDto> getAllStockMovements() {
+//        List<StockMovement> stockMovements = stockMovementRepository.findAll();
+//        return stockMovements.stream()
+//                .map(stockMovementMapper::toDto)
+//                .toList();
+//    }
 
-    public StockMovementDto createStockMovement(StockMovementDto stockMovementDto) {
-        StockMovement stockMovement = stockMovementMapper.toEntity(stockMovementDto);
-        StockMovement savedMovement = stockMovementRepository.save(stockMovement);
+//    public List<StockMovementDto> getAllStockMovementsByPurchaseId(Integer purchaseId) {
+//        List<StockMovement> stockMovements = stockMovementRepository.findAll();
+//        return stockMovements.stream()
+//                .map(stockMovementMapper::toDto)
+//                .toList();
+//    }
 
-        // Update stock quantity based on the movement
-        updateStockQuantity(stockMovement);
+//    public StockMovementDto createStockMovement(StockMovementDto stockMovementDto) {
+//        StockMovement stockMovement = stockMovementMapper.toEntity(stockMovementDto);
+//        StockMovement savedMovement = stockMovementRepository.save(stockMovement);
+//
+//        // Update stock quantity based on the movement
+//        updateStockQuantity(stockMovement);
+//
+//        return stockMovementMapper.toDto(savedMovement);
+//    }
 
-        return stockMovementMapper.toDto(savedMovement);
+    public void createStockMovement(StockMovement stockMovement) {
+        stockMovementRepository.save(stockMovement);
     }
 
     private void updateStockQuantity(StockMovement stockMovement) {
@@ -88,5 +108,9 @@ public class StockService {
             }
             stockRepository.save(stock);
         });
+    }
+
+    public List<StockMovement> findPurchaseItems(RelatedEntityType relatedEntityType, Integer purchaseId) {
+        return stockMovementRepository.findByRelatedEntityTypeAndRelatedEntityId(relatedEntityType, purchaseId);
     }
 }

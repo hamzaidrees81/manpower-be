@@ -48,10 +48,10 @@ public class POSStockController {
         return ResponseEntity.notFound().build();
     }
 
-    // Stock Movement Endpoints
-
-    @PostMapping("/movements")
-    public ResponseEntity<StockMovementDto> createStockMovement(@RequestBody StockMovementDto stockMovementDto) {
-        return ResponseEntity.ok(stockService.createStockMovement(stockMovementDto));
-    }
+//    // Stock Movement Endpoints
+//
+//    @PostMapping("/movements")
+//    public ResponseEntity<StockMovementDto> createStockMovement(@RequestBody StockMovementDto stockMovementDto) {
+//        return ResponseEntity.ok(stockService.createStockMovement(stockMovementDto));
+//    }
 }
