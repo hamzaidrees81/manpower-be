@@ -1,14 +1,15 @@
 package com.manpower.pos.service;
 
 import com.manpower.pos.dto.StockDto;
-import com.manpower.pos.dto.StockMovementDto;
 import com.manpower.pos.enums.RelatedEntityType;
+import com.manpower.pos.enums.StocksForPage;
 import com.manpower.pos.mapper.StockMapper;
 import com.manpower.pos.mapper.StockMovementMapper;
 import com.manpower.pos.model.Stock;
 import com.manpower.pos.model.StockMovement;
 import com.manpower.pos.repository.StockRepository;
 import com.manpower.pos.repository.StockMovementRepository;
+import com.manpower.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -112,5 +113,60 @@ public class StockService {
 
     public List<StockMovement> findPurchaseItems(RelatedEntityType relatedEntityType, Integer purchaseId) {
         return stockMovementRepository.findByRelatedEntityTypeAndRelatedEntityId(relatedEntityType, purchaseId);
+    }
+
+    public List<Stock> getAllStocksByCompanyId() {
+        return stockRepository.findAllByCompanyId(SecurityUtil.getCompanyClaim());
+
+    }
+
+    public List<Stock> getAllStocksByProductIdShopIdCompanyId(Integer productId, Integer shopId) {
+        return stockRepository.findAllByProduct_IdAndShop_IdAndCompany_Id(productId, shopId, SecurityUtil.getCompanyClaim());
+    }
+
+    public List<Stock> getAllStocksByShopIdCompanyId(Integer shopId) {
+        return stockRepository.findAllByShop_IdAndCompany_Id(shopId, SecurityUtil.getCompanyClaim());
+    }
+
+    public List<Stock> getProductStocksAllShopsCompanyId(Integer productId) {
+        return stockRepository.findAllByProduct_IdAndCompany_Id(productId, SecurityUtil.getCompanyClaim());
+    }
+
+    public List<StockDto> findStocks(Integer shopId, Integer productId, StocksForPage stocksForPage) {
+        List<StockDto> stocksList;
+
+        //get all stocks or by shop or by product id
+        if(shopId != null && productId != null) {
+            stocksList = getAllStocksByProductIdShopIdCompanyId(productId,shopId).stream().map(stockMapper::toDto).toList();
+        }
+        if(shopId != null && productId == null) {
+            stocksList = getAllStocksByShopIdCompanyId(shopId).stream().map(stockMapper::toDto).toList();
+        }
+        else if(shopId == null && productId != null) {
+            stocksList = getProductStocksAllShopsCompanyId(productId).stream().map(stockMapper::toDto).toList();
+        }
+        else
+            stocksList = getAllStocksByCompanyId().stream().map(stockMapper::toDto).toList();
+
+        if(StocksForPage.PURCHASE.equals(stocksForPage)) {
+            //also show buy price if purchase - take buy from latest stock movement
+            for(StockDto stockDto : stocksList)
+            {
+                Optional<StockMovement> stockMovementOtp =
+                        stockMovementRepository.
+                                findTopByProduct_IdAndShop_IdAndCompany_IdOrderByIdDesc(
+                                        stockDto.getProductId(),
+                                        shopId,
+                                        SecurityUtil.getCompanyClaim()
+                                );
+                if(stockMovementOtp.isEmpty())
+                    continue;
+                StockMovement stockMovement = stockMovementOtp.get();
+                stockDto.setBuyPrice(stockMovement.getBuyPrice());
+            }
+
+        }
+
+        return stocksList;
     }
 }

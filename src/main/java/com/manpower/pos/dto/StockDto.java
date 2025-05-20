@@ -15,7 +15,9 @@ public class StockDto {
     private Integer productId;
     private ProductDto product;
     private BigDecimal quantity;
-    private BigDecimal price;
-    private Integer supplierId;
-    private SupplierDTO supplier;
+    private BigDecimal retailPrice;
+    private BigDecimal minPrice;
+    private BigDecimal buyPrice;
+    private String storageRack;
+    private ShopDTO shop;
 }

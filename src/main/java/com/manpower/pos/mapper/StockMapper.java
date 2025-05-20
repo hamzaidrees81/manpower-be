@@ -9,10 +9,12 @@ public class StockMapper {
 
     private final ProductMapper productMapper;
     private final SupplierMapper supplierMapper;
+    private final ShopMapper shopMapper;
 
-    public StockMapper(ProductMapper productMapper, SupplierMapper supplierMapper) {
+    public StockMapper(ProductMapper productMapper, SupplierMapper supplierMapper, ShopMapper shopMapper) {
         this.productMapper = productMapper;
         this.supplierMapper = supplierMapper;
+        this.shopMapper = shopMapper;
     }
 
     public StockDto toDto(Stock stock) {
@@ -25,20 +27,27 @@ public class StockMapper {
         dto.setProductId(stock.getProduct().getId());
         dto.setProduct(productMapper.toDto(stock.getProduct()));
         dto.setQuantity(stock.getQuantity());
-        dto.setPrice(stock.getRetailPrice());
+        dto.setRetailPrice(stock.getRetailPrice());
+        dto.setMinPrice(stock.getMinSalePrice());
+        dto.setShop(shopMapper.toDTO(stock.getShop()));
+        dto.setStorageRack(stock.getStorageRack());
         return dto;
     }
 
-    public Stock toEntity(StockDto dto) {
-        if (dto == null) {
-            return null;
-        }
-
-        Stock stock = new Stock();
-        stock.setId(dto.getId());
-        stock.setQuantity(dto.getQuantity());
-        stock.setRetailPrice(dto.getPrice());
-        // Assuming the product, supplier, and company are fetched or set later
-        return stock;
+    public Stock toEntity(StockDto stockDto) {
+        return null;
     }
+
+//    public Stock toEntity(StockDto dto) {
+//        if (dto == null) {
+//            return null;
+//        }
+//
+//        Stock stock = new Stock();
+//        stock.setId(dto.getId());
+//        stock.setQuantity(dto.getQuantity());
+//        stock.setRetailPrice(dto.getPrice());
+//        // Assuming the product, supplier, and company are fetched or set later
+//        return stock;
+//    }
 }

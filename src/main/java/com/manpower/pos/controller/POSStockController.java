@@ -1,7 +1,7 @@
 package com.manpower.pos.controller;
 
 import com.manpower.pos.dto.StockDto;
-import com.manpower.pos.dto.StockMovementDto;
+import com.manpower.pos.enums.StocksForPage;
 import com.manpower.pos.service.StockService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +17,11 @@ public class POSStockController {
     private final StockService stockService;
 
     @GetMapping
-    public ResponseEntity<List<StockDto>> getAllStocks() {
-        return ResponseEntity.ok(stockService.getAllStocks());
+    public ResponseEntity<List<StockDto>> getStocks(
+            @RequestParam(required = false) Integer shopId,
+            @RequestParam(required = false) Integer productId,
+            @RequestParam(required = false) StocksForPage stocksForPage) {
+        return ResponseEntity.ok(stockService.findStocks(shopId, productId, stocksForPage));
     }
 
     @GetMapping("/{id}")
