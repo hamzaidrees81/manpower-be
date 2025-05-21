@@ -38,6 +38,14 @@ public class Purchase {
     @Column(name = "total_amount", nullable = false, precision = 15, scale = 2)
     private BigDecimal totalAmount;
 
+    @NotNull
+    @Column(name = "paid_amount", nullable = false, precision = 15, scale = 2)
+    private BigDecimal paidAmount;
+
+    @NotNull
+    @Column(name = "vat_amount", nullable = false, precision = 15, scale = 2)
+    private BigDecimal vatAmount;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "shop_id")
     private Shop shop;

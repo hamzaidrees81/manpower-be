@@ -19,6 +19,7 @@ public class PurchaseItemDTO {
         private BigDecimal minSalePrice;
         private BigDecimal retailPrice;
         private BigDecimal quantity;
+        private BigDecimal VATAmount;
         private String comments;
         private PricingStrategy pricingStrategy;
 }

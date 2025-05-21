@@ -31,6 +31,8 @@ public class PurchaseMapper {
                 .supplierInvoiceNo(purchase.getSupplierInvoiceNumber())
                 .purchaseDate(purchase.getDate())
                 .totalAmount(purchase.getTotalAmount())
+                .totalVATAmount(purchase.getVatAmount())
+                .paidAmount(purchase.getPaidAmount())
                 .build();
     }
 }

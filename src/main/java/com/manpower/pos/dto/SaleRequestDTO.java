@@ -1,6 +1,7 @@
 package com.manpower.pos.dto;
 
 import com.manpower.model.Payment;
+import com.manpower.pos.enums.AliveStatus;
 import com.manpower.pos.model.Shop;
 import lombok.Data;
 
@@ -11,13 +12,12 @@ import java.util.List;
 @Data
 public class SaleRequestDTO {
     private BigDecimal totalAmount;
-    private String status;
+    private AliveStatus status;
     private Integer customerId;
     private LocalDateTime saleDate;
-    private Shop shop;
     private Integer shopId;
     private String poNumber;
-    private List<Payment> payments;
-
+//    private List<Payment> payments;
+    private BigDecimal paidAmount;
     private List<SaleItemDTO> saleItems;
 }

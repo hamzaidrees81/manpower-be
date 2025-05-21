@@ -13,6 +13,7 @@ import com.manpower.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,9 +30,10 @@ public class SaleMapper {
         sale.setStatus(dto.getStatus());
         sale.setTotalAmount(dto.getTotalAmount());
         sale.setCompany(Company.builder().id(SecurityUtil.getCompanyClaim()).build());
-        sale.setCustomerId(dto.getCustomerId());
+        sale.setClientId(dto.getCustomerId());
         sale.setShop(shopRepository.findById(dto.getShopId()).get());
         sale.setPoNumber(dto.getPoNumber());
+        sale.setPaidAmount(dto.getPaidAmount() !=null ? dto.getPaidAmount() : BigDecimal.ZERO);
 
         List<SaleItem> items = dto.getSaleItems().stream().map(itemDTO -> {
             SaleItem item = new SaleItem();
@@ -56,7 +58,7 @@ public class SaleMapper {
         responseDTO.setSaleDate(sale.getDate());
         responseDTO.setTotalAmount(sale.getTotalAmount());
         responseDTO.setStatus(sale.getStatus());
-        responseDTO.setCustomerId(sale.getCustomerId());
+        responseDTO.setCustomerId(sale.getClientId());
         responseDTO.setShopId(sale.getShop().getId());
         responseDTO.setShop(sale.getShop());
         responseDTO.setPoNumber(sale.getPoNumber());

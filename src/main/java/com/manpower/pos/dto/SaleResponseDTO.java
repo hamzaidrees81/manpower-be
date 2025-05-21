@@ -1,6 +1,7 @@
 package com.manpower.pos.dto;
 
 import com.manpower.model.dto.PaymentDTO;
+import com.manpower.pos.enums.AliveStatus;
 import com.manpower.pos.model.Shop;
 import lombok.Data;
 
@@ -13,7 +14,7 @@ public class SaleResponseDTO {
     private Integer id;
     private Instant saleDate;
     private BigDecimal totalAmount;
-    private String status;
+    private AliveStatus status;
     private Integer customerId;
     private List<SaleItemResponseDTO> saleItems;
     private String poNumber;

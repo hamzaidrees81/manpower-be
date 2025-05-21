@@ -68,6 +68,10 @@ public class StockMovement {
     @Column(name = "related_entity_id")
     private Integer relatedEntityId;
 
+    @NotNull
+    @Column(name = "vat_amount", nullable = false, precision = 15, scale = 2)
+    private BigDecimal vatAmount;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "related_entity_type", nullable = false)
     private RelatedEntityType relatedEntityType;

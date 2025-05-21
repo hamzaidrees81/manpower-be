@@ -16,8 +16,10 @@ public class PurchaseDTO {
     private Integer shopId;
     private String supplierInvoiceNo;
     private List<PurchaseItemDTO> items;
+    private BigDecimal paidAmount;
 
-    BigDecimal totalAmount;
+    private BigDecimal totalAmount;
+    private BigDecimal totalVATAmount;
 
     //additional params
     private SupplierDTO supplier;
