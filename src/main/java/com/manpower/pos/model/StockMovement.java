@@ -31,11 +31,17 @@ public class StockMovement {
     @Column(name = "quantity", precision = 15, scale = 2)
     private BigDecimal quantity;
 
+    @Column(name = "remaining_qty", precision = 15, scale = 2)
+    private BigDecimal remQty;
+
     @Column(name = "buy_price", precision = 15, scale = 2)
     private BigDecimal buyPrice;
 
     @Column(name = "retail_price", precision = 15, scale = 2)
     private BigDecimal retailPrice;
+
+    @Column(name = "sold_price", precision = 15, scale = 2)
+    private BigDecimal soldPrice;
 
     @Column(name = "min_price", precision = 15, scale = 2)
     private BigDecimal minPrice;

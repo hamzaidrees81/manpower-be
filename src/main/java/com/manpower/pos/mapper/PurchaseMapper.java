@@ -11,15 +11,17 @@ import java.util.List;
 public class PurchaseMapper {
     private final ShopMapper shopMapper;
     private final SupplierMapper supplierMapper;
+    private final StockMovementMapper stockMovementMapper;
 
-    public PurchaseMapper(ShopMapper shopMapper, SupplierMapper supplierMapper) {
+    public PurchaseMapper(ShopMapper shopMapper, SupplierMapper supplierMapper, StockMovementMapper stockMovementMapper) {
         this.shopMapper = shopMapper;
         this.supplierMapper = supplierMapper;
+        this.stockMovementMapper = stockMovementMapper;
     }
 
     public PurchaseDTO toDTO(Purchase purchase, List<StockMovement> purchaseItems) {
         PurchaseDTO purchaseDTO = toDTO(purchase);
-        purchaseDTO.setItems(purchaseItems.stream().map(StockMovementMapper::toDto).toList());
+        purchaseDTO.setItems(purchaseItems.stream().map(stockMovementMapper::toPurchaseDto).toList());
         return purchaseDTO;
     }
 

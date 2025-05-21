@@ -2,7 +2,6 @@ package com.manpower.pos.controller;
 
 import com.manpower.pos.dto.PurchaseDTO;
 import com.manpower.pos.dto.PurchaseFilterDTO;
-import com.manpower.pos.model.Purchase;
 import com.manpower.pos.service.PurchaseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/pos/api/purchase")
 @RequiredArgsConstructor
-public class PurchaseController {
+public class POSPurchaseController {
 
     private final PurchaseService purchaseService;
 

@@ -1,18 +1,21 @@
 package com.manpower.pos.mapper;
 
-import com.manpower.pos.dto.PurchaseDTO;
 import com.manpower.pos.dto.PurchaseItemDTO;
-import com.manpower.pos.dto.StockMovementDto;
-import com.manpower.pos.enums.PricingStrategy;
+import com.manpower.pos.dto.SaleItemDTO;
+import com.manpower.pos.dto.SaleItemResponseDTO;
 import com.manpower.pos.model.StockMovement;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 
 @Component
+@RequiredArgsConstructor
 public class StockMovementMapper {
 
-    public static PurchaseItemDTO toDto(StockMovement smvt) {
+    private final ProductMapper productMapper;
+
+    public PurchaseItemDTO toPurchaseDto(StockMovement smvt) {
         if (smvt == null) {
             return null;
         }
@@ -30,6 +33,27 @@ public class StockMovementMapper {
                 .quantity(smvt.getQuantity())
                 .comments(smvt.getComments())
                 .pricingStrategy(smvt.getPricingStrategy())
+                .build();
+        return dto;
+    }
+
+    public SaleItemResponseDTO toSaleDTO(StockMovement smvt) {
+        if (smvt == null) {
+            return null;
+        }
+
+
+        SaleItemResponseDTO dto = SaleItemResponseDTO
+                .builder()
+                .saleItemId(smvt.getId())
+                .productId(smvt.getProduct().getId())
+                .quantity(smvt.getQuantity())
+                .unitPrice(smvt.getRetailPrice())
+                .soldPrice(smvt.getSoldPrice())
+                .totalPrice(smvt.getRetailPrice().multiply(smvt.getQuantity()))
+                .discount(smvt.getRetailPrice().subtract(smvt.getSoldPrice()))
+                .tax(smvt.getVatAmount())
+                .product(productMapper.toDto(smvt.getProduct()))
                 .build();
         return dto;
     }

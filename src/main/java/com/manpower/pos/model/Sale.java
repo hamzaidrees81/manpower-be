@@ -1,6 +1,7 @@
 package com.manpower.pos.model;
 
 import com.manpower.model.Company;
+import com.manpower.pos.enums.AliveStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -22,8 +23,8 @@ public class Sale {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @Column(name = "customer_id")
-    private Integer customerId;
+    @Column(name = "client_id ")
+    private Integer clientId;
 
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "date")
@@ -34,16 +35,21 @@ public class Sale {
     private BigDecimal totalAmount;
 
     @NotNull
-    @Lob
+    @Column(name = "vat_amount", nullable = false, precision = 15, scale = 2)
+    private BigDecimal vatAmount;
+
+    @NotNull
+    @Column(name = "paid_amount", nullable = false, precision = 15, scale = 2)
+    private BigDecimal paidAmount;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    private String status;
+    private AliveStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
     private Company company;
-
-    @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<SaleItem> saleItems = new ArrayList<>();
 
     @Column(name = "sale_date")
     private Instant saleDate;

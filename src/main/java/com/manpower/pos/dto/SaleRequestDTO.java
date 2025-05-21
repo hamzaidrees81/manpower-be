@@ -12,12 +12,12 @@ import java.util.List;
 @Data
 public class SaleRequestDTO {
     private BigDecimal totalAmount;
+    private BigDecimal vatAmount;
     private AliveStatus status;
     private Integer customerId;
     private LocalDateTime saleDate;
     private Integer shopId;
     private String poNumber;
-//    private List<Payment> payments;
     private BigDecimal paidAmount;
     private List<SaleItemDTO> saleItems;
 }

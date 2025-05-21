@@ -13,6 +13,7 @@ import com.manpower.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -60,6 +61,11 @@ public class StockService {
                     return stockMapper.toDto(saved);
                 });
     }
+
+    public Stock updateStock(Stock stock) {
+        return stockRepository.save(stock);
+    }
+
 
     public boolean deleteStock(Integer id) {
         if (stockRepository.existsById(id)) {
@@ -115,6 +121,10 @@ public class StockService {
         return stockMovementRepository.findByRelatedEntityTypeAndRelatedEntityId(relatedEntityType, purchaseId);
     }
 
+    public List<StockMovement> findSaleItems(RelatedEntityType relatedEntityType, Integer saleId) {
+        return stockMovementRepository.findByRelatedEntityTypeAndRelatedEntityId(relatedEntityType, saleId);
+    }
+
     public List<Stock> getAllStocksByCompanyId() {
         return stockRepository.findAllByCompanyId(SecurityUtil.getCompanyClaim());
 
@@ -132,26 +142,34 @@ public class StockService {
         return stockRepository.findAllByProduct_IdAndCompany_Id(productId, SecurityUtil.getCompanyClaim());
     }
 
+
+    public List<StockMovement> findAvailableStockMovementListAsc(Integer shopId, Integer productId) {
+        return stockMovementRepository.
+                findAllByProduct_IdAndShop_IdAndCompany_IdAndRemQtyGreaterThanOrderByIdAsc(
+                        productId,
+                        shopId,
+                        SecurityUtil.getCompanyClaim(),
+                        BigDecimal.ZERO
+                );
+    }
+
     public List<StockDto> findStocks(Integer shopId, Integer productId, StocksForPage stocksForPage) {
         List<StockDto> stocksList;
 
         //get all stocks or by shop or by product id
-        if(shopId != null && productId != null) {
-            stocksList = getAllStocksByProductIdShopIdCompanyId(productId,shopId).stream().map(stockMapper::toDto).toList();
+        if (shopId != null && productId != null) {
+            stocksList = getAllStocksByProductIdShopIdCompanyId(productId, shopId).stream().map(stockMapper::toDto).toList();
         }
-        if(shopId != null && productId == null) {
+        if (shopId != null && productId == null) {
             stocksList = getAllStocksByShopIdCompanyId(shopId).stream().map(stockMapper::toDto).toList();
-        }
-        else if(shopId == null && productId != null) {
+        } else if (shopId == null && productId != null) {
             stocksList = getProductStocksAllShopsCompanyId(productId).stream().map(stockMapper::toDto).toList();
-        }
-        else
+        } else
             stocksList = getAllStocksByCompanyId().stream().map(stockMapper::toDto).toList();
 
-        if(StocksForPage.PURCHASE.equals(stocksForPage)) {
+        if (StocksForPage.PURCHASE.equals(stocksForPage)) {
             //also show buy price if purchase - take buy from latest stock movement
-            for(StockDto stockDto : stocksList)
-            {
+            for (StockDto stockDto : stocksList) {
                 Optional<StockMovement> stockMovementOtp =
                         stockMovementRepository.
                                 findTopByProduct_IdAndShop_IdAndCompany_IdOrderByIdDesc(
@@ -159,7 +177,7 @@ public class StockService {
                                         shopId,
                                         SecurityUtil.getCompanyClaim()
                                 );
-                if(stockMovementOtp.isEmpty())
+                if (stockMovementOtp.isEmpty())
                     continue;
                 StockMovement stockMovement = stockMovementOtp.get();
                 stockDto.setBuyPrice(stockMovement.getBuyPrice());

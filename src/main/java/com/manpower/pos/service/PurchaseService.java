@@ -121,6 +121,7 @@ public class PurchaseService {
                     .builder()
                     .product(stock.getProduct())
                     .quantity(item.getQuantity())
+                    .remQty(item.getQuantity()) //assign rem qty
                     .buyPrice(item.getBuyPrice())
                     .retailPrice(item.getRetailPrice())
                     .minPrice(item.getMinSalePrice())

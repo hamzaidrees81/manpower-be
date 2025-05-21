@@ -2,11 +2,14 @@ package com.manpower.pos.mapper;
 
 import com.manpower.model.Company;
 import com.manpower.model.User;
+import com.manpower.pos.dto.PurchaseDTO;
 import com.manpower.pos.dto.SaleItemResponseDTO;
 import com.manpower.pos.dto.SaleRequestDTO;
 import com.manpower.pos.dto.SaleResponseDTO;
+import com.manpower.pos.model.Purchase;
 import com.manpower.pos.model.Sale;
 import com.manpower.pos.model.SaleItem;
+import com.manpower.pos.model.StockMovement;
 import com.manpower.pos.repository.ProductRepository;
 import com.manpower.pos.repository.ShopRepository;
 import com.manpower.util.SecurityUtil;
@@ -23,6 +26,7 @@ import java.util.stream.Collectors;
 public class SaleMapper {
     private final ProductRepository productRepository;
     private final ShopRepository shopRepository;
+    private final StockMovementMapper stockMovementMapper;
 
     public Sale toEntity(SaleRequestDTO dto, Company company, User user) {
         Sale sale = new Sale();
@@ -34,21 +38,14 @@ public class SaleMapper {
         sale.setShop(shopRepository.findById(dto.getShopId()).get());
         sale.setPoNumber(dto.getPoNumber());
         sale.setPaidAmount(dto.getPaidAmount() !=null ? dto.getPaidAmount() : BigDecimal.ZERO);
-
-        List<SaleItem> items = dto.getSaleItems().stream().map(itemDTO -> {
-            SaleItem item = new SaleItem();
-            item.setProduct(productRepository.getReferenceById(Long.valueOf(itemDTO.getProductId())));
-            item.setQuantity(itemDTO.getQuantity());
-            item.setUnitPrice(itemDTO.getUnitPrice());
-            item.setDiscount(itemDTO.getDiscount());
-            item.setTax(itemDTO.getTax());
-            item.setSale(sale);
-            item.setCompany(company);
-            return item;
-        }).collect(Collectors.toList());
-
-        sale.setSaleItems(items);
+        sale.setVatAmount(dto.getVatAmount() !=null ? dto.getVatAmount() : BigDecimal.ZERO);
         return sale;
+    }
+
+    public SaleResponseDTO toDTO(Sale sale, List<StockMovement> saleItems) {
+        SaleResponseDTO saleResponseDTO = toResponseDTO(sale);
+        saleResponseDTO.setSaleItems(saleItems.stream().map(stockMovementMapper::toSaleDTO).toList());
+        return saleResponseDTO;
     }
 
     // Mapping from entity to response DTO
@@ -62,25 +59,6 @@ public class SaleMapper {
         responseDTO.setShopId(sale.getShop().getId());
         responseDTO.setShop(sale.getShop());
         responseDTO.setPoNumber(sale.getPoNumber());
-
-        List<SaleItemResponseDTO> itemDTOs = sale.getSaleItems().stream().map(item -> {
-            SaleItemResponseDTO itemDTO = new SaleItemResponseDTO();
-            itemDTO.setProductId(item.getProduct().getId());
-            itemDTO.setProductName(item.getProduct().getName());
-            itemDTO.setQuantity(item.getQuantity());
-            itemDTO.setUnitPrice(item.getUnitPrice());
-            itemDTO.setDiscount(item.getDiscount());
-            itemDTO.setTax(item.getTax());
-            itemDTO.setTotalPrice(
-                    item.getUnitPrice().multiply(item.getQuantity())
-                            .subtract(item.getDiscount()).add(item.getTax())
-            );
-            return itemDTO;
-        }).collect(Collectors.toList());
-
-        //TODO: HANDLE PAYMENTS LIKE SALE ITEMS
-
-        responseDTO.setSaleItems(itemDTOs);
         return responseDTO;
     }
 }
