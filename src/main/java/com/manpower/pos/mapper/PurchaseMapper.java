@@ -28,6 +28,7 @@ public class PurchaseMapper {
     public PurchaseDTO toDTO(Purchase purchase) {
         return PurchaseDTO
                 .builder()
+                .purchaseId(purchase.getId())
                 .shop(shopMapper.toDTO(purchase.getShop()))
                 .supplier(supplierMapper.toDTO(purchase.getSupplier()))
                 .supplierInvoiceNo(purchase.getSupplierInvoiceNumber())

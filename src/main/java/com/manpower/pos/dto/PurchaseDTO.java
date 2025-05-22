@@ -12,6 +12,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @AllArgsConstructor
 public class PurchaseDTO {
+    private Integer purchaseId;
     private Integer supplierId;
     private Integer shopId;
     private String supplierInvoiceNo;

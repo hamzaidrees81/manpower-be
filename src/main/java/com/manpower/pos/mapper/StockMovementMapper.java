@@ -28,7 +28,7 @@ public class StockMovementMapper {
                 .storageRack(smvt.getStorageRack())
                 .buyPrice(smvt.getBuyPrice())
                 .minSalePrice(smvt.getMinPrice())
-                .VATAmount(smvt.getVatAmount())
+                .vatAmount(smvt.getVatAmount())
                 .retailPrice(smvt.getRetailPrice())
                 .quantity(smvt.getQuantity())
                 .comments(smvt.getComments())

@@ -134,7 +134,7 @@ public class PurchaseService {
                     .comments(item.getComments())
                     .storageRack(item.getStorageRack())
                     .company(stock.getCompany())
-                    .vatAmount(item.getVATAmount())
+                    .vatAmount(item.getVatAmount())
                     .status(AliveStatus.ACTIVE)
                     .shop(stock.getShop())
                     .build();
