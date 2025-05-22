@@ -27,6 +27,7 @@ public class SaleMapper {
     private final ProductRepository productRepository;
     private final ShopRepository shopRepository;
     private final StockMovementMapper stockMovementMapper;
+    private final ShopMapper shopMapper;
 
     public Sale toEntity(SaleRequestDTO dto, Company company, User user) {
         Sale sale = new Sale();
@@ -57,7 +58,7 @@ public class SaleMapper {
         responseDTO.setStatus(sale.getStatus());
         responseDTO.setCustomerId(sale.getClientId());
         responseDTO.setShopId(sale.getShop().getId());
-        responseDTO.setShop(sale.getShop());
+        responseDTO.setShop(shopMapper.toDTO(sale.getShop()));
         responseDTO.setPoNumber(sale.getPoNumber());
         return responseDTO;
     }

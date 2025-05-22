@@ -2,14 +2,13 @@ package com.manpower.pos.service;
 
 import com.manpower.model.Company;
 import com.manpower.model.User;
-import com.manpower.pos.dto.PurchaseDTO;
-import com.manpower.pos.dto.SaleItemDTO;
-import com.manpower.pos.dto.SaleRequestDTO;
-import com.manpower.pos.dto.SaleResponseDTO;
+import com.manpower.pos.dto.*;
 import com.manpower.pos.enums.AliveStatus;
 import com.manpower.pos.enums.RelatedEntityType;
 import com.manpower.pos.enums.StockMovementReason;
 import com.manpower.pos.enums.StockMovementType;
+import com.manpower.pos.filter.PurchaseSpecification;
+import com.manpower.pos.filter.SaleSpecification;
 import com.manpower.pos.mapper.SaleMapper;
 import com.manpower.pos.model.*;
 import com.manpower.pos.repository.SaleRepository;
@@ -136,7 +135,6 @@ public class SaleService {
 
 
     public SaleResponseDTO getSale(Integer saleId) {
-
         //get purchase row
         Optional<Sale> saleOpt = saleRepository.findById(saleId);
         if(saleOpt.isEmpty()) {
@@ -148,5 +146,10 @@ public class SaleService {
         //get all purchase items
         List<StockMovement> saleItems = stockService.findSaleItems(RelatedEntityType.SALE, saleId);
         return saleMapper.toDTO(sale, saleItems);
+    }
+
+    public List<SaleResponseDTO> filterSales(SaleFilterRequest dto) {
+        List<Sale> sales = saleRepository.findAll(SaleSpecification.filter(dto));
+        return sales.stream().map(saleMapper::toResponseDTO).toList();
     }
 }

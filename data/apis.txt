@@ -76,3 +76,23 @@ public enum PricingStrategy{
 
 
 9. Create SALE:
+{
+  "totalAmount": 1000,
+  "vatAmount": 150,
+  "customerId": 5,
+  "saleDate": "2025-05-22T12:36:51.635Z",
+  "shopId": 1,
+  "poNumber": "PO123",
+  "paidAmount": 100,
+  "saleItems": [
+    {
+      "productId": 1,
+      "quantity": 5,
+      "unitPrice": 60,
+      "soldPrice": 55,
+      "totalPrice": 275,
+      "discount": 0,
+      "tax": 150
+    }
+  ]
+}

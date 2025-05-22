@@ -19,6 +19,6 @@ public class SaleResponseDTO {
     private List<SaleItemResponseDTO> saleItems;
     private String poNumber;
     private Integer shopId;
-    private Shop shop;
+    private ShopDTO shop;
     private List<PaymentDTO> payments;
 }
