@@ -1,0 +1,75 @@
+1. create a supplier:
+
+{
+  "name": "Hamza Supplier 1",
+  "address": "Riyadh"
+}
+
+2. Create a shop:
+{
+  "shopName": "Hamza Shop 1"
+}
+
+
+3. Create category:
+{
+  "categoryName": "Mobiles"
+}
+
+
+4. Create Brand:
+{
+  "brandName": "APPLE"
+}
+
+
+5. Create a product:
+
+{
+  "name": "Apple iPhone 15 Pro Max",
+  "namePrint": "Apple iPhone 15 Pro Max",
+  "namePrintAr": "Apple iPhone 15 Pro Max",
+  "code": "IP-15-PX",
+  "productCode": "IP-15-PX",
+  "comments": "A good phone",
+  "categoryId": 1,
+  "brandId": 1
+}
+
+
+6. Create a purchase:
+
+{
+  "supplierId": 1,
+  "shopId": 1,
+  "supplierInvoiceNo": "INV123",
+  "paidAmount": 2000,
+  "vatAmount": 200,
+  "items": [
+    {
+      "productId": 1,
+      "batchNo": "Batch-001",
+      "storageRack": "Rack123",
+      "buyPrice": 500000,
+      "minSalePrice": 600000,
+      "retailPrice": 650000,
+	  "vatAmount": 200,
+      "quantity": 10,
+      "comments": "first purchase",
+      "pricingStrategy": "MAXIMUM_PRICE"
+    }
+  ]
+}
+
+
+public enum PricingStrategy{
+    MAXIMUM_PRICE,
+    LATEST_PRICE,
+    MIN_PRICE
+}
+
+7. See the created Purchase
+/pos/api/purchase/{purchaseId}
+
+
+8.
