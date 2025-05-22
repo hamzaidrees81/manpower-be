@@ -47,6 +47,7 @@ public class SaleService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         Sale saleInput = saleMapper.toEntity(dto, company, user);
+        saleInput.setStatus(AliveStatus.ACTIVE);
         final Sale sale = saleRepository.save(saleInput);
 
         //store sale changes in stock movement

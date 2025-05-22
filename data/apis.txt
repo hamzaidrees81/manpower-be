@@ -72,4 +72,7 @@ public enum PricingStrategy{
 /pos/api/purchase/{purchaseId}
 
 
-8.
+8. Check stocks:
+
+
+9. Create SALE:
