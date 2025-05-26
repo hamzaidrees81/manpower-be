@@ -2,7 +2,10 @@ package com.manpower.pos.mapper;
 
 import com.manpower.pos.dto.StockDto;
 import com.manpower.pos.model.Stock;
+import com.manpower.service.PreferenceService;
 import org.springframework.stereotype.Component;
+
+import java.math.BigDecimal;
 
 @Component
 public class StockMapper {
@@ -10,11 +13,13 @@ public class StockMapper {
     private final ProductMapper productMapper;
     private final SupplierMapper supplierMapper;
     private final ShopMapper shopMapper;
+    private final PreferenceService preferenceService;
 
-    public StockMapper(ProductMapper productMapper, SupplierMapper supplierMapper, ShopMapper shopMapper) {
+    public StockMapper(ProductMapper productMapper, SupplierMapper supplierMapper, ShopMapper shopMapper, PreferenceService preferenceService) {
         this.productMapper = productMapper;
         this.supplierMapper = supplierMapper;
         this.shopMapper = shopMapper;
+        this.preferenceService = preferenceService;
     }
 
     public StockDto toDto(Stock stock) {
@@ -31,6 +36,8 @@ public class StockMapper {
         dto.setMinPrice(stock.getMinSalePrice());
         dto.setShop(shopMapper.toDTO(stock.getShop()));
         dto.setStorageRack(stock.getStorageRack());
+        dto.setTax(stock.getRetailPrice().multiply(preferenceService.findVATAmount()));
+        dto.setDiscount(BigDecimal.ONE); //TODO: add me
         return dto;
     }
 

@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 public class PreferenceService {
   private final PreferencesRepository preferencesRepository;
 
-  BigDecimal findVATAmount()
+  public BigDecimal findVATAmount()
   {
     Integer companyId = SecurityUtil.getCompanyClaim();
     return preferencesRepository.findByCompany_Id(companyId).getTaxAmount();

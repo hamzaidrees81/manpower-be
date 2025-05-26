@@ -18,6 +18,8 @@ public class StockDto {
     private BigDecimal retailPrice;
     private BigDecimal minPrice;
     private BigDecimal buyPrice;
+    private BigDecimal discount;
+    private BigDecimal tax;
     private String storageRack;
     private ShopDTO shop;
 }
