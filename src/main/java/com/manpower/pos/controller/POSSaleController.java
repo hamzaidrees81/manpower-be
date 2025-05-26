@@ -22,7 +22,7 @@ public class POSSaleController {
     }
 
     @GetMapping("/{saleId}")
-    public ResponseEntity<SaleResponseDTO> getSale(@RequestParam Integer saleId) {
+    public ResponseEntity<SaleResponseDTO> getSale(@RequestParam Integer saleId) throws Exception {
         return ResponseEntity.ok().body(saleService.getSale(saleId));
     }
 

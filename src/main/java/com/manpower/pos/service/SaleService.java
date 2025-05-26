@@ -134,7 +134,7 @@ public class SaleService {
     }
 
 
-    public SaleResponseDTO getSale(Integer saleId) {
+    public SaleResponseDTO getSale(Integer saleId) throws Exception {
         //get purchase row
         Optional<Sale> saleOpt = saleRepository.findById(saleId);
         if(saleOpt.isEmpty()) {
