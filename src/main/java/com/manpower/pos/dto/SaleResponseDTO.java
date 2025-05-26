@@ -1,5 +1,6 @@
 package com.manpower.pos.dto;
 
+import com.manpower.model.Client;
 import com.manpower.model.dto.PaymentDTO;
 import com.manpower.pos.enums.AliveStatus;
 import com.manpower.pos.model.Shop;
@@ -16,6 +17,7 @@ public class SaleResponseDTO {
     private BigDecimal totalAmount;
     private AliveStatus status;
     private Integer customerId;
+    private Client client;
     private List<SaleItemResponseDTO> saleItems;
     private String poNumber;
     private Integer shopId;

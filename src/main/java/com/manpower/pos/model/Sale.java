@@ -25,9 +25,6 @@ public class Sale {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "client_id")
-    private Integer clientId;
-
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "date")
     private Instant date;

@@ -1,5 +1,6 @@
 package com.manpower.pos.mapper;
 
+import com.manpower.model.Client;
 import com.manpower.model.Company;
 import com.manpower.model.User;
 import com.manpower.pos.dto.PurchaseDTO;
@@ -35,7 +36,7 @@ public class SaleMapper {
         sale.setStatus(dto.getStatus());
         sale.setTotalAmount(dto.getTotalAmount());
         sale.setCompany(Company.builder().id(SecurityUtil.getCompanyClaim()).build());
-        sale.setClientId(dto.getCustomerId());
+        sale.setClient(Client.builder().id(dto.getCustomerId()).build());
         sale.setShop(shopRepository.findById(dto.getShopId()).get());
         sale.setPoNumber(dto.getPoNumber());
         sale.setPaidAmount(dto.getPaidAmount() !=null ? dto.getPaidAmount() : BigDecimal.ZERO);
@@ -58,7 +59,8 @@ public class SaleMapper {
         responseDTO.setSaleDate(sale.getDate());
         responseDTO.setTotalAmount(sale.getTotalAmount());
         responseDTO.setStatus(sale.getStatus());
-        responseDTO.setCustomerId(sale.getClientId());
+        responseDTO.setCustomerId(sale.getClient().getId());
+        responseDTO.setClient(sale.getClient());
         responseDTO.setShopId(sale.getShop().getId());
         responseDTO.setShop(shopMapper.toDTO(sale.getShop()));
         responseDTO.setPoNumber(sale.getPoNumber());
