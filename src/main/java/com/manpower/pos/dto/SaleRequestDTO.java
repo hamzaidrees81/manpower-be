@@ -11,6 +11,8 @@ import java.util.List;
 
 @Data
 public class SaleRequestDTO {
+    private BigDecimal totalBeforeVat;
+    private BigDecimal discountPercentage;
     private BigDecimal totalAmount;
     private BigDecimal vatAmount;
     private AliveStatus status;

@@ -59,4 +59,8 @@ public class Purchase {
     @JoinColumn(name = "company_id")
     private Company company;
 
+    @NotNull
+    @Column(name = "total_before_vat", nullable = false, precision = 15, scale = 2)
+    private BigDecimal totalBeforeVat;
+
 }

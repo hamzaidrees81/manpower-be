@@ -51,6 +51,7 @@ public class PurchaseService {
                 .status(AliveStatus.ACTIVE)
                 .paidAmount(purchaseDTO.getPaidAmount() != null ? purchaseDTO.getPaidAmount() : BigDecimal.ZERO)
                 .vatAmount(purchaseDTO.getTotalVATAmount()!=null ? purchaseDTO.getTotalVATAmount() : BigDecimal.ZERO)
+                .totalBeforeVat(purchaseDTO.getTotalBeforeVat())
                 .build();
 
         purchase = purchaseRepository.save(purchase);

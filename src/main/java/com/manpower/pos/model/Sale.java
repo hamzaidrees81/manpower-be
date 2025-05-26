@@ -1,5 +1,6 @@
 package com.manpower.pos.model;
 
+import com.manpower.model.Client;
 import com.manpower.model.Company;
 import com.manpower.pos.enums.AliveStatus;
 import jakarta.persistence.*;
@@ -24,7 +25,7 @@ public class Sale {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "client_id ")
+    @Column(name = "client_id")
     private Integer clientId;
 
     @ColumnDefault("CURRENT_TIMESTAMP")
@@ -62,5 +63,18 @@ public class Sale {
     @Size(max = 50)
     @Column(name = "po_number", length = 50)
     private String poNumber;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "client_id", nullable = false)
+    private Client client;
+
+    @NotNull
+    @Column(name = "total_before_vat", nullable = false, precision = 15, scale = 2)
+    private BigDecimal totalBeforeVat;
+
+    @NotNull
+    @Column(name = "discount_percentage", nullable = false, precision = 15, scale = 2)
+    private BigDecimal discountPercentage;
 
 }

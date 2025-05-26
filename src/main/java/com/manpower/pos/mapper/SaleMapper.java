@@ -40,6 +40,8 @@ public class SaleMapper {
         sale.setPoNumber(dto.getPoNumber());
         sale.setPaidAmount(dto.getPaidAmount() !=null ? dto.getPaidAmount() : BigDecimal.ZERO);
         sale.setVatAmount(dto.getVatAmount() !=null ? dto.getVatAmount() : BigDecimal.ZERO);
+        sale.setTotalBeforeVat(dto.getTotalBeforeVat());
+        sale.setDiscountPercentage(dto.getDiscountPercentage());
         return sale;
     }
 
@@ -60,6 +62,8 @@ public class SaleMapper {
         responseDTO.setShopId(sale.getShop().getId());
         responseDTO.setShop(shopMapper.toDTO(sale.getShop()));
         responseDTO.setPoNumber(sale.getPoNumber());
+        sale.setTotalBeforeVat(sale.getTotalBeforeVat());
+        sale.setDiscountPercentage(sale.getDiscountPercentage());
         return responseDTO;
     }
 }

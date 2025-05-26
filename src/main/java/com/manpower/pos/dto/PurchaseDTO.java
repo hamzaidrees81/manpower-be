@@ -18,6 +18,7 @@ public class PurchaseDTO {
     private String supplierInvoiceNo;
     private List<PurchaseItemDTO> items;
     private BigDecimal paidAmount;
+    private BigDecimal totalBeforeVat;
 
     private BigDecimal totalAmount;
     private BigDecimal totalVATAmount;

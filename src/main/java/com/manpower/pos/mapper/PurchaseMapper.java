@@ -36,6 +36,7 @@ public class PurchaseMapper {
                 .totalAmount(purchase.getTotalAmount())
                 .totalVATAmount(purchase.getVatAmount())
                 .paidAmount(purchase.getPaidAmount())
+                .totalBeforeVat(purchase.getTotalBeforeVat())
                 .build();
     }
 }
