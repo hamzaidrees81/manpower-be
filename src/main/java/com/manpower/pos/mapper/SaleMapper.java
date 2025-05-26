@@ -13,6 +13,7 @@ import com.manpower.pos.model.SaleItem;
 import com.manpower.pos.model.StockMovement;
 import com.manpower.pos.repository.ProductRepository;
 import com.manpower.pos.repository.ShopRepository;
+import com.manpower.service.ZatkaService;
 import com.manpower.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -29,6 +30,7 @@ public class SaleMapper {
     private final ShopRepository shopRepository;
     private final StockMovementMapper stockMovementMapper;
     private final ShopMapper shopMapper;
+    private final ZatkaService zatkaService;
 
     public Sale toEntity(SaleRequestDTO dto, Company company, User user) {
         Sale sale = new Sale();
@@ -46,9 +48,15 @@ public class SaleMapper {
         return sale;
     }
 
-    public SaleResponseDTO toDTO(Sale sale, List<StockMovement> saleItems) {
+    public SaleResponseDTO toDTO(Sale sale, List<StockMovement> saleItems) throws Exception {
         SaleResponseDTO saleResponseDTO = toResponseDTO(sale);
+//        public String generateQR(String sellerName , String vatNumber, String timestamp, String totalWithVat, String vatAmount) throws Exception {
+
+        String qrCode = zatkaService.generateQR(sale.getCompany().getName(), sale.getCompany().getVat(),
+                sale.getSaleDate().toString(), sale.getTotalAmount().toString(), sale.getVatAmount().toString());
+        saleResponseDTO.setQRCode(qrCode);
         saleResponseDTO.setSaleItems(saleItems.stream().map(stockMovementMapper::toSaleDTO).toList());
+
         return saleResponseDTO;
     }
 
@@ -66,6 +74,7 @@ public class SaleMapper {
         responseDTO.setPoNumber(sale.getPoNumber());
         sale.setTotalBeforeVat(sale.getTotalBeforeVat());
         sale.setDiscountPercentage(sale.getDiscountPercentage());
+
         return responseDTO;
     }
 }

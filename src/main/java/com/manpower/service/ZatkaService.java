@@ -10,7 +10,7 @@ import java.util.Map;
 @Service
 public class ZatkaService {
 
-    String generateQR(String sellerName , String vatNumber, String timestamp, String totalWithVat, String vatAmount) throws Exception {
+    public String generateQR(String sellerName , String vatNumber, String timestamp, String totalWithVat, String vatAmount) throws Exception {
 
         String zatcaBase64 = TLVUtil.generateZatcaBase64(sellerName, vatNumber, timestamp, totalWithVat, vatAmount);
         String qrBase64 = QRCodeGenerator.generateQRCodeImage(zatcaBase64, 300, 300);

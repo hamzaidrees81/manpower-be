@@ -23,4 +23,5 @@ public class SaleResponseDTO {
     private Integer shopId;
     private ShopDTO shop;
     private List<PaymentDTO> payments;
+    String QRCode;
 }
