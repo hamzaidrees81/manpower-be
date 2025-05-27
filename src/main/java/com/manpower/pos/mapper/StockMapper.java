@@ -31,7 +31,7 @@ public class StockMapper {
         dto.setId(stock.getId());
         dto.setProductId(stock.getProduct().getId());
         dto.setProduct(productMapper.toDto(stock.getProduct()));
-        dto.setQuantity(stock.getQuantity());
+        dto.setStockQty(stock.getQuantity());
         dto.setRetailPrice(stock.getRetailPrice());
         dto.setMinPrice(stock.getMinSalePrice());
         dto.setShop(shopMapper.toDTO(stock.getShop()));
