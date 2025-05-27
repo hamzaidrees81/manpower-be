@@ -69,9 +69,9 @@ public class SaleMapper {
         responseDTO.setShopId(sale.getShop().getId());
         responseDTO.setShop(shopMapper.toDTO(sale.getShop()));
         responseDTO.setPoNumber(sale.getPoNumber());
+        responseDTO.setCompany(CompanyMapper.toDTO(sale.getCompany()));
         sale.setTotalBeforeVat(sale.getTotalBeforeVat());
         sale.setDiscountPercentage(sale.getDiscountPercentage());
-        sale.setCompany(CompanyMapper.toDTO(sale.getCompany()));
         return responseDTO;
     }
 }
