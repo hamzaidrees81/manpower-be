@@ -1,8 +1,6 @@
 package com.manpower.pos.dto;
 
-import com.manpower.model.Payment;
 import com.manpower.pos.enums.AliveStatus;
-import com.manpower.pos.model.Shop;
 import lombok.Data;
 
 import java.math.BigDecimal;

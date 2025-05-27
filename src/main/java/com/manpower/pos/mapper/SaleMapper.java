@@ -1,15 +1,12 @@
 package com.manpower.pos.mapper;
 
+import com.manpower.mapper.ClientMapper;
 import com.manpower.model.Client;
 import com.manpower.model.Company;
 import com.manpower.model.User;
-import com.manpower.pos.dto.PurchaseDTO;
-import com.manpower.pos.dto.SaleItemResponseDTO;
 import com.manpower.pos.dto.SaleRequestDTO;
 import com.manpower.pos.dto.SaleResponseDTO;
-import com.manpower.pos.model.Purchase;
 import com.manpower.pos.model.Sale;
-import com.manpower.pos.model.SaleItem;
 import com.manpower.pos.model.StockMovement;
 import com.manpower.pos.repository.ProductRepository;
 import com.manpower.pos.repository.ShopRepository;
@@ -21,7 +18,6 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -34,7 +30,7 @@ public class SaleMapper {
 
     public Sale toEntity(SaleRequestDTO dto, Company company, User user) {
         Sale sale = new Sale();
-        sale.setDate(Instant.now());
+        sale.setDate(Instant.from(dto.getSaleDate()));
         sale.setStatus(dto.getStatus());
         sale.setTotalAmount(dto.getTotalAmount());
         sale.setCompany(Company.builder().id(SecurityUtil.getCompanyClaim()).build());
@@ -53,7 +49,7 @@ public class SaleMapper {
 //        public String generateQR(String sellerName , String vatNumber, String timestamp, String totalWithVat, String vatAmount) throws Exception {
 
         String qrCode = zatkaService.generateQR(sale.getCompany().getName(), sale.getCompany().getVat(),
-                sale.getSaleDate().toString(), sale.getTotalAmount().toString(), sale.getVatAmount().toString());
+                sale.getDate().toString(), sale.getTotalAmount().toString(), sale.getVatAmount().toString());
         saleResponseDTO.setQRCode(qrCode);
         saleResponseDTO.setSaleItems(saleItems.stream().map(stockMovementMapper::toSaleDTO).toList());
 
@@ -68,7 +64,7 @@ public class SaleMapper {
         responseDTO.setTotalAmount(sale.getTotalAmount());
         responseDTO.setStatus(sale.getStatus());
         responseDTO.setCustomerId(sale.getClient().getId());
-        responseDTO.setClient(sale.getClient());
+        responseDTO.setClient(ClientMapper.toDTO(sale.getClient()));
         responseDTO.setShopId(sale.getShop().getId());
         responseDTO.setShop(shopMapper.toDTO(sale.getShop()));
         responseDTO.setPoNumber(sale.getPoNumber());

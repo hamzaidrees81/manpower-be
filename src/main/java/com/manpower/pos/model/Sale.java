@@ -50,9 +50,6 @@ public class Sale {
     @JoinColumn(name = "company_id")
     private Company company;
 
-    @Column(name = "sale_date")
-    private Instant saleDate;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "shop_id")
     private Shop shop;
