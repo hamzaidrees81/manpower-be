@@ -4,6 +4,7 @@ import com.manpower.pos.enums.AliveStatus;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -15,7 +16,7 @@ public class SaleRequestDTO {
     private BigDecimal vatAmount;
     private AliveStatus status;
     private Integer customerId;
-    private LocalDateTime saleDate;
+    private Instant saleDate;
     private Integer shopId;
     private String poNumber;
     private BigDecimal paidAmount;

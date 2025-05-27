@@ -30,7 +30,7 @@ public class SaleMapper {
 
     public Sale toEntity(SaleRequestDTO dto, Company company, User user) {
         Sale sale = new Sale();
-        sale.setDate(Instant.from(dto.getSaleDate()));
+        sale.setDate(dto.getSaleDate());
         sale.setStatus(dto.getStatus());
         sale.setTotalAmount(dto.getTotalAmount());
         sale.setCompany(Company.builder().id(SecurityUtil.getCompanyClaim()).build());
