@@ -1,7 +1,9 @@
 package com.manpower.pos.dto;
 
 import com.manpower.model.Client;
+import com.manpower.model.Company;
 import com.manpower.model.dto.ClientDTO;
+import com.manpower.model.dto.CompanyDTO;
 import com.manpower.model.dto.PaymentDTO;
 import com.manpower.pos.enums.AliveStatus;
 import com.manpower.pos.model.Shop;
@@ -24,5 +26,6 @@ public class SaleResponseDTO {
     private Integer shopId;
     private ShopDTO shop;
     private List<PaymentDTO> payments;
+    private CompanyDTO company;
     String QRCode;
 }

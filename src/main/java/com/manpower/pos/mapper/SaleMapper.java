@@ -1,6 +1,7 @@
 package com.manpower.pos.mapper;
 
 import com.manpower.mapper.ClientMapper;
+import com.manpower.mapper.CompanyMapper;
 import com.manpower.model.Client;
 import com.manpower.model.Company;
 import com.manpower.model.User;
@@ -70,7 +71,7 @@ public class SaleMapper {
         responseDTO.setPoNumber(sale.getPoNumber());
         sale.setTotalBeforeVat(sale.getTotalBeforeVat());
         sale.setDiscountPercentage(sale.getDiscountPercentage());
-
+        sale.setCompany(CompanyMapper.toDTO(sale.getCompany()));
         return responseDTO;
     }
 }
