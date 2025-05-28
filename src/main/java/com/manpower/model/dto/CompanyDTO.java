@@ -14,6 +14,7 @@ public class CompanyDTO {
     private Integer maxAssetCount;
     private String headerImageUrl;
     private String footerImageUrl;
+    private String logoImageUrl; // fix me
     private String bankAccountTitle;
     private String bankAccountNumber;
     private String bankIban;
