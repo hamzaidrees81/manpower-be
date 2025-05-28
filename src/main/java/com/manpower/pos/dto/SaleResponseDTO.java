@@ -6,6 +6,7 @@ import com.manpower.model.dto.ClientDTO;
 import com.manpower.model.dto.CompanyDTO;
 import com.manpower.model.dto.PaymentDTO;
 import com.manpower.pos.enums.AliveStatus;
+import com.manpower.pos.enums.PaymentMode;
 import com.manpower.pos.model.Shop;
 import lombok.Data;
 
@@ -27,5 +28,9 @@ public class SaleResponseDTO {
     private ShopDTO shop;
     private List<PaymentDTO> payments;
     private CompanyDTO company;
-    String QRCode;
+    private String QRCode;
+    private BigDecimal bulkDiscountPercentage;
+    private BigDecimal receivedAmount;
+    private PaymentMode paymentMode;
+
 }
