@@ -34,6 +34,10 @@ public class Company {
   @Column(name = "footer_image_url", length = 100)
   private String footerImageUrl;
 
+  @Size(max = 100)
+  @Column(name = "logo_image_url", length = 100)
+  private String logoImageUrl;
+
   @Size(max = 45)
   @Column(name = "bank_account_title", length = 45)
   private String bankAccountTitle;

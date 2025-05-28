@@ -22,6 +22,7 @@ public class CompanyMapper {
                 .bankIban(company.getBankIban())
                 .bankName(company.getBankName())
                 .VAT(company.getVat())
+                .logoImageUrl(company.getLogoImageUrl())
                 .build();
     }
 
