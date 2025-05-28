@@ -14,4 +14,6 @@ public class ClientDTO {
     private String address;
     private Integer status;
     private Integer companyId; // just include the company ID to avoid deep nesting
+    private String phoneNumber; // //fix
+
 }

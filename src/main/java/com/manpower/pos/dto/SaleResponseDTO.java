@@ -17,8 +17,12 @@ import java.util.List;
 @Data
 public class SaleResponseDTO {
     private Integer id;
-    private Instant saleDate;
+    private String invoiceNumber; //fix
+    private Instant saleDate; //fix
+    private String sellerName; //fix
     private BigDecimal totalAmount;
+    private BigDecimal totalAmountBeforeVAT;
+    private BigDecimal vatAmount;
     private AliveStatus status;
     private Integer customerId;
     private ClientDTO client;
