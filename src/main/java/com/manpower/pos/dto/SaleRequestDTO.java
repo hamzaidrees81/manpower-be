@@ -21,4 +21,5 @@ public class SaleRequestDTO {
     private String poNumber;
     private BigDecimal paidAmount;
     private List<SaleItemDTO> saleItems;
+    private BigDecimal bulkDiscountPercentage;
 }
