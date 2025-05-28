@@ -1,6 +1,7 @@
 package com.manpower.pos.dto;
 
 import com.manpower.pos.enums.AliveStatus;
+import com.manpower.pos.enums.PaymentMode;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -22,4 +23,6 @@ public class SaleRequestDTO {
     private BigDecimal paidAmount;
     private List<SaleItemDTO> saleItems;
     private BigDecimal bulkDiscountPercentage;
+    private BigDecimal receivedAmount;
+    private PaymentMode paymentMode;
 }
