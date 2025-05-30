@@ -17,6 +17,7 @@ public class CompanyMapper {
                 .maxAssetCount(company.getMaxAssetCount())
                 .headerImageUrl(company.getHeaderImageUrl())
                 .footerImageUrl(company.getFooterImageUrl())
+                .logoImageUrl(company.getLogoImageUrl())
                 .bankAccountTitle(company.getBankAccountTitle())
                 .bankAccountNumber(company.getBankAccountNumber())
                 .bankIban(company.getBankIban())

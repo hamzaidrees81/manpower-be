@@ -15,6 +15,8 @@ import com.manpower.pos.repository.SaleRepository;
 import com.manpower.pos.repository.StockMovementRepository;
 import com.manpower.repository.CompanyRepository;
 import com.manpower.repository.UserRepository;
+import com.manpower.service.PreferenceService;
+import com.manpower.service.UserService;
 import com.manpower.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -34,6 +36,8 @@ public class SaleService {
     private final UserRepository userRepository;
     private final StockService stockService;
     private final StockMovementRepository stockMovementRepository;
+    private final PreferenceService preferenceService;
+    private final UserService userService;
 
     @Transactional
     public SaleResponseDTO createSale(SaleRequestDTO dto) {
@@ -46,6 +50,8 @@ public class SaleService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         Sale saleInput = saleMapper.toEntity(dto, company, user);
+        saleInput.setInvoiceNumber("INV-"+preferenceService.invoiceSequence());
+        saleInput.setSellingUser(userService.getUserByIdRaw(SecurityUtil.getUserClaim()));
         saleInput.setStatus(AliveStatus.ACTIVE);
         final Sale sale = saleRepository.save(saleInput);
 
@@ -129,7 +135,7 @@ public class SaleService {
         }
 
         //query the logs
-
+        preferenceService.updateSaleInvoiceNumber();
         return saleMapper.toResponseDTO(sale);
     }
 

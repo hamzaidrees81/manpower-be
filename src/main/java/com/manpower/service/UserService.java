@@ -26,6 +26,11 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
+    public User getUserByIdRaw(Integer id) {
+        Optional<User> user = userRepository.findById(id);
+        return user.get();
+    }
+
     public Optional<UserDTO> getUserById(Integer id) {
         Optional<User> user = userRepository.findById(id);
         return user.map(userMapper::toDTO);

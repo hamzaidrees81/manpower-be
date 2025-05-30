@@ -39,6 +39,7 @@ public class CompanyService {
         company.setFooterImageUrl(updatedCompany.getFooterImageUrl());
         company.setBankAccountTitle(updatedCompany.getBankAccountTitle());
         company.setBankAccountNumber(updatedCompany.getBankAccountNumber());
+        company.setLogoImageUrl(updatedCompany.getLogoImageUrl());
         company.setBankIban(updatedCompany.getBankIban());
         company.setBankName(updatedCompany.getBankName());
         return companyRepository.save(company);

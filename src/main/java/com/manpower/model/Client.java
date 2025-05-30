@@ -1,6 +1,8 @@
 package com.manpower.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -33,5 +35,10 @@ public class Client {
   @OnDelete(action = OnDeleteAction.CASCADE)
   @JoinColumn(name = "company_id", nullable = false)
   private Company company;
+
+  @Size(max = 20)
+  @NotNull
+  @Column(name = "phone_number", nullable = false, length = 20)
+  private String phoneNumber;
 
 }

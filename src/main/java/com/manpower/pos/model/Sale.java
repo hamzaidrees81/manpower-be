@@ -2,7 +2,9 @@ package com.manpower.pos.model;
 
 import com.manpower.model.Client;
 import com.manpower.model.Company;
+import com.manpower.model.User;
 import com.manpower.pos.enums.AliveStatus;
+import com.manpower.pos.enums.PaymentMode;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -46,13 +48,17 @@ public class Sale {
     @Column(name = "status", nullable = false)
     private AliveStatus status;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "company_id")
     private Company company;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "shop_id")
     private Shop shop;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "seller_id")
+    private User sellingUser;
 
     @Size(max = 50)
     @Column(name = "po_number", length = 50)
@@ -70,5 +76,23 @@ public class Sale {
     @NotNull
     @Column(name = "discount_percentage", nullable = false, precision = 15, scale = 2)
     private BigDecimal discountPercentage;
+
+
+    @Column(name = "sale_date")
+    private Instant saleDate;
+
+    @NotNull
+    @Column(name = "received_amount", nullable = false, precision = 15, scale = 2)
+    private BigDecimal receivedAmount;
+
+    @Size(max = 20)
+    @Enumerated(EnumType.STRING)
+    @Column(name = "payment_mode", nullable = false, length = 20)
+    private PaymentMode paymentMode;
+
+    @Size(max = 20)
+    @NotNull
+    @Column(name = "invoice_number", nullable = false, length = 20)
+    private String invoiceNumber;
 
 }

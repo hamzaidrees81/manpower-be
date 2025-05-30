@@ -15,7 +15,8 @@ public class ClientMapper {
                 .name(client.getName())
                 .address(client.getAddress())
                 .status(client.getStatus())
-                .companyId(client.getCompany().getId())
+                .companyId(client.getCompany() != null ? client.getCompany().getId() : null)
+                .phoneNumber(client.getPhoneNumber())
                 .build();
     }
 
@@ -28,6 +29,7 @@ public class ClientMapper {
         client.setName(dto.getName());
         client.setAddress(dto.getAddress());
         client.setStatus(dto.getStatus());
+        client.setPhoneNumber(dto.getPhoneNumber());
         client.setCompany(Company.builder().id(dto.getCompanyId()).build());
 
         // You must set Company separately in the service layer since only ID is available in DTO

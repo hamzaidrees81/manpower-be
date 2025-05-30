@@ -395,7 +395,7 @@ public class InvoiceService {
         invoice.setProfit(invoice.getTotalBeforeTax().subtract(invoice.getSponsorPayable()).subtract(totalAssetPayable));
         invoiceRepository.save(invoice);
 
-        preferenceService.updateInvoiceNumber();
+        preferenceService.updateERPInvoiceNumber();
         return invoice;
     }
 

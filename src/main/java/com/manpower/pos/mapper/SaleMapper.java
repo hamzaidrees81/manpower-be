@@ -31,7 +31,7 @@ public class SaleMapper {
 
     public Sale toEntity(SaleRequestDTO dto, Company company, User user) {
         Sale sale = new Sale();
-        sale.setDate(dto.getSaleDate());
+        sale.setDate(Instant.now()); //when it was added to system for logging
         sale.setStatus(dto.getStatus());
         sale.setTotalAmount(dto.getTotalAmount());
         sale.setCompany(Company.builder().id(SecurityUtil.getCompanyClaim()).build());
@@ -42,6 +42,9 @@ public class SaleMapper {
         sale.setVatAmount(dto.getVatAmount() !=null ? dto.getVatAmount() : BigDecimal.ZERO);
         sale.setTotalBeforeVat(dto.getTotalBeforeVat());
         sale.setDiscountPercentage(dto.getDiscountPercentage());
+        sale.setSaleDate(dto.getSaleDate());
+        sale.setReceivedAmount(dto.getReceivedAmount());
+        sale.setPaymentMode(dto.getPaymentMode());
         return sale;
     }
 
@@ -61,7 +64,7 @@ public class SaleMapper {
     public SaleResponseDTO toResponseDTO(Sale sale) {
         SaleResponseDTO responseDTO = new SaleResponseDTO();
         responseDTO.setId(sale.getId());
-        responseDTO.setSaleDate(sale.getDate());
+        responseDTO.setSaleDate(sale.getSaleDate());
         responseDTO.setTotalAmount(sale.getTotalAmount());
         responseDTO.setStatus(sale.getStatus());
         responseDTO.setCustomerId(sale.getClient().getId());
@@ -70,8 +73,13 @@ public class SaleMapper {
         responseDTO.setShop(shopMapper.toDTO(sale.getShop()));
         responseDTO.setPoNumber(sale.getPoNumber());
         responseDTO.setCompany(CompanyMapper.toDTO(sale.getCompany()));
-        sale.setTotalBeforeVat(sale.getTotalBeforeVat());
-        sale.setDiscountPercentage(sale.getDiscountPercentage());
+        responseDTO.setTotalAmountBeforeVAT(sale.getTotalBeforeVat());
+        responseDTO.setBulkDiscountPercentage(sale.getDiscountPercentage());
+        responseDTO.setReceivedAmount(sale.getPaidAmount());
+        responseDTO.setVatAmount(sale.getVatAmount());
+        responseDTO.setPaymentMode(sale.getPaymentMode());
+        responseDTO.setInvoiceNumber(sale.getInvoiceNumber());
+        responseDTO.setSellerName(sale.getSellingUser().getUsername());
         return responseDTO;
     }
 }
